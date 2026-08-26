@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTranslation } from '@/lib/i18n';
+import { useTranslation, t } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,13 +15,13 @@ interface EventType {
 }
 
 const DEFAULT_EVENT_TYPES: EventType[] = [
-  { id: 'meeting', name: 'Встреча', color: '#3b82f6', isDefault: true },
-  { id: 'task', name: 'Задача', color: '#10b981', isDefault: true },
-  { id: 'call', name: 'Звонок', color: '#f59e0b', isDefault: true },
-  { id: 'court', name: 'Суд', color: '#ef4444', isDefault: true },
-  { id: 'project', name: 'Проект', color: '#8b5cf6', isDefault: true },
-  { id: 'reminder', name: 'Напоминание', color: '#ec4899', isDefault: true },
-  { id: 'personal', name: 'Личное', color: '#6366f1', isDefault: true },
+  { id: 'meeting', name: t('settings.calendar.event_types.types.meeting'), color: '#3b82f6', isDefault: true },
+  { id: 'task', name: t('settings.calendar.event_types.types.task'), color: '#10b981', isDefault: true },
+  { id: 'call', name: t('settings.calendar.event_types.types.call'), color: '#f59e0b', isDefault: true },
+  { id: 'court', name: t('settings.calendar.event_types.types.court'), color: '#ef4444', isDefault: true },
+  { id: 'project', name: t('settings.calendar.event_types.types.project'), color: '#8b5cf6', isDefault: true },
+  { id: 'reminder', name: t('settings.calendar.event_types.types.reminder'), color: '#ec4899', isDefault: true },
+  { id: 'personal', name: t('settings.calendar.event_types.types.personal'), color: '#6366f1', isDefault: true },
 ];
 
 const COLOR_OPTIONS = [
@@ -82,7 +82,7 @@ export function EventTypesPanel() {
   const handleDelete = (id: string) => {
     const type = eventTypes.find(t => t.id === id);
     if (type?.isDefault) {
-      alert(t('calendar.event_types.cannot_delete_default') ?? 'Невозможно удалить типы по умолчанию');
+      alert(t('settings.calendar.event_types.cannot_delete_default'));
       return;
     }
     saveEventTypes(eventTypes.filter(t => t.id !== id));
@@ -99,14 +99,14 @@ export function EventTypesPanel() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>{t('calendar.event_types.title') ?? 'Типы событий'}</CardTitle>
+            <CardTitle>{t('settings.calendar.event_types.title')}</CardTitle>
             <CardDescription>
-              {t('calendar.event_types.description') ?? 'Управление типами событий календаря и их цветами'}
+              {t('settings.calendar.event_types.description')}
             </CardDescription>
           </div>
           <Button onClick={() => setIsAddDialogOpen(true)} className="gap-2">
             <Plus className="w-4 h-4" />
-            {t('common.add') ?? 'Добавить'}
+            {t('common.add')}
           </Button>
         </div>
       </CardHeader>

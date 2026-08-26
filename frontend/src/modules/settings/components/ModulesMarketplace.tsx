@@ -54,7 +54,7 @@ export function ModulesMarketplace() {
   };
 
   if (isLoading) {
-    return <div className="p-8 text-center text-muted-foreground">Загрузка...</div>;
+    return <div className="p-8 text-center text-muted-foreground">{t('common.loading')}...</div>;
   }
 
   return (

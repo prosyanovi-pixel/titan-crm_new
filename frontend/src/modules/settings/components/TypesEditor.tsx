@@ -73,7 +73,7 @@ export function TypesEditor({ selectedModule, modules }: TypesEditorProps) {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium">Типы ({currentModule?.name})</h3>
+        <h3 className="text-lg font-medium">{t('settings.types_editor.title', { module: currentModule?.name })}</h3>
         <Button onClick={() => setIsAdding(true)} disabled={isAdding} size="sm">
           <Plus className="w-4 h-4 mr-2" />
           {t('common.add')}
@@ -86,7 +86,7 @@ export function TypesEditor({ selectedModule, modules }: TypesEditorProps) {
             <CardContent className="p-4 flex flex-col gap-4 sm:flex-row sm:items-center">
               <div className="flex-1 space-y-2">
                 <Input 
-                  placeholder="ID (например, type_1)" 
+                  placeholder={t('settings.types_editor.id_placeholder')} 
                   value={newData.id} 
                   onChange={e => setNewData({...newData, id: e.target.value})} 
                 />

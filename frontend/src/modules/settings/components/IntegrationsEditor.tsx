@@ -266,11 +266,11 @@ export function IntegrationsEditor() {
             <div className="p-4 bg-muted/30 rounded-lg space-y-3 border">
                 <h4 className="text-sm font-medium flex items-center gap-2">
                     <Database className="w-4 h-4" />
-                    Настройка Webhook
+                    {t('settings.integrations.webhook_setup')}
                 </h4>
                 <p className="text-sm text-muted-foreground mb-2">
-                    Для получения сообщений от бота, выполните настройку Webhook URL в Telegram (вы можете сделать это вручную через api.telegram.org или автоматически). <br/>
-                    <b>Ваш Webhook URL:</b> 
+                    {t('settings.integrations.telegram_webhook_desc')} <br/>
+                    <b>{t('settings.integrations.your_webhook_url')}</b> 
                 </p>
                 <code className="text-xs bg-muted p-2 rounded block break-all">
                     {window.location.origin}/api/chats/webhooks/telegram
@@ -303,7 +303,7 @@ export function IntegrationsEditor() {
             </div>
             <div>
                 <CardTitle>WhatsApp Business API</CardTitle>
-                <CardDescription>Интеграция с WhatsApp для общения с клиентами</CardDescription>
+                <CardDescription>{t('settings.integrations.whatsapp_desc')}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -329,10 +329,10 @@ export function IntegrationsEditor() {
             <div className="p-4 bg-muted/30 rounded-lg space-y-3 border">
                 <h4 className="text-sm font-medium flex items-center gap-2">
                     <Database className="w-4 h-4" />
-                    Настройка Webhook
+                    {t('settings.integrations.webhook_setup')}
                 </h4>
                 <p className="text-sm text-muted-foreground mb-2">
-                    Укажите этот URL в настройках приложения Meta for Developers:
+                    {t('settings.integrations.whatsapp_webhook_desc')}
                 </p>
                 <code className="text-xs bg-muted p-2 rounded block break-all">
                     {window.location.origin}/api/chats/webhooks/whatsapp
@@ -345,7 +345,7 @@ export function IntegrationsEditor() {
                     checked={whatsappConfig.enabled}
                     onCheckedChange={(c) => setWhatsappConfig({...whatsappConfig, enabled: c})}
                 />
-                <Label htmlFor="wa-enabled">Включить интеграцию</Label>
+                <Label htmlFor="wa-enabled">{t('settings.integrations.enable_integration')}</Label>
             </div>
         </CardContent>
         <CardFooter className="flex justify-end border-t p-4 bg-muted/10">

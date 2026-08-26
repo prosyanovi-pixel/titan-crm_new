@@ -111,7 +111,7 @@ export function ProjectStageEditor() {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-3 gap-2">
-        <Input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder={t('settings.project_stages.new_placeholder') || 'Новая стадия'} />
+        <Input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder={t('settings.project_stages.new_placeholder')} />
         <div className="flex items-center gap-2">
           <ColorPicker value={newColor} onChange={(c) => setNewColor(c)} />
           <Select value={newVariant} onValueChange={(v) => setNewVariant(v as 'solid'|'soft'|'outline'|'ghost')}>

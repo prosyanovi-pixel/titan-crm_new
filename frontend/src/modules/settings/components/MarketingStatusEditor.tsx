@@ -70,9 +70,9 @@ export function MarketingStatusEditor({ onUpdate }: MarketingStatusEditorProps) 
       await refetch();
       queryClient.invalidateQueries({ queryKey: ['referenceData'] });
       onUpdate?.();
-      toast.success(t('common.saved_successfully') || 'Сохранено');
+      toast.success(t('common.saved_successfully'));
     } catch (error) {
-      toast.error(t('common.error_saving') || 'Ошибка при сохранении');
+      toast.error(t('common.error_saving'));
     }
   };
 
@@ -95,17 +95,17 @@ export function MarketingStatusEditor({ onUpdate }: MarketingStatusEditorProps) 
       await refetch();
       queryClient.invalidateQueries({ queryKey: ['referenceData'] });
       onUpdate?.();
-      toast.success(t('common.added_successfully') || 'Добавлено');
+      toast.success(t('common.added_successfully'));
     } catch (error) {
-      toast.error(t('common.error_adding') || 'Ошибка при добавлении');
+      toast.error(t('common.error_adding'));
     }
   };
 
   const handleDelete = async (id: string) => {
     if (
       await confirm({
-        title: t('common.confirm_deletion') || 'Подтверждение удаления',
-        description: t('common.confirm_deletion_text') || 'Это действие нельзя отменить.',
+        title: t('common.confirm_deletion'),
+        description: t('common.confirm_deletion_text'),
         variant: 'destructive',
       })
     ) {
@@ -114,9 +114,9 @@ export function MarketingStatusEditor({ onUpdate }: MarketingStatusEditorProps) 
         await refetch();
         queryClient.invalidateQueries({ queryKey: ['referenceData'] });
         onUpdate?.();
-        toast.success(t('common.deleted_successfully') || 'Удалено');
+        toast.success(t('common.deleted_successfully'));
       } catch (error) {
-        toast.error(t('common.error_deleting') || 'Ошибка при удалении');
+        toast.error(t('common.error_deleting'));
       }
     }
   };
@@ -129,7 +129,7 @@ export function MarketingStatusEditor({ onUpdate }: MarketingStatusEditorProps) 
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-foreground">
-          {t('marketing.settings.statuses') || 'Статусы маркетинговых кампаний'}
+          {t('marketing.settings.statuses')}
         </h3>
         <Button variant="outline" size="sm" onClick={() => setIsAdding(true)} disabled={isAdding}>
           <Plus className="w-4 h-4 mr-1" />
@@ -161,7 +161,7 @@ export function MarketingStatusEditor({ onUpdate }: MarketingStatusEditorProps) 
                   <div className="flex items-center justify-between pt-2 border-t">
                     <Badge
                       id="preview"
-                      name={editData.name || 'Статус'}
+                      name={editData.name || t('marketing.campaigns.status')}
                       color={editData.color}
                       variant="soft"
                       size="md"
@@ -226,7 +226,7 @@ export function MarketingStatusEditor({ onUpdate }: MarketingStatusEditorProps) 
               <div className="flex items-center justify-between pt-2 border-t border-primary/10">
                 <Badge
                   id="preview-new"
-                  name={newData.name || 'Новый статус'}
+                  name={newData.name || t('common.new')}
                   color={newData.color}
                   variant="soft"
                   size="md"
@@ -248,7 +248,7 @@ export function MarketingStatusEditor({ onUpdate }: MarketingStatusEditorProps) 
 
         {statuses.length === 0 && !isAdding && (
           <p className="text-sm text-muted-foreground text-center py-4">
-            {t('marketing.settings.no_statuses') || 'Нет статусов'}
+            {t('marketing.settings.no_statuses')}
           </p>
         )}
       </div>

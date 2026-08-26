@@ -265,7 +265,7 @@ export function LegalFormEditor({ legalForms, onRefresh }: LegalFormEditorProps)
                           value={editFormKeywords}
                           onChange={(e) => setEditFormKeywords(e.target.value)}
                           className="h-8 text-xs"
-                          placeholder="Ключевые слова (напр. ооо, общество с ограниченной)"
+                          placeholder={t('settings.legal_forms_editor.keywords_placeholder')}
                         />
                         <div className="flex items-center gap-4">
                           <ColorPicker
@@ -342,7 +342,7 @@ export function LegalFormEditor({ legalForms, onRefresh }: LegalFormEditorProps)
                         value={newFormKeywords}
                         onChange={(e) => setNewFormKeywords(e.target.value)}
                         className="h-8 text-xs"
-                        placeholder="Ключевые слова через запятую"
+                        placeholder={t('settings.legal_forms_editor.keywords_comma_placeholder')}
                       />
                       <div className="flex items-center gap-4">
                         <ColorPicker

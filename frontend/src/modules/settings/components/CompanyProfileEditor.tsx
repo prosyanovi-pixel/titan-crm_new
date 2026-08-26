@@ -141,18 +141,18 @@ export function CompanyProfileEditor() {
         </div>
         <Button onClick={handleSave} disabled={saving} size="sm">
           <Save className="h-4 w-4 mr-2" />
-          {saving ? 'Сохранение...' : 'Сохранить'}
+          {saving ? t('settings.company_profile_editor.saving') : t('settings.company_profile_editor.save')}
         </Button>
       </div>
 
       <div className="grid grid-cols-1 gap-4">
         <div className="space-y-2">
           <Label>{t('generated.polnoe_naimenovanie')}</Label>
-          <Input value={data.full_name} onChange={set('full_name')} placeholder='ООО "Название компании"' />
+          <Input value={data.full_name} onChange={set('full_name')} placeholder={t('settings.company_profile_editor.full_name_placeholder')} />
         </div>
         <div className="space-y-2">
           <Label>{t('generated.kratkoe_naimenovanie')}</Label>
-          <Input value={data.short_name} onChange={set('short_name')} placeholder='ООО "Название"' />
+          <Input value={data.short_name} onChange={set('short_name')} placeholder={t('settings.company_profile_editor.short_name_placeholder')} />
         </div>
       </div>
 
@@ -180,7 +180,7 @@ export function CompanyProfileEditor() {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label>{t('generated.nazvanie_banka')}</Label>
-          <Input value={data.bank_name} onChange={set('bank_name')} placeholder='ПАО "Сбербанк"' />
+          <Input value={data.bank_name} onChange={set('bank_name')} placeholder={t('settings.company_profile_editor.bank_placeholder')} />
         </div>
         <div className="space-y-2">
           <Label>{t('generated.bik')}</Label>

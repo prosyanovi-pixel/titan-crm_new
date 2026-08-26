@@ -415,7 +415,7 @@ export function RoleEditor() {
                     onChange={(e) => setCurrentRole({ ...currentRole, name: e.target.value })}
                     className="h-9 bg-background focus:ring-1 focus:ring-primary/30"
                     disabled={currentRole?.isSystem}
-                    placeholder={t('generated.vvedite_nazvanie') || 'Введите название'}
+                    placeholder={t('generated.vvedite_nazvanie')}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -427,7 +427,7 @@ export function RoleEditor() {
                     value={currentRole?.description || ""}
                     onChange={(e) => setCurrentRole({ ...currentRole, description: e.target.value })}
                     className="min-h-[80px] text-sm bg-background focus:ring-1 focus:ring-primary/30"
-                    placeholder={t('generated.vvedite_opisanie') || 'Введите описание роли'}
+                    placeholder={t('generated.vvedite_opisanie')}
                   />
                 </div>
               </div>
@@ -436,10 +436,10 @@ export function RoleEditor() {
             <div className="bg-amber-50/50 border border-amber-100 rounded-lg p-3">
               <h4 className="text-[10px] font-bold flex items-center gap-1.5 mb-1.5 text-amber-700 uppercase">
                 <ShieldAlert className="w-3.5 h-3.5" />
-                {t('generated.vazhno') || 'Внимание'}
+                {t('generated.vazhno')}
               </h4>
               <p className="text-[10px] text-amber-700/70 leading-relaxed">
-                {t('generated.role_edit_help') || 'Изменения прав доступа вступят в силу после обновления страницы пользователем.'}
+                {t('generated.role_edit_help')}
               </p>
             </div>
           </div>
@@ -484,7 +484,7 @@ export function RoleEditor() {
                           </Label>
                           {someSelected && (
                             <Badge variant="outline" className="text-[8px] h-3.5 px-1 font-normal bg-muted/20 border-muted-foreground/20 text-muted-foreground">
-                              {t('common.partially_selected') || 'частично'}
+                              {t('common.partially_selected')}
                             </Badge>
                           )}
                         </div>

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { useModuleSettings, useUpdateModuleSettings } from '../hooks';
-import { useTranslation } from '@/lib/i18n';
+import { useTranslation, t } from '@/lib/i18n';
 import { useConfirm } from '@/components/ui/confirm-dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
@@ -16,10 +16,10 @@ interface TabsEditorProps {
 }
 
 const AVAILABLE_ICONS = [
-  { id: 'Users', icon: Users, label: 'Пользователи' },
-  { id: 'Box', icon: Box, label: 'Коробка' },
-  { id: 'Wrench', icon: Wrench, label: 'Инструмент' },
-  { id: 'Settings', icon: Settings, label: 'Настройки' }
+  { id: 'Users', icon: Users, label: t('settings.tabs_editor.icons.users') },
+  { id: 'Box', icon: Box, label: t('settings.tabs_editor.icons.box') },
+  { id: 'Wrench', icon: Wrench, label: t('settings.tabs_editor.icons.wrench') },
+  { id: 'Settings', icon: Settings, label: t('settings.tabs_editor.icons.settings') }
 ];
 
 export function TabsEditor({ selectedModule, modules }: TabsEditorProps) {
@@ -81,7 +81,7 @@ export function TabsEditor({ selectedModule, modules }: TabsEditorProps) {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium">Вкладки ({currentModule?.name})</h3>
+        <h3 className="text-lg font-medium">{t('settings.tabs_editor.title', { module: currentModule?.name })}</h3>
         <Button onClick={() => setIsAdding(true)} disabled={isAdding} size="sm">
           <Plus className="w-4 h-4 mr-2" />
           {t('common.add')}
@@ -94,7 +94,7 @@ export function TabsEditor({ selectedModule, modules }: TabsEditorProps) {
             <CardContent className="p-4 flex flex-col gap-4 sm:flex-row sm:items-center">
               <div className="flex-1 space-y-2">
                 <Input 
-                  placeholder="ID (совпадает с ID типа)" 
+                  placeholder={t('settings.tabs_editor.id_placeholder')} 
                   value={newData.id} 
                   onChange={e => setNewData({...newData, id: e.target.value})} 
                 />
@@ -109,7 +109,7 @@ export function TabsEditor({ selectedModule, modules }: TabsEditorProps) {
               <div className="w-full sm:w-auto">
                 <Select value={newData.icon} onValueChange={(val) => setNewData({...newData, icon: val})}>
                   <SelectTrigger className="w-full sm:w-[140px]">
-                    <SelectValue placeholder="Иконка" />
+                    <SelectValue placeholder={t('settings.tabs_editor.icon_placeholder')} />
                   </SelectTrigger>
                   <SelectContent>
                     {AVAILABLE_ICONS.map(i => (
@@ -125,7 +125,7 @@ export function TabsEditor({ selectedModule, modules }: TabsEditorProps) {
               </div>
               <div className="flex items-center gap-2">
                 <Switch checked={newData.visible} onCheckedChange={(val) => setNewData({...newData, visible: val})} />
-                <span className="text-sm">Видна</span>
+                <span className="text-sm">{t('settings.tabs_editor.visible')}</span>
               </div>
               <div className="flex items-center gap-2 pt-2 sm:pt-0">
                 <Button size="icon" onClick={handleAdd} disabled={!newData.label || !newData.id}><Check className="w-4 h-4" /></Button>
@@ -151,7 +151,7 @@ export function TabsEditor({ selectedModule, modules }: TabsEditorProps) {
                     <div className="w-full sm:w-auto">
                       <Select value={editData.icon} onValueChange={(val) => setEditData({...editData, icon: val})}>
                         <SelectTrigger className="w-full sm:w-[140px]">
-                          <SelectValue placeholder="Иконка" />
+                          <SelectValue placeholder={t('settings.tabs_editor.icon_placeholder')} />
                         </SelectTrigger>
                         <SelectContent>
                           {AVAILABLE_ICONS.map(i => (
@@ -167,7 +167,7 @@ export function TabsEditor({ selectedModule, modules }: TabsEditorProps) {
                     </div>
                     <div className="flex items-center gap-2">
                       <Switch checked={editData.visible} onCheckedChange={(val) => setEditData({...editData, visible: val})} />
-                      <span className="text-sm">Видна</span>
+                      <span className="text-sm">{t('settings.tabs_editor.visible')}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Button size="icon" onClick={handleSaveEdit} disabled={!editData.label}><Check className="w-4 h-4" /></Button>
@@ -180,7 +180,7 @@ export function TabsEditor({ selectedModule, modules }: TabsEditorProps) {
                       <IconComp className="w-4 h-4 text-muted-foreground" />
                       <span className="font-medium">{tab.label}</span>
                       <span className="text-xs text-muted-foreground ml-2 bg-muted px-2 py-1 rounded-md font-mono">{tab.id}</span>
-                      {!tab.visible && <span className="text-xs text-destructive ml-2">(Скрыта)</span>}
+                      {!tab.visible && <span className="text-xs text-destructive ml-2">{t('settings.tabs_editor.hidden')}</span>}
                     </div>
                     <div className="flex items-center gap-2">
                       <Button variant="ghost" size="icon" onClick={() => handleEdit(tab)}><Edit2 className="w-4 h-4 text-muted-foreground" /></Button>

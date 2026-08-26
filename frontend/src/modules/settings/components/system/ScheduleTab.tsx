@@ -146,7 +146,7 @@ export function ScheduleTab() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="trash-cleanup-cron">Автоочистка корзины (Cron)</Label>
+              <Label htmlFor="trash-cleanup-cron">{t('settings.schedule_tab.trash_cron')}</Label>
               <Input
                 id="trash-cleanup-cron"
                 value={config.trashCleanupCron}
@@ -157,18 +157,18 @@ export function ScheduleTab() {
           </div>
 
           <div className="pt-6 border-t space-y-6">
-            <h4 className="text-sm font-semibold">Настройки корзины</h4>
+            <h4 className="text-sm font-semibold">{t('settings.schedule_tab.trash_settings')}</h4>
             <div className="flex items-center space-x-2">
               <Switch
                 id="trash-auto-clean"
                 checked={trashConfig.enabled}
                 onCheckedChange={(checked) => setTrashConfig({ ...trashConfig, enabled: checked })}
               />
-              <Label htmlFor="trash-auto-clean">Включить автоматическую очистку</Label>
+              <Label htmlFor="trash-auto-clean">{t('settings.schedule_tab.enable_auto_clean')}</Label>
             </div>
             
             <div className="space-y-2 max-w-xs">
-              <Label htmlFor="retention-days">Хранить удаленные файлы (дней)</Label>
+              <Label htmlFor="retention-days">{t('settings.schedule_tab.retention_days')}</Label>
               <Input
                 id="retention-days"
                 type="number"

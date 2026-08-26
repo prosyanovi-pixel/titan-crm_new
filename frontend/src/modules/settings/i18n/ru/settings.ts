@@ -110,7 +110,13 @@ export const settings = {
     bot_enabled: "Включить интеграцию",
     test_connection: "Проверить соединение",
     send_test: "Отправить тест",
-    save_settings: "Сохранить настройки"
+    save_settings: "Сохранить настройки",
+    webhook_setup: "Настройка Webhook",
+    telegram_webhook_desc: "Для получения сообщений от бота, выполните настройку Webhook URL в Telegram (вы можете сделать это вручную через api.telegram.org или автоматически).",
+    your_webhook_url: "Ваш Webhook URL:",
+    whatsapp_desc: "Интеграция с WhatsApp для общения с клиентами",
+    whatsapp_webhook_desc: "Укажите этот URL в настройках приложения Meta for Developers:",
+    enable_integration: "Включить интеграцию"
   },
   select_module: {
     title: "Выбор модуля",
@@ -279,6 +285,20 @@ export const settings = {
       days_14: "За 14 дней",
       days_30: "За 30 дней",
       hint: "События будут видны за указанное количество дней до дня рождения",
+    },
+    event_types: {
+      title: "Типы событий",
+      description: "Управление типами событий календаря и их цветами",
+      cannot_delete_default: "Невозможно удалить типы по умолчанию",
+      types: {
+        meeting: "Встреча",
+        task: "Задача",
+        call: "Звонок",
+        court: "Суд",
+        project: "Проект",
+        reminder: "Напоминание",
+        personal: "Личное"
+      }
     }
   },
   tax: {
@@ -1439,5 +1459,39 @@ export const settings = {
     regenerate: "Перегенерировать",
     action_items: "Что нужно сделать:",
     insights_title: "AI Инсайты"
+  },
+  types_editor: {
+    title: "Типы ({{module}})",
+    id_placeholder: "ID (например, type_1)"
+  },
+  company_profile_editor: {
+    save: "Сохранить",
+    saving: "Сохранение...",
+    full_name_placeholder: "ООО \"Название компании\"",
+    short_name_placeholder: "ООО \"Название\"",
+    bank_placeholder: "ПАО \"Сбербанк\""
+  },
+  legal_forms_editor: {
+    keywords_placeholder: "Ключевые слова (напр. ооо, общество с ограниченной)",
+    keywords_comma_placeholder: "Ключевые слова через запятую"
+  },
+  tabs_editor: {
+    title: "Вкладки ({{module}})",
+    id_placeholder: "ID (совпадает с ID типа)",
+    icon_placeholder: "Иконка",
+    visible: "Видна",
+    hidden: "(Скрыта)",
+    icons: {
+      users: "Пользователи",
+      box: "Коробка",
+      wrench: "Инструмент",
+      settings: "Настройки"
+    }
+  },
+  schedule_tab: {
+    trash_cron: "Автоочистка корзины (Cron)",
+    trash_settings: "Настройки корзины",
+    enable_auto_clean: "Включить автоматическую очистку",
+    retention_days: "Хранить удаленные файлы (дней)"
   }
 };
