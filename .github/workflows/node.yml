@@ -10,25 +10,51 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: titancrm1
+          POSTGRES_USER: myuser
+          POSTGRES_PASSWORD: mysecretpassword
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    env:
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_NAME: titancrm1
+      DB_USER: myuser
+      DB_PASSWORD: mysecretpassword
+      NODE_ENV: test
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Use Node.js 20
       uses: actions/setup-node@v4
       with:
         node-version: '20'
-        
+
     - name: Install root dependencies
       run: npm install
-      
+
     - name: Install backend dependencies
       run: npm --prefix backend install
-      
+
     - name: Install frontend dependencies
       run: npm --prefix frontend install
-      
+
+    - name: Run database migrations
+      run: npm --prefix backend run migrate
+
     - name: Run frontend lint
       run: npm --prefix frontend run lint
-      
+
     - name: Run tests (Backend & Frontend unit tests)
       run: npm test
