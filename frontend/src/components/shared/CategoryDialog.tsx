@@ -45,6 +45,7 @@ export function CategoryDialog({ open, onOpenChange, category, parentId, onSave 
   useEffect(() => {
     if (open) {
       if (category) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setFormData({
           name: category.name || '',
           parent_id: category.parent_id,

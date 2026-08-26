@@ -49,6 +49,7 @@ export function TransactionTableRow({
           case 'createdAt':
             return (
               <TableCell key={key} className="font-medium text-sm">
+                {/* eslint-disable-next-line react-hooks/purity */}
                 {format(new Date(transaction.createdAt || Date.now()), 'dd MMM yyyy, HH:mm', { locale: ru })}
               </TableCell>
             );

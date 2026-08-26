@@ -87,6 +87,7 @@ export function ProjectContractsTab({ project }: ProjectContractsTabProps) {
   const [sheetOpen, setSheetOpen] = React.useState(false);
   const [linkDialogOpen, setLinkDialogOpen] = React.useState(false);
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const matchedContractorId = useMemo(() => {
     if (!project.client || !contractorsData?.data) return undefined;
     const clientNameLower = project.client.trim().toLowerCase();

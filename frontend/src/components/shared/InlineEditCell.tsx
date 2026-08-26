@@ -47,6 +47,18 @@ export function InlineEditCell({
     }
   }, [isEditing, inputType]);
 
+  const handleSave = () => {
+    if (currentValue !== value) {
+      onSave(currentValue);
+    }
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setCurrentValue(value);
+    setIsEditing(false);
+  };
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
@@ -60,18 +72,6 @@ export function InlineEditCell({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [wrapperRef, isEditing]);
-
-  const handleSave = () => {
-    if (currentValue !== value) {
-      onSave(currentValue);
-    }
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setCurrentValue(value);
-    setIsEditing(false);
-  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {

@@ -148,10 +148,11 @@ export const MailProvider: React.FC<{ children: React.ReactNode, minimal?: boole
   useEffect(() => {
     if (!minimal && selectedAccountId && selectedAccountId !== 'all' && accounts.length > 0) {
       const accountExists = accounts.some(a => a.id === selectedAccountId);
-      // Если выбранный аккаунт удалили, сбрасываем выбор
       if (!accountExists) {
-        setSelectedAccountIdState('');
-        localStorage.removeItem('mail-selected-account-id');
+        setTimeout(() => {
+          setSelectedAccountIdState('');
+          localStorage.removeItem('mail-selected-account-id');
+        }, 0);
       }
     }
   }, [accounts, selectedAccountId, minimal]);

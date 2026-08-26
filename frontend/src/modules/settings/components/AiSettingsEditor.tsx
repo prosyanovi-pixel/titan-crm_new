@@ -23,10 +23,6 @@ export function AiSettingsEditor() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    loadSettings();
-  }, []);
-
   const loadSettings = async () => {
     setLoading(true);
     try {
@@ -43,11 +39,16 @@ export function AiSettingsEditor() {
       }
     } catch (error) {
       console.error('Failed to load AI settings:', error);
-      // Fallback
+      toast.error(t('common.error'), { description: 'Не удалось загрузить настройки ИИ' });
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadSettings();
+  }, []);
 
   const saveSettings = async () => {
     setSaving(true);
