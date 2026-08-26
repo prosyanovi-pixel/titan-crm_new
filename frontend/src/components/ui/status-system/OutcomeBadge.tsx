@@ -20,6 +20,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { useOutcomes } from './status-system.hooks';
 import { Trophy } from 'lucide-react';
+import { useTranslation } from '@/lib/i18n';
 
 export interface OutcomeBadgeProps {
   /** ID результата (например, 'won', 'won_partial', 'lost') */
@@ -159,10 +160,12 @@ export function OutcomeSelect({
   value,
   onChange,
   className,
-  placeholder = 'Выберите результат',
+  placeholder,
   disabled,
 }: OutcomeSelectProps) {
   const { outcomes, isLoading } = useOutcomes();
+  const { t } = useTranslation();
+  const finalPlaceholder = placeholder || t('components.status_system.outcome.placeholder');
 
   return (
     <select
@@ -175,7 +178,7 @@ export function OutcomeSelect({
       )}
       disabled={disabled || isLoading}
     >
-      <option value="">{placeholder}</option>
+      <option value="">{finalPlaceholder}</option>
       {outcomes.map((outcome) => (
         <option key={outcome.id} value={outcome.id}>
           {outcome.name}
