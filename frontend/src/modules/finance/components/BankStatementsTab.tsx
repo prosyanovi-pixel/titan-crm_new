@@ -461,7 +461,7 @@ function ReconcileDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <RefreshCw className="w-5 h-5" />
-            {t('finance.statement.reconcile_title') || 'Авто-разноска'}
+            {t('finance.statement.reconcile_title')}
           </DialogTitle>
           <DialogDescription>
             {t('finance.statement.reconcile_description') || 
@@ -472,7 +472,7 @@ function ReconcileDialog({
         <div className="space-y-4 py-4">
           <div>
             <label className="text-sm font-medium block mb-2">
-              {t('finance.statement.account_number') || 'Номер счёта'}
+              {t('finance.statement.account_number')}
             </label>
             <input
               className="w-full border rounded-md px-3 py-2 text-sm bg-background"
@@ -498,21 +498,21 @@ function ReconcileDialog({
 
         <DialogFooter className="gap-2">
           <Button variant="outline" onClick={handleSkip} disabled={isPending}>
-            {t('generated.bez_scheta') || 'Без счёта'}
+            {t('finance.statement.without_account')}
           </Button>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
-            {t('generated.otmena') || 'Отмена'}
+            {t('common.cancel')}
           </Button>
           <Button onClick={handleStart} disabled={isPending} className="gap-2">
             {isPending ? (
               <>
                 <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                {t('finance.statement.reconciling') || 'Разноска...'}
+                {t('finance.statement.reconciling')}
               </>
             ) : (
               <>
                 <RefreshCw className="w-4 h-4" />
-                {t('finance.statement.reconcile') || 'Разнести'}
+                {t('finance.statement.reconcile')}
               </>
             )}
           </Button>

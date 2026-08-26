@@ -291,6 +291,7 @@ export const finance = {
 
   // Bank statements
   statement: {
+
     unlink_invoice_confirm: 'Вы уверены, что хотите отвязать счет? Связанный платеж будет удален, а статус счета пересчитан.',
     unlink_invoice: 'Отвязать счет',
     invoice_unlinked: 'Счет отвязан',
@@ -337,7 +338,7 @@ export const finance = {
     reconcile_hint: 'Оставьте пустым для поиска по контрагенту',
     reconcile_info: 'Система автоматически привяжет платежи к счетам по сумме',
     reconciling: 'Разноска...',
-    bez_scheta: 'Без счёта',
+    without_account: 'Без счёта',
     import_preview_title: 'Предпросмотр импорта',
     import_confirm: 'Подтвердить импорт',
     preview_summary: 'Общая сводка',

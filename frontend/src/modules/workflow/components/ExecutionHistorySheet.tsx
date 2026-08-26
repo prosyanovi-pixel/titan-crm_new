@@ -91,11 +91,11 @@ export const ExecutionHistorySheet: React.FC<ExecutionHistorySheetProps> = ({
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'completed': return <Badge variant="outline" className="text-green-600 border-green-200">{t('workflows.table.status_success') || 'Успех'}</Badge>;
-      case 'failed':    return <Badge variant="outline" className="text-red-600 border-red-200">{t('workflows.table.status_failed') || 'Ошибка'}</Badge>;
+      case 'completed': return <Badge variant="outline" className="text-green-600 border-green-200">{t('workflows.table.status_success')}</Badge>;
+      case 'failed':    return <Badge variant="outline" className="text-red-600 border-red-200">{t('workflows.table.status_failed')}</Badge>;
       case 'dry_run':   return <Badge variant="outline" className="text-blue-600 border-blue-200">Dry Run</Badge>;
       case 'paused':    return <Badge variant="outline" className="text-yellow-600 border-yellow-200">{t('workflows.status.paused')}</Badge>;
-      case 'waiting_approval': return <Badge variant="outline" className="text-orange-600 border-orange-200 animate-pulse">{t('workflows.history.waiting_approval_short') || 'Ожидание'}</Badge>;
+      case 'waiting_approval': return <Badge variant="outline" className="text-orange-600 border-orange-200 animate-pulse">{t('workflows.history.waiting_approval_short')}</Badge>;
       default:          return <Badge variant="outline">{t('workflows.status.active')}</Badge>;
     }
   };

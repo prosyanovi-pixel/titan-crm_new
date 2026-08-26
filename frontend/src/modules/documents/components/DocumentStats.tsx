@@ -38,7 +38,7 @@ export function DocumentStats({ stats }: DocumentStatsProps) {
           iconColor="text-purple-500 bg-purple-50 dark:bg-purple-950"
         />
         <StatsCard 
-          title={t('common.other') || "Прочее"} 
+          title={t('common.other')}
           value={formatBytes(stats.categories.others)} 
           icon={LayoutGrid} 
           compact 

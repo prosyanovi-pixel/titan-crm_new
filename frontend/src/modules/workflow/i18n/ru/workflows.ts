@@ -54,6 +54,7 @@ export const workflows = {
       description: 'Описание',
       trigger_type:'Тип триггера',
       status:      'Статус',
+      event_name:  'Имя события (Event Name)',
       cron:        'Cron-расписание',
       webhook_url: 'URL вебхука',
       module:      'Модуль',

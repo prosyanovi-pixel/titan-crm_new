@@ -134,7 +134,7 @@ export function MailComposeEditor({
       });
 
       onAttachmentsChange([...attachments, ...normalized]);
-      toast.success(`${t('mail.filters.uploaded') || 'Загружено'} ${normalized.length}`);
+      toast.success(`${t('mail.filters.uploaded')} ${normalized.length}`);
     } catch (error) {
       toast.error(t('mail.errors.upload_failed'));
     } finally {
@@ -148,7 +148,7 @@ export function MailComposeEditor({
     try {
       await api.delete(`/mail/attachments/${attachmentId}`);
       onAttachmentsChange(attachments.filter(a => a.id !== attachmentId));
-      toast.success(t('mail.filters.attachment_deleted') || 'Вложение удалено');
+      toast.success(t('mail.filters.attachment_deleted'));
     } catch (error) {
       toast.error(t('mail.errors.delete_failed'));
     }
@@ -158,7 +158,7 @@ export function MailComposeEditor({
     <div className="space-y-4">
       <div className="space-y-1">
         <Label htmlFor="body" className="text-sm font-medium">
-          {t('mail.body') || 'Сообщение'} <span className="text-red-500">*</span>
+          {t('mail.body')} <span className="text-red-500">*</span>
         </Label>
         {isHtmlMode ? (
           <RichTextEditor content={body} onChange={onBodyChange} className="min-h-[300px]" />
@@ -210,7 +210,7 @@ export function MailComposeEditor({
         {onTemplateClick && (
           <Button variant="outline" size="sm" onClick={onTemplateClick} className="gap-2 text-primary border-primary/20 hover:bg-primary/5">
             <BookTemplate className="h-4 w-4" />
-            {t('mail.filters.templates') || 'Шаблоны'}
+            {t('mail.filters.templates')}
           </Button>
         )}
       </div>

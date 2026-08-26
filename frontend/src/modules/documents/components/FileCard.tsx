@@ -78,7 +78,7 @@ export function FileCard({ file, onClick, onToggleStar, onRestore, selected = fa
               {isTrash ? (
                 <DropdownMenuItem onClick={() => onRestore?.(file.id)} className="text-green-600 focus:text-green-700 focus:bg-green-50">
                   <RotateCcw className="w-3 h-3 mr-2" />
-                  {t('common.restore') || "Восстановить"}
+                  {t('common.restore')}
                 </DropdownMenuItem>
               ) : (
                 <>

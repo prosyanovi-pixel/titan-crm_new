@@ -279,7 +279,7 @@ export default function Documents() {
               {filter === "trash" && (
                 <Button variant="outline" size="sm" onClick={() => handleRestoreFiles(selectedIds)} className="h-8 gap-2 text-green-600 hover:text-green-700">
                   <RotateCcw className="w-3.5 h-3.5" />
-                  {t("common.restore") || "Восстановить"}
+                  {t("common.restore")}
                 </Button>
               )}
               <Button variant="destructive" size="sm" onClick={() => handleDeleteFiles(selectedIds)} className="h-8 gap-2">
@@ -365,7 +365,7 @@ export default function Documents() {
                                     </Button>
                                     {file.type !== "folder" && (
                                       <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                                        onClick={() => setVersionFile(file)} title={t("documents.versions.title") || "История версий"}>
+                                        onClick={() => setVersionFile(file)} title={t("documents.versions.title")}>
                                         <History className="w-4 h-4" />
                                       </Button>
                                     )}
@@ -468,7 +468,7 @@ export default function Documents() {
                                 <div className="flex items-center justify-end gap-1">
                                   {filter === "trash" ? (
                                     <Button variant="ghost" size="icon" className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
-                                      onClick={() => handleRestoreFiles([file.id])} title={t("common.restore") || "Восстановить"}>
+                                      onClick={() => handleRestoreFiles([file.id])} title={t("common.restore")}>
                                       <RotateCcw className="w-3.5 h-3.5" />
                                     </Button>
                                   ) : (
@@ -479,7 +479,7 @@ export default function Documents() {
                                       </Button>
                                       {file.type !== "folder" && (
                                         <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                                          onClick={() => setVersionFile(file)} title={t("documents.versions.title") || "История версий"}>
+                                          onClick={() => setVersionFile(file)} title={t("documents.versions.title")}>
                                           <History className="w-3.5 h-3.5" />
                                         </Button>
                                       )}

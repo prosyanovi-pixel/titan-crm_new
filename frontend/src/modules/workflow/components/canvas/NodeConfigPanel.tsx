@@ -146,7 +146,7 @@ export const NodeConfigPanel: React.FC<NodeConfigPanelProps> = ({
 
       {workflowData.trigger_type === 'event' && (
         <div className="space-y-2">
-          <Label>{t('workflows.editor.field.event_name') || 'Имя события (Event Name)'}</Label>
+          <Label>{t('workflows.editor.field.event_name')}</Label>
           <Input
             placeholder="например, projects.status_changed"
             value={workflowData.trigger_config?.eventName || ''}

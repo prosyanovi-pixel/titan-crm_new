@@ -268,17 +268,17 @@ export function ContractForm({ contract, onSuccess, onCancel, defaultProjectId, 
                   name="contractNumber"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t('contracts.form.fields.contract_number') || 'Номер договора'}</FormLabel>
+                      <FormLabel>{t('contracts.form.fields.contract_number')}</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder={t('contracts.form.placeholders.contract_number') || 'Автоматически при сохранении'}
+                          placeholder={t('contracts.form.placeholders.contract_number')}
                           {...field}
                           disabled={isLoadingForm}
                         />
                       </FormControl>
                       {!isEditing && (
                         <p className="text-[10px] text-muted-foreground mt-0.5">
-                          {t('contracts.form.hints.contract_number') || 'Оставьте пустым для автогенерации по шаблону'}
+                          {t('contracts.form.hints.contract_number')}
                         </p>
                       )}
                       <FormMessage />
@@ -298,7 +298,7 @@ export function ContractForm({ contract, onSuccess, onCancel, defaultProjectId, 
                           value={field.value ?? undefined}
                           onChange={(id) => field.onChange(id ?? null)}
                           options={contractorOptions}
-                          placeholder={t('contracts.sheet.placeholder.contractor') || 'Выберите контрагента'}
+                          placeholder={t('contracts.sheet.placeholder.contractor')}
                           onCreate={async (name) => {
                             const newId = await handleCreateContractor(name);
                             return newId;
@@ -322,7 +322,7 @@ export function ContractForm({ contract, onSuccess, onCancel, defaultProjectId, 
                           value={field.value ?? undefined}
                           onChange={(id) => field.onChange(id ?? null)}
                           options={projectOptions}
-                          placeholder={t('contracts.sheet.placeholder.project') || 'Выберите проект'}
+                          placeholder={t('contracts.sheet.placeholder.project')}
                         />
                       </FormControl>
                       <FormMessage />
@@ -336,7 +336,7 @@ export function ContractForm({ contract, onSuccess, onCancel, defaultProjectId, 
                   name="templateId"
                   render={({ field }) => (
                     <FormItem className={isEditing ? 'hidden' : ''}>
-                      <FormLabel>{t('contracts.form.fields.template') || 'Шаблон договора'}</FormLabel>
+                      <FormLabel>{t('contracts.form.fields.template')}</FormLabel>
                       <Select 
                         value={field.value ?? undefined} 
                         onValueChange={field.onChange}
@@ -344,7 +344,7 @@ export function ContractForm({ contract, onSuccess, onCancel, defaultProjectId, 
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder={t('contracts.form.placeholders.template') || 'Выберите шаблон'} />
+                            <SelectValue placeholder={t('contracts.form.placeholders.template')} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -373,7 +373,7 @@ export function ContractForm({ contract, onSuccess, onCancel, defaultProjectId, 
                           value={field.value ?? undefined}
                           onChange={(val) => field.onChange(val ?? null)}
                           options={userOptions}
-                          placeholder={t('contracts.sheet.placeholder.assigned_to') || 'Выберите исполнителя'}
+                          placeholder={t('contracts.sheet.placeholder.assigned_to')}
                         />
                       </FormControl>
                       <FormMessage />
@@ -388,13 +388,13 @@ export function ContractForm({ contract, onSuccess, onCancel, defaultProjectId, 
                 name="tags"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('contracts.form.fields.tags') || 'Теги'}</FormLabel>
+                    <FormLabel>{t('contracts.form.fields.tags')}</FormLabel>
                     <FormControl>
                       <TagMultiSelect
                         value={field.value || []}
                         onChange={field.onChange}
                         options={tags.map(t => ({ id: t.id, name: t.name, color: t.color }))}
-                        placeholder={t('contracts.form.placeholders.tags') || 'Выберите или создайте теги'}
+                        placeholder={t('contracts.form.placeholders.tags')}
                         onCreate={handleCreateTag}
                       />
                     </FormControl>
@@ -540,7 +540,7 @@ export function ContractForm({ contract, onSuccess, onCancel, defaultProjectId, 
                   name="startDate"
                   render={({ field }) => (
                     <FormItem className="col-span-2">
-                      <FormLabel>{t('contracts.form.fields.start_date') || 'Дата начала'}</FormLabel>
+                      <FormLabel>{t('contracts.form.fields.start_date')}</FormLabel>
                       <FormControl>
                         <Input type="date" {...field} value={field.value ?? ''} />
                       </FormControl>
@@ -554,7 +554,7 @@ export function ContractForm({ contract, onSuccess, onCancel, defaultProjectId, 
                   name="endDate"
                   render={({ field }) => (
                     <FormItem className="col-span-2">
-                      <FormLabel>{t('contracts.form.fields.end_date') || 'Дата окончания'}</FormLabel>
+                      <FormLabel>{t('contracts.form.fields.end_date')}</FormLabel>
                       <FormControl>
                         <Input type="date" {...field} value={field.value ?? ''} />
                       </FormControl>

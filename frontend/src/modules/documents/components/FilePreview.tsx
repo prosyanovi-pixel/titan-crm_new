@@ -65,7 +65,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({
 
     return (
       <div className="flex flex-col items-center justify-center py-20 bg-muted/30 rounded-lg border-2 border-dashed">
-        <p className="text-muted-foreground mb-4">{t("documents.preview.not_supported") || "Предпросмотр недоступен для этого типа файла"}</p>
+        <p className="text-muted-foreground mb-4">{t("documents.preview.not_supported")}</p>
         <Button onClick={() => onDownload(file)} variant="outline" className="gap-2">
           <Download className="w-4 h-4" />
           {t("common.download")}
@@ -92,7 +92,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({
               size="icon"
               className="h-8 w-8 text-muted-foreground hover:text-foreground"
               onClick={() => onDownload(file)}
-              title={t("common.download") || "Скачать"}
+              title={t("common.download")}
             >
               <Download className="w-4 h-4" />
             </Button>
@@ -101,7 +101,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({
               size="icon"
               className="h-8 w-8 text-muted-foreground hover:text-foreground"
               onClick={() => window.open(previewUrl, "_blank")}
-              title={t("common.open_new_tab") || "Открыть в новой вкладке"}
+              title={t("common.open_new_tab")}
             >
               <ExternalLink className="w-4 h-4" />
             </Button>

@@ -119,10 +119,10 @@ export function ProjectStageEditor() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="solid">{t('settings.badge_editor.variants.solid') || 'Solid'}</SelectItem>
-              <SelectItem value="soft">{t('settings.badge_editor.variants.soft') || 'Soft'}</SelectItem>
-              <SelectItem value="outline">{t('settings.badge_editor.variants.outline') || 'Outline'}</SelectItem>
-              <SelectItem value="ghost">{t('settings.badge_editor.variants.ghost') || 'Ghost'}</SelectItem>
+              <SelectItem value="solid">{t('settings.badge_editor.variants.solid')}</SelectItem>
+              <SelectItem value="soft">{t('settings.badge_editor.variants.soft')}</SelectItem>
+              <SelectItem value="outline">{t('settings.badge_editor.variants.outline')}</SelectItem>
+              <SelectItem value="ghost">{t('settings.badge_editor.variants.ghost')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -142,13 +142,13 @@ export function ProjectStageEditor() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="solid">{t('settings.badge_editor.variants.solid') || 'Solid'}</SelectItem>
-                      <SelectItem value="soft">{t('settings.badge_editor.variants.soft') || 'Soft'}</SelectItem>
-                      <SelectItem value="outline">{t('settings.badge_editor.variants.outline') || 'Outline'}</SelectItem>
-                      <SelectItem value="ghost">{t('settings.badge_editor.variants.ghost') || 'Ghost'}</SelectItem>
+                      <SelectItem value="solid">{t('settings.badge_editor.variants.solid')}</SelectItem>
+                      <SelectItem value="soft">{t('settings.badge_editor.variants.soft')}</SelectItem>
+                      <SelectItem value="outline">{t('settings.badge_editor.variants.outline')}</SelectItem>
+                      <SelectItem value="ghost">{t('settings.badge_editor.variants.ghost')}</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Button onClick={saveEdit}>{t('common.save') || 'Save'}</Button>
+                  <Button onClick={saveEdit}>{t('common.save')}</Button>
                 </div>
               ) : (
                 <div className="flex items-center gap-4 w-full">

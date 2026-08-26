@@ -144,7 +144,7 @@ export function useMailComposeLogic({
       }
     } catch (error) {
       console.error('Draft save error:', error);
-      toast.error(t('mail.errors.save_draft_failed') || 'Ошибка при сохранении черновика');
+      toast.error(t('mail.errors.save_draft_failed'));
     } finally {
       setSavingDraft(false);
     }
@@ -184,7 +184,7 @@ export function useMailComposeLogic({
     setBody(newBody);
     
     setIsTemplateDialogOpen(false);
-    toast.success(`${t('mail.filters.template_applied') || 'Применен шаблон'}: ${template.name}`);
+    toast.success(`${t('mail.filters.template_applied')}: ${template.name}`);
   };
 
   // Cleanup on close
@@ -207,17 +207,17 @@ export function useMailComposeLogic({
 
   const handleSend = async () => {
     if (!to.trim()) {
-      toast.error(t('mail.errors.to_required') || 'Укажите получателя');
+      toast.error(t('mail.errors.to_required'));
       return;
     }
 
     if (!subject.trim()) {
-      toast.error(t('mail.errors.subject_required') || 'Укажите тему');
+      toast.error(t('mail.errors.subject_required'));
       return;
     }
 
     if (!body.trim()) {
-      toast.error(t('mail.errors.body_required') || 'Введите текст письма');
+      toast.error(t('mail.errors.body_required'));
       return;
     }
 
@@ -242,7 +242,7 @@ export function useMailComposeLogic({
         attachmentIds: attachmentIds.length > 0 ? attachmentIds : undefined
       });
 
-      toast.success(t('mail.actions.sent_success') || 'Письмо отправлено!');
+      toast.success(t('mail.actions.sent_success'));
 
       onSent?.();
       onClose();
@@ -264,8 +264,8 @@ export function useMailComposeLogic({
 
     const confirmClose = await import('@/components/ui/confirm-dialog').then(m =>
       m.showConfirm({ 
-        title: t('mail.compose.close_draft_title') || 'Закрыть черновик', 
-        description: t('mail.compose.close_draft_desc') || 'Письмо не сохранено. Закрыть без сохранения?', 
+        title: t('mail.compose.close_draft_title'), 
+        description: t('mail.compose.close_draft_desc'), 
         confirmText: t('common.close'), 
         variant: 'destructive' 
       })

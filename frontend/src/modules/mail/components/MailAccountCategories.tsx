@@ -35,12 +35,12 @@ export function MailAccountCategories({
 
   const handleResetCategories = () => {
     onUpdateCategories(defaultCategories);
-    toast.success(t('common.reset_success') || 'Настройки сброшены');
+    toast.success(t('common.reset_success'));
   };
 
   const handleAddCategory = () => {
     const id = `custom-${Date.now()}`;
-    onUpdateCategories([...categories, { id, name: t('common.new_category') || 'Новая категория', keywords: '', icon: 'Tag' }]);
+    onUpdateCategories([...categories, { id, name: t('common.new_category'), keywords: '', icon: 'Tag' }]);
   };
 
   const handleUpdateCategory = (id: string, updates: any) => {
@@ -73,7 +73,7 @@ export function MailAccountCategories({
         <CardContent className="space-y-6">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800 flex gap-3">
             <Info className="w-5 h-5 shrink-0" />
-            <p>{t('mail.settings.categories.info_desc') || 'Эти настройки применяются локально. Письма будут автоматически фильтроваться на основе ключевых слов.'}</p>
+            <p>{t('mail.settings.categories.info_desc')}</p>
           </div>
 
           <div className="grid gap-6">

@@ -44,7 +44,7 @@ export function MailComposeForm({
       {accounts.length > 1 && fromAccountId && onFromAccountIdChange && (
         <div className="space-y-1">
           <Label htmlFor="fromAccountId" className="text-sm font-medium flex items-center gap-2">
-            <span>{t('mail.from') || 'От кого'}</span>
+            <span>{t('mail.from')}</span>
           </Label>
           <select
             id="fromAccountId"
@@ -125,7 +125,7 @@ export function MailComposeForm({
             onClick={() => onShowAdvancedChange(false)}
             className="text-xs text-muted-foreground hover:text-foreground"
           >
-            ✕ {t('common.hide') || 'Скрыть'} CC/BCC
+            ✕ {t('common.hide')} CC/BCC
           </Button>
         </div>
       )}

@@ -144,7 +144,7 @@ export function MailCompose(props: MailComposeProps) {
             </div>
             {replyTo && (
               <p className="text-xs text-muted-foreground mt-2">
-                {t('mail.reply_to_desc') || 'Ответ на письмо от'} {replyTo.sender} &lt;{replyTo.senderEmail}&gt;
+                {t('mail.reply_to_desc')} {replyTo.sender} &lt;{replyTo.senderEmail}&gt;
               </p>
             )}
           </div>
@@ -155,7 +155,7 @@ export function MailCompose(props: MailComposeProps) {
       <Dialog open={isTemplateDialogOpen} onOpenChange={setIsTemplateDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>{t('mail.filters.templates') || 'Выберите шаблон'}</DialogTitle>
+            <DialogTitle>{t('mail.filters.templates')}</DialogTitle>
             <DialogDescription>{t('mail.template_desc')}</DialogDescription>
           </DialogHeader>
           <div className="py-4">

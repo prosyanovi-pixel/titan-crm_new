@@ -173,7 +173,7 @@ function DroppableColumn({ column, contracts, onEdit, t }: DroppableColumnProps)
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-background border shadow-sm mb-3">
               <DollarSign className="w-5 h-5 text-muted-foreground/50" />
             </div>
-            <p className="text-sm font-medium">{t('general.no_data') || 'Нет договоров'}</p>
+            <p className="text-sm font-medium">{t('general.no_data')}</p>
             <p className="text-xs mt-1 text-muted-foreground/70">
               В этой колонке пока пусто
             </p>

@@ -77,7 +77,7 @@ export const VersionHistoryDialog: React.FC<VersionHistoryDialogProps> = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <History className="w-5 h-5 text-muted-foreground" />
-            {t("documents.versions.title") || "История версий"}: {file.name}
+            {t("documents.versions.title")}: {file.name}
           </DialogTitle>
         </DialogHeader>
 
@@ -88,7 +88,7 @@ export const VersionHistoryDialog: React.FC<VersionHistoryDialogProps> = ({
             </div>
           ) : versions.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">
-              {t("documents.versions.empty") || "История версий пуста"}
+              {t("documents.versions.empty")}
             </p>
           ) : (
             <div className="space-y-4">
@@ -104,7 +104,7 @@ export const VersionHistoryDialog: React.FC<VersionHistoryDialogProps> = ({
                       <span className="font-bold text-sm">v{v.version_number}</span>
                       {v.version_number === versions[0].version_number && (
                         <span className="text-[10px] bg-primary text-primary-foreground px-1.5 py-0.5 rounded-full uppercase font-bold">
-                          {t("documents.versions.current") || "Текущая"}
+                          {t("documents.versions.current")}
                         </span>
                       )}
                       <span className="text-xs text-muted-foreground">{formatBytes(Number(v.size))}</span>

@@ -115,7 +115,7 @@ export function useMailAccountSettingsLogic(accountId?: string, onSave?: () => v
     try {
       setLoadingFolders(true);
       const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error(t('common.timeout') || "Таймаут (45с)")), 45000)
+        setTimeout(() => reject(new Error(t('common.timeout'))), 45000)
       );
 
       const foldersPromise = api.get(`/mail/folders/${id}`);
@@ -141,7 +141,7 @@ export function useMailAccountSettingsLogic(accountId?: string, onSave?: () => v
       setImapFolders(mappedImapFolders);
     } catch (error: unknown) {
       console.error('Error loading folders:', error);
-      toast.error(getErrorMessage(error, t('mail.errors.load_folders_failed') || 'Не удалось загрузить папки'));
+      toast.error(getErrorMessage(error, t('mail.errors.load_folders_failed')));
     } finally {
       setLoadingFolders(false);
     }
@@ -211,14 +211,14 @@ export function useMailAccountSettingsLogic(accountId?: string, onSave?: () => v
 
   const handleClearFolder = async (folder: IMAPFolder) => {
     if (!folder.matchedFolderId) {
-      toast.error(t('mail.errors.folder_not_synced') || "Эту папку нельзя очистить");
+      toast.error(t('mail.errors.folder_not_synced'));
       return;
     }
 
     const confirmed = await showConfirm({
-      title: t('mail.settings.clear_folder_title') || 'Очистить папку локально',
-      description: t('mail.settings.clear_folder_desc', { name: folder.name }) || `Вы уверены, что хотите удалить все письма в папке "${folder.name}"?`,
-      confirmText: t('common.clear') || 'Очистить',
+      title: t('mail.settings.clear_folder_title'),
+      description: t('mail.settings.clear_folder_desc', { name: folder.name }),
+      confirmText: t('common.clear'),
       variant: 'destructive',
     });
 
@@ -279,7 +279,7 @@ export function useMailAccountSettingsLogic(accountId?: string, onSave?: () => v
       if (response.results) {
         const { imap, smtp } = response.results;
         if (imap.success && smtp.success) {
-          toast.success(t('mail.settings.test_success') || "Все подключения успешны!");
+          toast.success(t('mail.settings.test_success'));
           setConnectionTested(true);
           if (isEditing && accountId) await loadFoldersForAccount(accountId);
         } else {

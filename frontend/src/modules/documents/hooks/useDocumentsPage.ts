@@ -140,7 +140,7 @@ export function useDocumentsPage() {
 
   const currentFolderName = useMemo(() => {
     if (filter === "trash") return t("documents.categories.trash");
-    if (filter === "templates") return t("generated.shablony_avtomatizatsii") || "Шаблоны автоматизации";
+    if (filter === "templates") return t("documents.filters.templates");
     if (!currentFolderId) return t("documents.categories.all");
     const folder = files.find((f) => f.id === currentFolderId);
     if (folder) return folder.name;
