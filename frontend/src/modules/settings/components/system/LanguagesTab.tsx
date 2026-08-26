@@ -8,6 +8,7 @@ import { Plus, Trash, Globe, Check } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
 import { useConfirm } from '@/components/ui/confirm-dialog';
 import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
 
 export interface ContentLanguage {
   code: string;
@@ -24,10 +25,12 @@ export function LanguagesTab() {
   const [newCode, setNewCode] = useState('');
   const [newName, setNewName] = useState('');
 
-  const languages: ContentLanguage[] = settings?.contentLanguages || [
-    { code: 'ru', name: 'Русский', isDefault: true },
-    { code: 'en', name: 'English', isDefault: false }
+  const DEFAULT_CONTENT_LANGUAGES: ContentLanguage[] = [
+    { code: 'ru', name: t('settings.languages_tab.russian'), isDefault: true },
+    { code: 'en', name: t('settings.languages_tab.english'), isDefault: false }
   ];
+
+  const languages: ContentLanguage[] = settings?.contentLanguages || DEFAULT_CONTENT_LANGUAGES;
 
   const handleAdd = () => {
     if (!newCode.trim() || !newName.trim()) return;
@@ -46,13 +49,13 @@ export function LanguagesTab() {
   const handleRemove = async (code: string) => {
     const lang = languages.find(l => l.code === code);
     if (lang?.isDefault) {
-      alert("Нельзя удалить язык по умолчанию");
+      alert(t('settings.languages_tab.cannot_delete_default'));
       return;
     }
 
     const yes = await confirm({
-      title: "Удалить язык?",
-      description: "Вы уверены? Это может скрыть переводы на этом языке в интерфейсе."
+      title: t('settings.languages_tab.delete_title'),
+      description: t('settings.languages_tab.delete_desc')
     });
 
     if (yes) {
@@ -74,7 +77,7 @@ export function LanguagesTab() {
     updateSettingsMutation.mutate({ moduleId: 'system', settings: { ...settings, contentLanguages: nextLangs } });
   };
 
-  if (isLoading) return <div>Загрузка...</div>;
+  if (isLoading) return <div>{t('common.loading')}...</div>;
 
   return (
     <Card>
@@ -90,11 +93,11 @@ export function LanguagesTab() {
       <CardContent className="space-y-6">
         <div className="flex gap-4 items-end">
           <div className="space-y-1">
-            <label className="text-sm font-medium">Код языка (например, uz)</label>
+            <label className="text-sm font-medium">{t('settings.languages_tab.code_label')}</label>
             <Input value={newCode} onChange={e => setNewCode(e.target.value)} placeholder="uz" className="w-32" />
           </div>
           <div className="space-y-1 flex-1">
-            <label className="text-sm font-medium">Название (например, O'zbek)</label>
+            <label className="text-sm font-medium">{t('settings.languages_tab.name_label')}</label>
             <Input value={newName} onChange={e => setNewName(e.target.value)} placeholder="O'zbek" />
           </div>
           <Button onClick={handleAdd} disabled={!newCode || !newName}>
@@ -105,10 +108,10 @@ export function LanguagesTab() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Код</TableHead>
-              <TableHead>Название</TableHead>
-              <TableHead>Статус</TableHead>
-              <TableHead className="text-right">Действия</TableHead>
+              <TableHead className="w-[100px]">{t('settings.languages_tab.code')}</TableHead>
+              <TableHead>{t('common.name')}</TableHead>
+              <TableHead>{t('common.status')}</TableHead>
+              <TableHead className="text-right">{t('common.actions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -117,7 +120,7 @@ export function LanguagesTab() {
                 <TableCell className="font-mono">{lang.code}</TableCell>
                 <TableCell>{lang.name}</TableCell>
                 <TableCell>
-                  {lang.isDefault && <Badge variant="default">По умолчанию</Badge>}
+                  {lang.isDefault && <Badge variant="default">{t('settings.languages_tab.default_badge')}</Badge>}
                 </TableCell>
                 <TableCell className="text-right">
                   {!lang.isDefault && (

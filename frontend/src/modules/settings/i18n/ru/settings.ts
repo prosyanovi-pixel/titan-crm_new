@@ -1493,5 +1493,16 @@ export const settings = {
     trash_settings: "Настройки корзины",
     enable_auto_clean: "Включить автоматическую очистку",
     retention_days: "Хранить удаленные файлы (дней)"
+  },
+  languages_tab: {
+    russian: "Русский",
+    english: "Английский",
+    cannot_delete_default: "Нельзя удалить язык по умолчанию",
+    delete_title: "Удалить язык?",
+    delete_desc: "Вы уверены? Это может скрыть переводы на этом языке в интерфейсе.",
+    code_label: "Код языка (например, uz)",
+    name_label: "Название (например, O'zbek)",
+    code: "Код",
+    default_badge: "По умолчанию"
   }
 };
