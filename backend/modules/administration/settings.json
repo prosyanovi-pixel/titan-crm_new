@@ -1,0 +1,6 @@
+{
+  "id": "administration",
+  "name": "Администрирование",
+  "icon": "ShieldAlert",
+  "prefix": "/api/admin"
+}

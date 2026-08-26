@@ -1,0 +1,60 @@
+codecov:
+  require_ci_to_pass: true
+  notify:
+    wait_for_ci: true
+
+coverage:
+  precision: 2
+  round: down
+  range: "60...80"
+  
+  status:
+    project:
+      default:
+        target: 60%
+        threshold: 5%
+        base: auto
+        if_no_uploads: error
+        if_not_found: success
+        if_ci_failed: error
+        only_pulls: false
+        flags:
+          - frontend
+        paths:
+          - frontend/src
+    patch:
+      default:
+        target: 70%
+        threshold: 10%
+        base: auto
+        if_no_uploads: error
+        if_not_found: success
+        if_ci_failed: warning
+        only_pulls: true
+
+parsers:
+  javascript:
+    enable_partials: yes
+
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false
+  require_base: false
+  require_head: true
+  hide_project_coverage: false
+  
+flags:
+  frontend:
+    paths:
+      - frontend/src
+    carryforward: true
+
+ignore:
+  - "frontend/src/**/*.test.ts"
+  - "frontend/src/**/*.spec.ts"
+  - "frontend/src/**/__tests__/**"
+  - "frontend/src/test/**"
+  - "frontend/src/**/*.d.ts"
+  - "frontend/src/**/*.stories.tsx"
+  - "frontend/node_modules/**"

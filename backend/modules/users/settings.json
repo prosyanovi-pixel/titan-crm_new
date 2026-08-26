@@ -1,0 +1,6 @@
+{
+  "id": "users",
+  "name": "Пользователи",
+  "icon": "Users",
+  "prefix": "/api/users"
+}

@@ -1,0 +1,50 @@
+export const templates = {
+  title: "Шаблоны документов",
+  subtitle: "Управление шаблонами для генерации документов (договоры, счета, акты)",
+  upload: "Создать шаблон",
+  editTitle: "Редактирование шаблона",
+  uploadTitle: "Создание нового шаблона",
+  module: "Модуль",
+  namePlaceholder: "Например: Договор оказания услуг",
+  file: "Файл шаблона (.docx)",
+  fileHelp: "Используйте плейсхолдеры в фигурных скобках, например {CONTRACT_NUMBER}",
+  fileReplace: "Заменить файл шаблона (.docx)",
+  fileReplaceHint: "Оставьте пустым, если не хотите изменять текущий файл.",
+  uploadFile: "Загрузить файл",
+  createEditor: "Создать в редакторе",
+  editorText: "Текст шаблона",
+  variables: "Доступные переменные",
+  variablesHelp: "Кликните на переменную, чтобы скопировать её",
+  copied: "Скопировано",
+  variablesEditor: {
+    title: "Переменные шаблонов"
+  },
+  hideVariables: "Скрыть переменные",
+  showVariables: "Показать переменные",
+  generate: "Сгенерировать документ",
+  generateError: "Ошибка при генерации документа",
+  generate_document_title: "Сгенерировать документ по шаблону",
+  selectTemplate: "Выберите шаблон",
+  select_template: "Выберите шаблон",
+  generate_hint: "Файл будет создан и прикреплен во вкладку \"Документы\" сразу после сохранения",
+  insertTemplate: "Вставить шаблон",
+  noTemplates: "Нет доступных шаблонов",
+  downloading: "Скачивание...",
+  accessRights: "Права доступа",
+  accessPrivate: "Личный (доступен только мне)",
+  accessShared: "Общий (доступен другим)",
+  accessAllOrSelect: "Кому доступен шаблон?",
+  testGenerate: "Тестовая генерация",
+  testGenerateHelp: "Введите ID сущности (например, ID проекта или договора), чтобы сгенерировать тестовый документ без его сохранения в систему.",
+  type: "Тип",
+  errors: {
+    not_found: "Шаблон не найден",
+    accessDenied: "У вас нет прав на создание шаблонов"
+  },
+  moduleNames: {
+    contracts: "Договоры",
+    projects: "Проекты",
+    legal_cases: "Судебные дела",
+    mail: "Почта"
+  }
+};

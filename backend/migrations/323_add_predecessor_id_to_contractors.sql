@@ -1,0 +1,1 @@
+ALTER TABLE contractors ADD COLUMN predecessor_id INTEGER REFERENCES contractors(id) ON DELETE SET NULL; COMMENT ON COLUMN contractors.predecessor_id IS 'ID предыдущего контрагента (в случае смены юридической формы)';

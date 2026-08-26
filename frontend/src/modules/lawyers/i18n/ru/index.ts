@@ -1,0 +1,1 @@
+export { legal } from './lawyers';

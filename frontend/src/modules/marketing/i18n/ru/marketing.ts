@@ -1,0 +1,60 @@
+export const marketing = {
+  module: {
+    title: 'Маркетинг',
+    description: 'Управление маркетинговыми кампаниями',
+    subtitle: 'Управление маркетинговыми кампаниями и бюджетами',
+  },
+  campaigns: {
+    title: 'Маркетинговые кампании',
+    add: 'Добавить кампанию',
+    name: 'Название',
+    description: 'Описание',
+    status: 'Статус',
+    type: 'Тип',
+    budget: 'Бюджет',
+    actual_cost: 'Фактическая стоимость',
+    start_date: 'Дата начала',
+    end_date: 'Дата окончания',
+    dates: 'Даты',
+    target_audience: 'Целевая аудитория',
+
+    active_campaigns: 'Активные кампании',
+    campaigns_in_progress: 'Кампаний в процессе реализации',
+    total_budget: 'Общий бюджет',
+    planned_expenses: 'Запланированные расходы',
+    actual_cost_label: 'Фактический расход',
+    of_total_budget: 'от общего бюджета',
+
+    all_statuses: 'Все статусы',
+    campaign_type: 'Тип кампании',
+    all_types: 'Все типы',
+
+    edit_campaign: 'Редактировать кампанию',
+    create_campaign: 'Создать маркетинговую кампанию',
+    form_description: 'Заполните детали о маркетинговой кампании. Нажмите сохранить по завершении.',
+    campaign_name_label: 'Название кампании *',
+    placeholder_name: 'Напр. Летняя распродажа 2026',
+    placeholder_description: 'Опишите цели или суть кампании...',
+    select_status: 'Выберите статус',
+    select_type: 'Выберите тип',
+    budget_rub: 'Бюджет (₽)',
+    actual_cost_rub: 'Фактический расход (₽)',
+    payments_count: '{count} платежей',
+    placeholder_target_audience: 'Напр. Мужчины 25-45, IT специалисты',
+  },
+  campaign: {
+    label: 'Маркетинговая кампания',
+  },
+  settings: {
+    statuses: 'Статусы кампаний',
+    types: 'Типы кампаний',
+    no_statuses: 'Нет статусов',
+    no_types: 'Нет типов',
+  },
+  toast: {
+    error_details: 'Ошибка загрузки деталей кампании',
+  },
+  confirm: {
+    delete_description: 'Удалить маркетинговую кампанию "{name}"?',
+  },
+};

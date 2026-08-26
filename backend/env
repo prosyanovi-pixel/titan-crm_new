@@ -1,0 +1,43 @@
+# Порт сервера (Backend)
+PORT=5001
+
+# Базовый URL API (для скриптов бэкапа)
+API_URL=http://localhost:5001
+# Базовый URL фронтенда (для ссылок в письмах)
+FRONTEND_URL=http://localhost:3000
+
+# Настройки Базы Данных (PostgreSQL)
+DB_HOST=localhost
+DB_PORT=5432  
+DB_NAME=titancrm1
+DB_USER=myuser
+DB_PASSWORD=mysecretpassword
+
+# Пути к утилитам PostgreSQL (для Windows/Mac/Linux)
+# Если PostgreSQL установлен и добавлен в PATH, оставьте пустым или используйте 'pg_dump' и 'psql'
+# Для Windows с полной установкой PostgreSQL:
+# PG_DUMP_PATH=C:\Program Files\PostgreSQL\16\bin\pg_dump.exe
+# PSQL_PATH=C:\Program Files\PostgreSQL\16\bin\psql.exe
+#PG_DUMP_PATH=pg_dump
+#PSQL_PATH=psql
+# Пути к pg_dump и psql — ОСТАВЬТЕ ПУСТЫМИ для автоопределения.
+# Скрипт сам найдёт утилиты на Windows, macOS (Postgres.app / Homebrew) и Linux.
+# Укажите вручную только если автоопределение не работает:
+#PG_DUMP_PATH=
+#PSQL_PATH=
+
+
+# Безопасность
+JWT_SECRET=change_this_secret_key_to_something_secure
+ENCRYPTION_KEY=mail-encryption-key-2024-change-this
+DISABLE_AUTH=false
+
+# Логирование (info, debug, error)
+LOG_LEVEL=info
+
+# Настройки почты (SMTP) - Опционально
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your_email@gmail.com
+SMTP_PASS=your_app_password
+SMTP_FROM="TITAN CRM <no-reply@titan.com>"

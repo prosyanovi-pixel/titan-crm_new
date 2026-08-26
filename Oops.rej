@@ -1,0 +1,23 @@
+@@ -35,2 +44,22 @@
+   const { languages, defaultLanguage } = useContentLanguages();
+   const [translations, setTranslations] = useState<Record<string, {name: string, description: string}>>({});
++
++  useEffect(() => {
++    if (open && product) {
++      setName(product.name || "");
++      setDescription(product.description || "");
++      setSkuInternal(product.sku_internal || "");
++      setSkuExternal(product.sku_external || "");
++      setPurchasePrice(product.purchase_price?.toString() || "");
++      setVatRate(product.vat_rate?.toString() || "0");
++      setCategoryId(product.category_id?.toString() || "");
++      setStatus(product.status || "active");
++      setType(product.type || "");
++      setTags(product.tags || []);
++      setCharacteristics(product.characteristics || []);
++      setImageUrls((product.images || []).join('\n'));
++      setTranslations(product.translations || {});
++    } else if (open && !product) {
++      resetForm();
++    }
++  }, [open, product]);

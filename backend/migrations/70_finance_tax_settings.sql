@@ -1,0 +1,354 @@
+-- Migration 70: Finance Tax Settings
+-- Описание: Создание таблиц для настроек налогообложения, методов распределения и накладных расходов
+-- Дата: 2026-03-30
+-- Зависимости: 69_projects_finance_phase1.sql, 68_create_module_settings_table.sql
+
+-- ============================================================
+-- ЧАСТЬ 1: Таблица finance_tax_regimes (режимы налогообложения)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS finance_tax_regimes (
+    id INTEGER PRIMARY KEY,
+    code VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
+    -- Типы налогов, применяемых в режиме
+    has_vat BOOLEAN DEFAULT FALSE,           -- НДС
+    has_profit_tax BOOLEAN DEFAULT FALSE,    -- Налог на прибыль
+    has_usn_tax BOOLEAN DEFAULT FALSE,       -- УСН налог
+    has_insurance BOOLEAN DEFAULT FALSE,     -- Страховые взносы
+    has_ndfl BOOLEAN DEFAULT FALSE,          -- НДФЛ
+    -- Настройки по умолчанию
+    default_vat_rate DECIMAL(5,2) DEFAULT 20.00,
+    default_profit_tax_rate DECIMAL(5,2) DEFAULT 20.00,
+    default_usn_rate DECIMAL(5,2) DEFAULT 6.00,
+    default_insurance_rate DECIMAL(5,2) DEFAULT 30.00,
+    default_ndfl_rate DECIMAL(5,2) DEFAULT 13.00,
+    -- Системные поля
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Индексы
+CREATE INDEX IF NOT EXISTS idx_finance_tax_regimes_code ON finance_tax_regimes(code);
+CREATE INDEX IF NOT EXISTS idx_finance_tax_regimes_active ON finance_tax_regimes(is_active);
+
+-- Комментарии
+COMMENT ON TABLE finance_tax_regimes IS 'Режимы налогообложения (ОСН, УСН, ЕНВД и т.д.)';
+COMMENT ON COLUMN finance_tax_regimes.code IS 'Код режима (OSN, USN_INCOME, USN_INCOME_EXPENSES)';
+COMMENT ON COLUMN finance_tax_regimes.name IS 'Название режима';
+COMMENT ON COLUMN finance_tax_regimes.has_vat IS 'Применяется ли НДС';
+COMMENT ON COLUMN finance_tax_regimes.has_profit_tax IS 'Применяется ли налог на прибыль';
+COMMENT ON COLUMN finance_tax_regimes.has_usn_tax IS 'Применяется ли УСН';
+COMMENT ON COLUMN finance_tax_regimes.has_insurance IS 'Применяются ли страховые взносы';
+COMMENT ON COLUMN finance_tax_regimes.has_ndfl IS 'Удерживается ли НДФЛ';
+
+-- ============================================================
+-- ЧАСТЬ 2: Таблица finance_tax_rates (ставки налогов)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS finance_tax_rates (
+    id INTEGER PRIMARY KEY,
+    tax_regime_id INTEGER REFERENCES finance_tax_regimes(id) ON DELETE CASCADE,
+    tax_type VARCHAR(50) NOT NULL,           -- vat, profit_tax, usn, insurance, ndfl
+    name VARCHAR(255) NOT NULL,
+    rate DECIMAL(5,2) NOT NULL,              -- Ставка в процентах
+    is_fixed BOOLEAN DEFAULT FALSE,          -- Фиксированная сумма вместо процента
+    fixed_amount DECIMAL(15,2) DEFAULT 0,    -- Фиксированная сумма
+    min_base DECIMAL(15,2),                  -- Минимальная база для применения
+    max_base DECIMAL(15,2),                  -- Максимальная база для применения
+    description TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
+    effective_from DATE,                     -- Дата начала действия
+    effective_to DATE,                       -- Дата окончания действия
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Индексы
+CREATE INDEX IF NOT EXISTS idx_finance_tax_rates_regime_id ON finance_tax_rates(tax_regime_id);
+CREATE INDEX IF NOT EXISTS idx_finance_tax_rates_type ON finance_tax_rates(tax_type);
+CREATE INDEX IF NOT EXISTS idx_finance_tax_rates_active ON finance_tax_rates(is_active);
+
+-- Комментарии
+COMMENT ON TABLE finance_tax_rates IS 'Ставки налогов для режимов налогообложения';
+COMMENT ON COLUMN finance_tax_rates.tax_regime_id IS 'Ссылка на режим налогообложения';
+COMMENT ON COLUMN finance_tax_rates.tax_type IS 'Тип налога (vat, profit_tax, usn, insurance, ndfl)';
+COMMENT ON COLUMN finance_tax_rates.rate IS 'Ставка налога в процентах';
+COMMENT ON COLUMN finance_tax_rates.is_fixed IS 'Фиксированная сумма вместо процента';
+COMMENT ON COLUMN finance_tax_rates.effective_from IS 'Дата начала действия ставки';
+COMMENT ON COLUMN finance_tax_rates.effective_to IS 'Дата окончания действия ставки';
+
+-- ============================================================
+-- ЧАСТЬ 3: Таблица finance_allocation_methods (методы распределения накладных)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS finance_allocation_methods (
+    id INTEGER PRIMARY KEY,
+    code VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    allocation_base VARCHAR(50) NOT NULL CHECK (allocation_base IN (
+        'direct_costs',      -- Прямые затраты
+        'labor_costs',       -- ФОТ
+        'revenue',           -- Выручка
+        'headcount',         -- Численность
+        'square',            -- Площадь
+        'custom'             -- Пользовательская база
+    )),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Индексы
+CREATE INDEX IF NOT EXISTS idx_finance_allocation_methods_code ON finance_allocation_methods(code);
+CREATE INDEX IF NOT EXISTS idx_finance_allocation_methods_active ON finance_allocation_methods(is_active);
+
+-- Комментарии
+COMMENT ON TABLE finance_allocation_methods IS 'Методы распределения накладных расходов';
+COMMENT ON COLUMN finance_allocation_methods.allocation_base IS 'База распределения (direct_costs, labor_costs, revenue, etc.)';
+
+-- ============================================================
+-- ЧАСТЬ 4: Таблица finance_overhead_articles (статьи накладных расходов)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS finance_overhead_articles (
+    id INTEGER PRIMARY KEY,
+    parent_id INTEGER REFERENCES finance_overhead_articles(id) ON DELETE CASCADE,
+    code VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    article_type VARCHAR(50) DEFAULT 'general' CHECK (article_type IN (
+        'general',          -- Общие накладные
+        'administrative',   -- Административные
+        'commercial',       -- Коммерческие
+        'production',       -- Производственные
+        'other'             -- Прочие
+    )),
+    allocation_method_id INTEGER REFERENCES finance_allocation_methods(id) ON DELETE SET NULL,
+    is_direct BOOLEAN DEFAULT FALSE,       -- Прямые расходы (не распределяются)
+    is_active BOOLEAN DEFAULT TRUE,
+    default_amount DECIMAL(15,2) DEFAULT 0,
+    priority INTEGER DEFAULT 0,            -- Приоритет распределения
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Индексы
+CREATE INDEX IF NOT EXISTS idx_finance_overhead_articles_parent ON finance_overhead_articles(parent_id);
+CREATE INDEX IF NOT EXISTS idx_finance_overhead_articles_code ON finance_overhead_articles(code);
+CREATE INDEX IF NOT EXISTS idx_finance_overhead_articles_type ON finance_overhead_articles(article_type);
+CREATE INDEX IF NOT EXISTS idx_finance_overhead_articles_active ON finance_overhead_articles(is_active);
+
+-- Комментарии
+COMMENT ON TABLE finance_overhead_articles IS 'Статьи накладных расходов';
+COMMENT ON COLUMN finance_overhead_articles.parent_id IS 'Родительская статья (для иерархии)';
+COMMENT ON COLUMN finance_overhead_articles.article_type IS 'Тип накладных расходов';
+COMMENT ON COLUMN finance_overhead_articles.allocation_method_id IS 'Метод распределения';
+COMMENT ON COLUMN finance_overhead_articles.is_direct IS 'Прямые расходы (не распределяются)';
+
+-- ============================================================
+-- ЧАСТЬ 5: Таблица finance_defaults_settings (настройки по умолчанию)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS finance_defaults_settings (
+    id INTEGER PRIMARY KEY DEFAULT 1,
+    default_tax_regime_id INTEGER REFERENCES finance_tax_regimes(id) ON DELETE SET NULL,
+    default_allocation_method_id INTEGER REFERENCES finance_allocation_methods(id) ON DELETE SET NULL,
+    default_currency VARCHAR(3) DEFAULT 'RUB',
+    default_payment_terms_days INTEGER DEFAULT 30,
+    auto_calculate_vat BOOLEAN DEFAULT TRUE,
+    auto_calculate_taxes BOOLEAN DEFAULT TRUE,
+    auto_allocate_overhead BOOLEAN DEFAULT FALSE,
+    overhead_allocation_frequency VARCHAR(20) DEFAULT 'monthly' CHECK (overhead_allocation_frequency IN (
+        'daily', 'weekly', 'monthly', 'quarterly', 'yearly'
+    )),
+    min_profitability_threshold DECIMAL(5,2) DEFAULT 10.00,  -- Мин. рентабельность %
+    max_budget_variance DECIMAL(5,2) DEFAULT 20.00,          -- Макс. отклонение бюджета %
+    enable_budget_alerts BOOLEAN DEFAULT TRUE,
+    enable_overdue_alerts BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Ограничение: только одна запись настроек по умолчанию
+CREATE UNIQUE INDEX IF NOT EXISTS idx_finance_defaults_single ON finance_defaults_settings((id IS NOT NULL));
+
+-- Комментарии
+COMMENT ON TABLE finance_defaults_settings IS 'Настройки модуля Finance по умолчанию';
+COMMENT ON COLUMN finance_defaults_settings.default_tax_regime_id IS 'Режим налогообложения по умолчанию';
+COMMENT ON COLUMN finance_defaults_settings.default_allocation_method_id IS 'Метод распределения накладных по умолчанию';
+COMMENT ON COLUMN finance_defaults_settings.auto_calculate_vat IS 'Автоматически рассчитывать НДС';
+COMMENT ON COLUMN finance_defaults_settings.auto_calculate_taxes IS 'Автоматически рассчитывать налоги';
+COMMENT ON COLUMN finance_defaults_settings.auto_allocate_overhead IS 'Автоматически распределять накладные';
+COMMENT ON COLUMN finance_defaults_settings.overhead_allocation_frequency IS 'Частота распределения накладных';
+
+-- ============================================================
+-- ЧАСТЬ 6: Связь с finance_expense_categories
+-- ============================================================
+
+-- Добавляем поля в таблицу finance_expense_categories (если не существуют)
+DO $$
+BEGIN
+    -- is_overhead - флаг накладного расхода
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'finance_expense_categories' AND column_name = 'is_overhead') THEN
+        ALTER TABLE finance_expense_categories ADD COLUMN is_overhead BOOLEAN DEFAULT FALSE;
+    END IF;
+    
+    -- overhead_article_id - ссылка на статью накладных
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'finance_expense_categories' AND column_name = 'overhead_article_id') THEN
+        ALTER TABLE finance_expense_categories ADD COLUMN overhead_article_id INTEGER REFERENCES finance_overhead_articles(id) ON DELETE SET NULL;
+    END IF;
+    
+    -- is_direct - прямые или косвенные расходы
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'finance_expense_categories' AND column_name = 'is_direct') THEN
+        ALTER TABLE finance_expense_categories ADD COLUMN is_direct BOOLEAN DEFAULT TRUE;
+    END IF;
+END $$;
+
+-- ============================================================
+-- ЧАСТЬ 7: Триггеры для обновления updated_at
+-- ============================================================
+
+-- Триггеры для finance_tax_regimes
+DROP TRIGGER IF EXISTS update_finance_tax_regimes_updated_at ON finance_tax_regimes;
+CREATE TRIGGER update_finance_tax_regimes_updated_at
+    BEFORE UPDATE ON finance_tax_regimes
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Триггеры для finance_tax_rates
+DROP TRIGGER IF EXISTS update_finance_tax_rates_updated_at ON finance_tax_rates;
+CREATE TRIGGER update_finance_tax_rates_updated_at
+    BEFORE UPDATE ON finance_tax_rates
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Триггеры для finance_allocation_methods
+DROP TRIGGER IF EXISTS update_finance_allocation_methods_updated_at ON finance_allocation_methods;
+CREATE TRIGGER update_finance_allocation_methods_updated_at
+    BEFORE UPDATE ON finance_allocation_methods
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Триггеры для finance_overhead_articles
+DROP TRIGGER IF EXISTS update_finance_overhead_articles_updated_at ON finance_overhead_articles;
+CREATE TRIGGER update_finance_overhead_articles_updated_at
+    BEFORE UPDATE ON finance_overhead_articles
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Триггеры для finance_defaults_settings
+DROP TRIGGER IF EXISTS update_finance_defaults_settings_updated_at ON finance_defaults_settings;
+CREATE TRIGGER update_finance_defaults_settings_updated_at
+    BEFORE UPDATE ON finance_defaults_settings
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================================
+-- ЧАСТЬ 8: Начальные данные
+-- ============================================================
+
+-- Режимы налогообложения
+INSERT INTO finance_tax_regimes (id, code, name, description, has_vat, has_profit_tax, has_usn_tax, has_insurance, has_ndfl, default_vat_rate, default_profit_tax_rate, default_usn_rate, default_insurance_rate, default_ndfl_rate)
+VALUES
+    (1, 'OSN', 'Общая система налогообложения (ОСН)', 'Полная система с НДС и налогом на прибыль', TRUE, TRUE, FALSE, TRUE, TRUE, 20.00, 20.00, 0, 30.00, 13.00),
+    (2, 'USN_INCOME', 'УСН "Доходы"', 'Упрощённая система, 6% от доходов', FALSE, FALSE, TRUE, TRUE, TRUE, 0, 0, 6.00, 30.00, 13.00),
+    (3, 'USN_INCOME_EXPENSES', 'УСН "Доходы минус расходы"', 'Упрощённая система, 15% от прибыли', FALSE, FALSE, TRUE, TRUE, TRUE, 0, 0, 15.00, 30.00, 13.00),
+    (4, 'ESKH', 'Единый сельскохозяйственный налог (ЕСХН)', 'Специальный режим для сельхозпроизводителей', FALSE, FALSE, TRUE, TRUE, TRUE, 0, 0, 6.00, 30.00, 13.00)
+ON CONFLICT (code) DO NOTHING;
+
+-- Методы распределения накладных
+INSERT INTO finance_allocation_methods (id, code, name, description, allocation_base, is_active)
+VALUES
+    (1, 'DIRECT_COSTS', 'Пропорционально прямым затратам', 'Распределение пропорционально прямым затратам проекта', 'direct_costs', TRUE),
+    (2, 'LABOR_COSTS', 'Пропорционально ФОТ', 'Распределение пропорционально фонду оплаты труда', 'labor_costs', TRUE),
+    (3, 'REVENUE', 'Пропорционально выручке', 'Распределение пропорционально выручке проекта', 'revenue', TRUE),
+    (4, 'HEADCOUNT', 'Пропорционально численности', 'Распределение пропорционально численности сотрудников', 'headcount', TRUE),
+    (5, 'EQUAL', 'Равномерно', 'Равномерное распределение между всеми проектами', 'custom', TRUE)
+ON CONFLICT (code) DO NOTHING;
+
+-- Статьи накладных расходов (примеры)
+INSERT INTO finance_overhead_articles (id, parent_id, code, name, description, article_type, allocation_method_id, is_direct, is_active)
+VALUES
+    (1, NULL, 'ADMIN', 'Административные расходы', 'Общие административные расходы компании', 'administrative', 1, FALSE, TRUE),
+    (2, 1, 'ADMIN_RENT', 'Аренда офиса', 'Расходы на аренду помещений', 'administrative', 1, FALSE, TRUE),
+    (3, 1, 'ADMIN_UTILITIES', 'Коммунальные услуги', 'Электричество, вода, отопление', 'administrative', 1, FALSE, TRUE),
+    (4, 1, 'ADMIN_OFFICE', 'Офисные расходы', 'Канцтовары, хозтовары', 'administrative', 1, FALSE, TRUE),
+    (5, NULL, 'HR', 'Расходы на персонал', 'Общие расходы на персонал', 'administrative', 2, FALSE, TRUE),
+    (6, 5, 'HR_TRAINING', 'Обучение сотрудников', 'Курсы, тренинги, конференции', 'administrative', 2, FALSE, TRUE),
+    (7, 5, 'HR_MEDICAL', 'Медицинское страхование', 'ДМС и медобслуживание', 'administrative', 2, FALSE, TRUE),
+    (8, NULL, 'IT', 'IT инфраструктура', 'Расходы на IT', 'production', 3, FALSE, TRUE),
+    (9, 8, 'IT_SOFTWARE', 'ПО и лицензии', 'Подписки на ПО, лицензии', 'production', 3, FALSE, TRUE),
+    (10, 8, 'IT_HOSTING', 'Хостинг и серверы', 'Облачные сервисы, хостинг', 'production', 3, FALSE, TRUE),
+    (11, NULL, 'MARKETING', 'Маркетинг и реклама', 'Рекламные кампании, продвижение', 'commercial', 3, FALSE, TRUE),
+    (12, NULL, 'LOGISTICS', 'Логистика', 'Транспортные расходы, ГСМ', 'general', 1, FALSE, TRUE)
+ON CONFLICT (code) DO NOTHING;
+
+-- Настройки по умолчанию
+INSERT INTO finance_defaults_settings (id, default_tax_regime_id, default_allocation_method_id, default_currency, default_payment_terms_days, auto_calculate_vat, auto_calculate_taxes, auto_allocate_overhead, overhead_allocation_frequency, min_profitability_threshold, max_budget_variance, enable_budget_alerts, enable_overdue_alerts)
+VALUES (1, 1, 1, 'RUB', 30, TRUE, TRUE, FALSE, 'monthly', 10.00, 20.00, TRUE, TRUE)
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================
+-- ЧАСТЬ 9: Представления для удобной работы
+-- ============================================================
+
+-- Представление: сводка по режимам налогообложения
+CREATE OR REPLACE VIEW v_tax_regimes_summary AS
+SELECT
+    tr.id,
+    tr.code,
+    tr.name,
+    tr.is_active,
+    STRING_AGG(
+        CASE 
+            WHEN tr.has_vat THEN 'НДС (' || tr.default_vat_rate || '%)'
+            WHEN tr.has_profit_tax THEN 'Налог на прибыль (' || tr.default_profit_tax_rate || '%)'
+            WHEN tr.has_usn_tax THEN 'УСН (' || tr.default_usn_rate || '%)'
+            WHEN tr.has_insurance THEN 'Страховые взносы (' || tr.default_insurance_rate || '%)'
+            WHEN tr.has_ndfl THEN 'НДФЛ (' || tr.default_ndfl_rate || '%)'
+        END,
+        ', '
+    ) AS taxes
+FROM finance_tax_regimes tr
+LEFT JOIN finance_tax_rates tar ON tr.id = tar.tax_regime_id AND tar.is_active
+GROUP BY tr.id, tr.code, tr.name, tr.is_active, tr.default_vat_rate, tr.default_profit_tax_rate, tr.default_usn_rate, tr.default_insurance_rate, tr.default_ndfl_rate;
+
+-- Представление: структура накладных расходов
+CREATE OR REPLACE VIEW v_overhead_structure AS
+SELECT
+    oa.id,
+    oa.code,
+    oa.name,
+    oa.article_type,
+    oa.is_direct,
+    oa.is_active,
+    am.name AS allocation_method_name,
+    am.allocation_base,
+    parent.name AS parent_name
+FROM finance_overhead_articles oa
+LEFT JOIN finance_allocation_methods am ON oa.allocation_method_id = am.id
+LEFT JOIN finance_overhead_articles parent ON oa.parent_id = parent.id
+ORDER BY oa.priority, oa.code;
+
+-- ============================================================
+-- ЗАВЕРШЕНИЕ
+-- ============================================================
+
+-- Вывод сообщения об успехе
+DO $$
+BEGIN
+    RAISE NOTICE 'Migration 70: Finance Tax Settings completed successfully';
+    RAISE NOTICE '  - Table finance_tax_regimes: created';
+    RAISE NOTICE '  - Table finance_tax_rates: created';
+    RAISE NOTICE '  - Table finance_allocation_methods: created';
+    RAISE NOTICE '  - Table finance_overhead_articles: created';
+    RAISE NOTICE '  - Table finance_defaults_settings: created';
+    RAISE NOTICE '  - Table finance_expense_categories: extended (3 columns)';
+    RAISE NOTICE '  - Triggers: 5 created';
+    RAISE NOTICE '  - Views: 2 created';
+    RAISE NOTICE '  - Seed data: tax regimes (4), allocation methods (5), overhead articles (12)';
+END $$;

@@ -1,0 +1,1 @@
+export { lawyers } from '@/modules/lawyers/i18n/ru/lawyers';

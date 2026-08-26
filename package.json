@@ -1,0 +1,37 @@
+{
+  "name": "titan-crm",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "start": "npm --prefix frontend run start",
+    "restart": "npm --prefix frontend run restart",
+    "test": "jest --config=config/jest.config.ts",
+    "test:frontend": "jest --config=config/jest.config.ts --testPathPattern=frontend",
+    "test:backend": "jest --config=config/jest.config.ts --testPathPattern=backend",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.19.17",
+    "@types/supertest": "^7.2.0",
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.4.1",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "go": "^3.0.1"
+  }
+}

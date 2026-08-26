@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Russian Filename Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 { color: #333; }
+    .test-section {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f9f9f9;
+      border-left: 4px solid #4CAF50;
+      border-radius: 4px;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin: 5px 5px 5px 0;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    input[type="file"] {
+      padding: 10px;
+      margin: 10px 0;
+    }
+    .status {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    #fileList {
+      margin-top: 20px;
+      list-style: none;
+      padding: 0;
+    }
+    #fileList li {
+      padding: 10px;
+      margin: 5px 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .filename {
+      flex-grow: 1;
+      font-weight: bold;
+    }
+    .file-actions {
+      display: flex;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🇷🇺 Russian Filename Test</h1>
+    <p>Test uploading and downloading files with Cyrillic names</p>
+
+    <!-- Upload Section -->
+    <div class="test-section">
+      <h3>📤 Upload File with Russian Name</h3>
+      <input type="file" id="fileInput" />
+      <br/>
+      <button onclick="uploadFile()">Upload</button>
+      <button onclick="createTestFile()">Create Test File (Тестовый_документ.txt)</button>
+      <div id="uploadStatus"></div>
+    </div>
+
+    <!-- File List -->
+    <div class="test-section">
+      <h3>📁 Uploaded Files</h3>
+      <button onclick="loadFiles()">Refresh List</button>
+      <ul id="fileList"></ul>
+    </div>
+
+    <!-- Info Section -->
+    <div class="test-section" style="border-left-color: #2196F3;">
+      <h3>ℹ️ Test Information</h3>
+      <p><strong>Backend:</strong> <code>http://localhost:3001</code></p>
+      <p><strong>Frontend:</strong> <code>http://localhost:3000</code></p>
+      <p><strong>Expected Header:</strong> <code>Content-Disposition: attachment; filename*=UTF-8''%D1%84%D0%B0%D0%B9%D0%BB...</code></p>
+      <p><strong>Test Files:</strong>
+        <ul>
+          <li>Результаты_квартала.xlsx - Excel file</li>
+          <li>Отчет_2024.docx - DOCX document</li>
+          <li>Квартальный_отчет.pdf - PDF document</li>
+        </ul>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3001/api';
+
+    function log(message, type = 'info') {
+      console.log(`[${type.toUpperCase()}] ${message}`);
+    }
+
+    async function uploadFile() {
+      const fileInput = document.getElementById('fileInput');
+      if (!fileInput.files.length) {
+        showStatus('uploadStatus', 'Please select a file', 'error');
+        return;
+      }
+
+      const file = fileInput.files[0];
+      log(`Uploading file: ${file.name}`, 'upload');
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        showStatus('uploadStatus', `Uploading ${file.name}...`, 'info');
+        const response = await fetch(`${API_BASE}/documents/upload`, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const result = await response.json();
+        log(`Upload successful: ${result.name}`, 'success');
+        showStatus('uploadStatus', `✅ Uploaded: ${result.name}`, 'success');
+        
+        fileInput.value = '';
+        setTimeout(loadFiles, 1000);
+      } catch (error) {
+        log(`Upload failed: ${error.message}`, 'error');
+        showStatus('uploadStatus', `❌ Error: ${error.message}`, 'error');
+      }
+    }
+
+    function createTestFile() {
+      const filename = 'Тестовый_документ.txt';
+      const content = new Blob([`Этот файл был создан для тестирования кодировки Russian filenames.\n\nFile name: ${filename}\nTime: ${new Date().toISOString()}`], { type: 'text/plain' });
+      
+      const file = new File([content], filename, { type: 'text/plain' });
+      const fileInput = document.getElementById('fileInput');
+      
+      // Create file list to simulate file selection
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      fileInput.files = dataTransfer.files;
+      
+      log(`Created test file: ${filename}`, 'info');
+      uploadFile();
+    }
+
+    async function loadFiles() {
+      log('Loading file list...', 'info');
+      
+      try {
+        const response = await fetch(`${API_BASE}/documents`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const files = await response.json();
+        const fileList = document.getElementById('fileList');
+        fileList.innerHTML = '';
+
+        if (files.length === 0) {
+          fileList.innerHTML = '<li><em>No files uploaded yet</em></li>';
+          return;
+        }
+
+        files.forEach(file => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <span class="filename">${escapeHtml(file.name)}</span>
+            <div class="file-actions">
+              <button onclick="downloadFile('${file.id}', '${escapeHtml(file.name)}')">Download</button>
+              <button onclick="deleteFile('${file.id}')">Delete</button>
+            </div>
+          `;
+          fileList.appendChild(li);
+        });
+
+        log(`Loaded ${files.length} files`, 'success');
+      } catch (error) {
+        log(`Failed to load files: ${error.message}`, 'error');
+      }
+    }
+
+    async function downloadFile(fileId, filename) {
+      log(`Downloading file: ${filename}`, 'download');
+      
+      try {
+        const response = await fetch(`${API_BASE}/documents/download/${fileId}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+        }
+
+        const contentDisposition = response.headers.get('content-disposition');
+        log(`Content-Disposition: ${contentDisposition}`, 'info');
+        
+        const blob = await response.blob();
+        
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        log(`Download completed: ${filename}`, 'success');
+      } catch (error) {
+        log(`Download failed: ${error.message}`, 'error');
+        alert(`Download failed: ${error.message}`);
+      }
+    }
+
+    async function deleteFile(fileId) {
+      if (!confirm('Delete this file?')) return;
+
+      try {
+        const response = await fetch(`${API_BASE}/documents/delete/${fileId}`, {
+          method: 'DELETE'
+        });
+
+        if (response.ok) {
+          log(`File deleted: ${fileId}`, 'success');
+          loadFiles();
+        } else {
+          throw new Error(`HTTP ${response.status}`);
+        }
+      } catch (error) {
+        log(`Delete failed: ${error.message}`, 'error');
+        alert(`Delete failed: ${error.message}`);
+      }
+    }
+
+    function showStatus(elementId, message, type) {
+      const element = document.getElementById(elementId);
+      element.textContent = message;
+      element.className = `status ${type}`;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Load files on page load
+    window.addEventListener('load', loadFiles);
+  </script>
+</body>
+</html>

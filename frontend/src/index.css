@@ -1,0 +1,338 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* TITAN CRM Design System */
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+
+    /* Sidebar - Dark Corporate */
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 222 47% 15%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 222 47% 18%;
+    --sidebar-ring: 217 91% 60%;
+    --sidebar-muted: 215 16% 60%;
+
+    /* Status Colors */
+    --status-active: 142 71% 45%;
+    --status-active-foreground: 0 0% 100%;
+    --status-pending: 38 92% 50%;
+    --status-pending-foreground: 0 0% 100%;
+    --status-vip: 217 91% 60%;
+    --status-vip-foreground: 0 0% 100%;
+    --status-paused: 0 84% 60%;
+    --status-paused-foreground: 0 0% 100%;
+
+    /* Priority Colors */
+    --priority-low: 142 71% 45%;
+    --priority-medium: 38 92% 50%;
+    --priority-high: 0 84% 60%;
+    --priority-urgent: 262 83% 58%;
+
+    /* Chart Colors */
+    --chart-1: 217 91% 60%;
+    --chart-2: 142 71% 45%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 262 83% 58%;
+    --chart-5: 0 84% 60%;
+  }
+
+  .dark {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 222 47% 15%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 222 47% 15%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 222 47% 18%;
+    --input: 222 47% 18%;
+    --ring: 217 91% 60%;
+
+    --sidebar-background: 222 47% 6%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 222 47% 12%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 222 47% 15%;
+    --sidebar-ring: 217 91% 60%;
+    --sidebar-muted: 215 20% 65%;
+    
+    /* Priority Colors for Dark Mode */
+    --priority-low: 142 71% 45%;
+    --priority-medium: 38 92% 50%;
+    --priority-high: 0 84% 60%;
+    --priority-urgent: 262 83% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    min-height: 100dvh;
+  }
+
+  body[data-scroll-locked] {
+    padding-right: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Responsive table helper */
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scrollbar-color: transparent transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+@layer components {
+  .titan-sidebar {
+    @apply bg-sidebar text-sidebar-foreground;
+  }
+
+  .titan-card {
+    @apply bg-card rounded-lg border border-border shadow-sm;
+  }
+
+  .titan-stat-card {
+    @apply bg-card rounded-lg border border-border p-6 flex items-center justify-between;
+  }
+
+  .titan-table-header {
+    @apply text-xs font-medium text-muted-foreground uppercase tracking-wider;
+  }
+
+  .titan-nav-item {
+    @apply flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors;
+  }
+
+  .titan-nav-item-active {
+    @apply bg-sidebar-primary text-sidebar-primary-foreground;
+  }
+
+  .titan-nav-item-inactive {
+    @apply text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground;
+  }
+
+/* Стили для скроллбара в сайдбаре */
+.sidebar-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+}
+
+/* Premium Animations */
+@keyframes bell-ring {
+  0%, 100% { transform: rotate(0); }
+  20%, 60% { transform: rotate(15deg); }
+  40%, 80% { transform: rotate(-15deg); }
+}
+
+.animate-bell {
+  animation: bell-ring 0.6s ease-in-out;
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.02); }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* 3D Flip Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+}
+
+/* NProgress */
+#nprogress .bar { background: hsl(var(--primary)) !important; height: 3px !important; }
+#nprogress .peg { box-shadow: 0 0 10px hsl(var(--primary)), 0 0 5px hsl(var(--primary)) !important; }
+#nprogress .spinner-icon { border-top-color: hsl(var(--primary)) !important; border-left-color: hsl(var(--primary)) !important; }
+
+/* UX-022: Mobile Card-view for tables */
+@media (max-width: 768px) {
+  .table-mobile-cards table {
+    display: block;
+    width: 100%;
+  }
+  .table-mobile-cards thead {
+    display: none;
+  }
+  .table-mobile-cards tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.5rem;
+  }
+  .table-mobile-cards tr {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    background: hsl(var(--card));
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .table-mobile-cards td {
+    display: flex;
+    align-items: center;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    border: none !important;
+    min-height: auto;
+    flex-wrap: wrap;
+  }
+  /* Checkbox column */
+  .table-mobile-cards td:first-child {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: auto !important;
+    z-index: 10;
+  }
+  /* Actions column */
+  .table-mobile-cards td:last-child {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: auto !important;
+    justify-content: flex-end;
+    z-index: 10;
+  }
+  /* Main title column */
+  .table-mobile-cards td:nth-child(2) {
+    padding-left: 2rem !important; /* space for checkbox */
+    padding-right: 2rem !important; /* space for actions */
+    margin-bottom: 0.25rem;
+    width: 100% !important;
+  }
+  .table-mobile-cards td:empty {
+    display: none;
+  }
+  /* Allow contents to wrap naturally */
+  .table-mobile-cards td > * {
+    white-space: normal !important;
+  }
+}

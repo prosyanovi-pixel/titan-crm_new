@@ -1,0 +1,4676 @@
+{
+  "calendar_events": {
+    "description": null,
+    "rowCount": "53",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "title",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "date",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "end_date",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "type",
+        "dataType": "character varying",
+        "characterMaximumLength": 20,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "status",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "time",
+        "dataType": "time without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "end_time",
+        "dataType": "time without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "all_day",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": null
+      },
+      {
+        "columnName": "location",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "description",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "client",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "assignee",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "notify_client",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": null
+      },
+      {
+        "columnName": "client_notify_channel",
+        "dataType": "character varying",
+        "characterMaximumLength": 20,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "client_notify_target",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "create_follow_up_task",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": null
+      },
+      {
+        "columnName": "notify_assignee",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": null
+      },
+      {
+        "columnName": "assignee_notify_channel",
+        "dataType": "character varying",
+        "characterMaximumLength": 20,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "assignee_notify_target",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "project_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "priority",
+        "dataType": "character varying",
+        "characterMaximumLength": 20,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'Medium'::character varying",
+        "comment": null
+      }
+    ],
+    "foreignKeys": [
+      {
+        "constraintName": "calendar_events_assignee_fkey",
+        "columnName": "assignee",
+        "foreignTableName": "users",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "NO ACTION"
+      },
+      {
+        "constraintName": "calendar_events_client_fkey",
+        "columnName": "client",
+        "foreignTableName": "contractors",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "NO ACTION"
+      },
+      {
+        "constraintName": "calendar_events_project_id_fkey",
+        "columnName": "project_id",
+        "foreignTableName": "projects",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "NO ACTION"
+      }
+    ],
+    "indexes": [
+      {
+        "indexName": "calendar_events_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      }
+    ]
+  },
+  "contractors": {
+    "description": null,
+    "rowCount": "86",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": "nextval('contractors_id_seq'::regclass)",
+        "comment": null
+      },
+      {
+        "columnName": "name",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "full_name",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "status",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "phone",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "manager",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "inn",
+        "dataType": "character varying",
+        "characterMaximumLength": 20,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "kpp",
+        "dataType": "character varying",
+        "characterMaximumLength": 20,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "ogrn",
+        "dataType": "character varying",
+        "characterMaximumLength": 20,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "legal_address",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "legal_form",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "type",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "currency",
+        "dataType": "character varying",
+        "characterMaximumLength": 10,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "registration_date",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "director",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "director_position",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "notes",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "is_employee",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": null
+      },
+      {
+        "columnName": "email",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "website",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "okved",
+        "dataType": "character varying",
+        "characterMaximumLength": 20,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "okved_name",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "authorized_capital",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 20,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "is_active",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": null
+      },
+      {
+        "columnName": "updated_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "now()",
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "now()",
+        "comment": null
+      },
+      {
+        "columnName": "enriched_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "legal_entity_type",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Правовая сущность: individual (ИП), legal (ЮЛ), private (Физлицо), foreign (Иностранная организация)"
+      },
+      {
+        "columnName": "tax_regime_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Ссылка на режим налогообложения для авторасчета НДС"
+      },
+      {
+        "columnName": "tax_system_history",
+        "dataType": "jsonb",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'[]'::jsonb",
+        "comment": null
+      },
+      {
+        "columnName": "group_id",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "gender",
+        "dataType": "character varying",
+        "characterMaximumLength": 10,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "passport_series",
+        "dataType": "character varying",
+        "characterMaximumLength": 10,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "passport_number",
+        "dataType": "character varying",
+        "characterMaximumLength": 20,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "passport_issued_by",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "passport_issued_date",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "passport_unit_code",
+        "dataType": "character varying",
+        "characterMaximumLength": 10,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "registration_address",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "okato",
+        "dataType": "character varying",
+        "characterMaximumLength": 20,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "okpo",
+        "dataType": "character varying",
+        "characterMaximumLength": 20,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "last_name",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "first_name",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "middle_name",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "snils",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "citizenship",
+        "dataType": "character varying",
+        "characterMaximumLength": 100,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "country_code",
+        "dataType": "character varying",
+        "characterMaximumLength": 10,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "registration_number",
+        "dataType": "character varying",
+        "characterMaximumLength": 100,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "tax_id",
+        "dataType": "character varying",
+        "characterMaximumLength": 100,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "kio",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "is_currency_resident",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": null
+      },
+      {
+        "columnName": "person_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "predecessor_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "ID предыдущего контрагента (в случае смены юридической формы)"
+      }
+    ],
+    "foreignKeys": [
+      {
+        "constraintName": "contractors_person_id_fkey",
+        "columnName": "person_id",
+        "foreignTableName": "contractors",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "SET NULL"
+      },
+      {
+        "constraintName": "contractors_predecessor_id_fkey",
+        "columnName": "predecessor_id",
+        "foreignTableName": "contractors",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "SET NULL"
+      },
+      {
+        "constraintName": "contractors_tax_regime_id_fkey",
+        "columnName": "tax_regime_id",
+        "foreignTableName": "finance_tax_regimes",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "SET NULL"
+      },
+      {
+        "constraintName": "fk_contractors_group",
+        "columnName": "group_id",
+        "foreignTableName": "legal_form_groups",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "SET NULL"
+      }
+    ],
+    "indexes": [
+      {
+        "indexName": "contractors_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      },
+      {
+        "indexName": "idx_contractors_tax_regime",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{tax_regime_id}"
+      }
+    ]
+  },
+  "finance_allocation_methods": {
+    "description": null,
+    "rowCount": "5",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "code",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "name",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "description",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "allocation_base",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": "База распределения (direct_costs, labor_costs, revenue, etc.)"
+      },
+      {
+        "columnName": "is_active",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      },
+      {
+        "columnName": "updated_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      }
+    ],
+    "foreignKeys": [],
+    "indexes": [
+      {
+        "indexName": "finance_allocation_methods_code_key",
+        "isUnique": true,
+        "isPrimary": false,
+        "columns": "{code}"
+      },
+      {
+        "indexName": "finance_allocation_methods_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      },
+      {
+        "indexName": "idx_finance_allocation_methods_active",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{is_active}"
+      },
+      {
+        "indexName": "idx_finance_allocation_methods_code",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{code}"
+      }
+    ]
+  },
+  "finance_bank_statements": {
+    "description": null,
+    "rowCount": "0",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "file_name",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "import_type",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "'csv'::text",
+        "comment": null
+      },
+      {
+        "columnName": "account",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "date_from",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "date_to",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "total_credit",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 14,
+        "numericScale": 2,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "total_debit",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 14,
+        "numericScale": 2,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "status",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "'pending'::text",
+        "comment": null
+      },
+      {
+        "columnName": "imported_by",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "now()",
+        "comment": null
+      },
+      {
+        "columnName": "import_session_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Идентификатор сессии импорта для группировки и отката"
+      },
+      {
+        "columnName": "is_rolled_back",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "false",
+        "comment": "Флаг отката импорта"
+      },
+      {
+        "columnName": "rolled_back_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "rolled_back_by",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "rollback_reason",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      }
+    ],
+    "foreignKeys": [],
+    "indexes": [
+      {
+        "indexName": "finance_bank_statements_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      },
+      {
+        "indexName": "idx_finance_bank_statements_rolled_back",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{is_rolled_back}"
+      },
+      {
+        "indexName": "idx_finance_bank_statements_session",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{import_session_id}"
+      }
+    ]
+  },
+  "finance_currencies": {
+    "description": null,
+    "rowCount": "1",
+    "columns": [
+      {
+        "columnName": "code",
+        "dataType": "character varying",
+        "characterMaximumLength": 3,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "name",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "symbol",
+        "dataType": "character varying",
+        "characterMaximumLength": 10,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "is_base",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": null
+      },
+      {
+        "columnName": "is_active",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      },
+      {
+        "columnName": "updated_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      }
+    ],
+    "foreignKeys": [],
+    "indexes": [
+      {
+        "indexName": "finance_currencies_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{code}"
+      }
+    ]
+  },
+  "finance_defaults_settings": {
+    "description": null,
+    "rowCount": "1",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": "1",
+        "comment": null
+      },
+      {
+        "columnName": "default_tax_regime_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Режим налогообложения по умолчанию"
+      },
+      {
+        "columnName": "default_allocation_method_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Метод распределения накладных по умолчанию"
+      },
+      {
+        "columnName": "default_currency",
+        "dataType": "character varying",
+        "characterMaximumLength": 3,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'RUB'::character varying",
+        "comment": null
+      },
+      {
+        "columnName": "default_payment_terms_days",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": "30",
+        "comment": null
+      },
+      {
+        "columnName": "auto_calculate_vat",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": "Автоматически рассчитывать НДС"
+      },
+      {
+        "columnName": "auto_calculate_taxes",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": "Автоматически рассчитывать налоги"
+      },
+      {
+        "columnName": "auto_allocate_overhead",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": "Автоматически распределять накладные"
+      },
+      {
+        "columnName": "overhead_allocation_frequency",
+        "dataType": "character varying",
+        "characterMaximumLength": 20,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'monthly'::character varying",
+        "comment": "Частота распределения накладных"
+      },
+      {
+        "columnName": "min_profitability_threshold",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 5,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "10.00",
+        "comment": null
+      },
+      {
+        "columnName": "max_budget_variance",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 5,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "20.00",
+        "comment": null
+      },
+      {
+        "columnName": "enable_budget_alerts",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": null
+      },
+      {
+        "columnName": "enable_overdue_alerts",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      },
+      {
+        "columnName": "updated_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      }
+    ],
+    "foreignKeys": [
+      {
+        "constraintName": "finance_defaults_settings_default_allocation_method_id_fkey",
+        "columnName": "default_allocation_method_id",
+        "foreignTableName": "finance_allocation_methods",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "SET NULL"
+      },
+      {
+        "constraintName": "finance_defaults_settings_default_tax_regime_id_fkey",
+        "columnName": "default_tax_regime_id",
+        "foreignTableName": "finance_tax_regimes",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "SET NULL"
+      }
+    ],
+    "indexes": [
+      {
+        "indexName": "finance_defaults_settings_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      },
+      {
+        "indexName": "idx_finance_defaults_single",
+        "isUnique": true,
+        "isPrimary": false,
+        "columns": null
+      }
+    ]
+  },
+  "finance_exchange_rates": {
+    "description": null,
+    "rowCount": "0",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": "nextval('finance_exchange_rates_id_seq'::regclass)",
+        "comment": null
+      },
+      {
+        "columnName": "currency_from",
+        "dataType": "character varying",
+        "characterMaximumLength": 3,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "currency_to",
+        "dataType": "character varying",
+        "characterMaximumLength": 3,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "rate",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 15,
+        "numericScale": 6,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "effective_date",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      }
+    ],
+    "foreignKeys": [
+      {
+        "constraintName": "finance_exchange_rates_currency_from_fkey",
+        "columnName": "currency_from",
+        "foreignTableName": "finance_currencies",
+        "foreignColumnName": "code",
+        "updateRule": "NO ACTION",
+        "deleteRule": "CASCADE"
+      },
+      {
+        "constraintName": "finance_exchange_rates_currency_to_fkey",
+        "columnName": "currency_to",
+        "foreignTableName": "finance_currencies",
+        "foreignColumnName": "code",
+        "updateRule": "NO ACTION",
+        "deleteRule": "CASCADE"
+      }
+    ],
+    "indexes": [
+      {
+        "indexName": "finance_exchange_rates_currency_from_currency_to_effective__key",
+        "isUnique": true,
+        "isPrimary": false,
+        "columns": "{currency_from,currency_to,effective_date}"
+      },
+      {
+        "indexName": "finance_exchange_rates_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      }
+    ]
+  },
+  "finance_expense_categories": {
+    "description": null,
+    "rowCount": "14",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "name",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "kind",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "'expense'::text",
+        "comment": null
+      },
+      {
+        "columnName": "parent_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "color",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "is_system",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "false",
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "now()",
+        "comment": null
+      },
+      {
+        "columnName": "is_overhead",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": null
+      },
+      {
+        "columnName": "overhead_article_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "is_direct",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": null
+      }
+    ],
+    "foreignKeys": [
+      {
+        "constraintName": "finance_expense_categories_overhead_article_id_fkey",
+        "columnName": "overhead_article_id",
+        "foreignTableName": "finance_overhead_articles",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "SET NULL"
+      },
+      {
+        "constraintName": "finance_expense_categories_parent_id_fkey",
+        "columnName": "parent_id",
+        "foreignTableName": "finance_expense_categories",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "NO ACTION"
+      }
+    ],
+    "indexes": [
+      {
+        "indexName": "finance_expense_categories_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      }
+    ]
+  },
+  "finance_import_sessions": {
+    "description": null,
+    "rowCount": "0",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "started_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "now()",
+        "comment": null
+      },
+      {
+        "columnName": "completed_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "status",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "'in_progress'::text",
+        "comment": null
+      },
+      {
+        "columnName": "files_imported",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "total_lines",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "total_credit",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 14,
+        "numericScale": 2,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "total_debit",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 14,
+        "numericScale": 2,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "payments_created",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "duplicates_skipped",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "contractors_new",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "contractors_updated",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "new_accounts_added",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "warnings_count",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "report_json",
+        "dataType": "jsonb",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "rolled_back_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "rolled_back_by",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "rollback_reason",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "imported_by",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      }
+    ],
+    "foreignKeys": [],
+    "indexes": [
+      {
+        "indexName": "finance_import_sessions_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      },
+      {
+        "indexName": "idx_finance_import_sessions_started_at",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{started_at}"
+      },
+      {
+        "indexName": "idx_finance_import_sessions_status",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{status}"
+      }
+    ]
+  },
+  "finance_income_categories": {
+    "description": null,
+    "rowCount": "6",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "name",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "parent_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Родительская категория (иерархия)"
+      },
+      {
+        "columnName": "color",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Цвет для визуализации"
+      },
+      {
+        "columnName": "is_system",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": "Системная категория (нельзя удалить)"
+      },
+      {
+        "columnName": "is_active",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "now()",
+        "comment": null
+      },
+      {
+        "columnName": "updated_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "now()",
+        "comment": null
+      }
+    ],
+    "foreignKeys": [
+      {
+        "constraintName": "finance_income_categories_parent_id_fkey",
+        "columnName": "parent_id",
+        "foreignTableName": "finance_income_categories",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "CASCADE"
+      }
+    ],
+    "indexes": [
+      {
+        "indexName": "finance_income_categories_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      },
+      {
+        "indexName": "idx_finance_income_categories_active",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{is_active}"
+      },
+      {
+        "indexName": "idx_finance_income_categories_parent",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{parent_id}"
+      }
+    ]
+  },
+  "finance_invoice_documents": {
+    "description": null,
+    "rowCount": "0",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "invoice_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "document_type",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "document_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "template_payload",
+        "dataType": "jsonb",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "status",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "'generated'::text",
+        "comment": null
+      },
+      {
+        "columnName": "created_by",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "now()",
+        "comment": null
+      }
+    ],
+    "foreignKeys": [],
+    "indexes": [
+      {
+        "indexName": "finance_invoice_documents_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      }
+    ]
+  },
+  "finance_invoice_status": {
+    "description": null,
+    "rowCount": "6",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "name",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "color",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "displayorder",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "variant",
+        "dataType": "character varying",
+        "characterMaximumLength": 20,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "size",
+        "dataType": "character varying",
+        "characterMaximumLength": 10,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'md'::character varying",
+        "comment": null
+      },
+      {
+        "columnName": "shape",
+        "dataType": "character varying",
+        "characterMaximumLength": 20,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'rounded'::character varying",
+        "comment": null
+      },
+      {
+        "columnName": "icon",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "is_glass",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": null
+      },
+      {
+        "columnName": "is_gradient",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": null
+      },
+      {
+        "columnName": "secondary_color",
+        "dataType": "character varying",
+        "characterMaximumLength": 7,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "is_animated",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": null
+      }
+    ],
+    "foreignKeys": [],
+    "indexes": [
+      {
+        "indexName": "finance_invoice_status_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      }
+    ]
+  },
+  "finance_invoices": {
+    "description": null,
+    "rowCount": "0",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "identifier",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "contractor_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "project_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "lawyer_user_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "source_task_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "title",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "description",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "currency",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "'RUB'::text",
+        "comment": null
+      },
+      {
+        "columnName": "amount_total",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 14,
+        "numericScale": 2,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "amount_paid",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 14,
+        "numericScale": 2,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "amount_due",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 14,
+        "numericScale": 2,
+        "isNullable": "NO",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "issue_date",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "due_date",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "status",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "'draft'::text",
+        "comment": null
+      },
+      {
+        "columnName": "calendar_event_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "created_by",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "updated_by",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "now()",
+        "comment": null
+      },
+      {
+        "columnName": "updated_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "now()",
+        "comment": null
+      },
+      {
+        "columnName": "invoice_type",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "'outgoing'::text",
+        "comment": null
+      },
+      {
+        "columnName": "overdue_since",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Дата, с которой счет просрочен (совпадает с due_date если счет не оплачен и дата прошла)"
+      },
+      {
+        "columnName": "vat_rate",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 5,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "0",
+        "comment": "Ставка НДС в % (например, 20.00)"
+      },
+      {
+        "columnName": "vat_amount",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 14,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "0",
+        "comment": "Сумма НДС в валюте счета"
+      },
+      {
+        "columnName": "is_taxable",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": "Облагается ли счет налогом"
+      },
+      {
+        "columnName": "contract_id",
+        "dataType": "uuid",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      }
+    ],
+    "foreignKeys": [
+      {
+        "constraintName": "finance_invoices_contract_id_fkey",
+        "columnName": "contract_id",
+        "foreignTableName": "contracts",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "SET NULL"
+      }
+    ],
+    "indexes": [
+      {
+        "indexName": "finance_invoices_identifier_key",
+        "isUnique": true,
+        "isPrimary": false,
+        "columns": "{identifier}"
+      },
+      {
+        "indexName": "finance_invoices_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      },
+      {
+        "indexName": "idx_finance_invoices_contract_id",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{contract_id}"
+      },
+      {
+        "indexName": "idx_finance_invoices_contractor_id",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{contractor_id}"
+      },
+      {
+        "indexName": "idx_finance_invoices_due_date",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{due_date}"
+      },
+      {
+        "indexName": "idx_finance_invoices_overdue_since",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{overdue_since}"
+      },
+      {
+        "indexName": "idx_finance_invoices_project_id",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{project_id}"
+      },
+      {
+        "indexName": "idx_finance_invoices_status",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{status}"
+      }
+    ]
+  },
+  "finance_ndfl_brackets": {
+    "description": null,
+    "rowCount": "5",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": "nextval('finance_ndfl_brackets_id_seq'::regclass)",
+        "comment": null
+      },
+      {
+        "columnName": "min_income",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 15,
+        "numericScale": 2,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "max_income",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 15,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "rate",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 5,
+        "numericScale": 2,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "description",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "is_active",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": null
+      },
+      {
+        "columnName": "effective_from",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'2026-01-01'::date",
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      }
+    ],
+    "foreignKeys": [],
+    "indexes": [
+      {
+        "indexName": "finance_ndfl_brackets_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      }
+    ]
+  },
+  "finance_overhead_articles": {
+    "description": null,
+    "rowCount": "12",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "parent_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Родительская статья (для иерархии)"
+      },
+      {
+        "columnName": "code",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "name",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "description",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "article_type",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'general'::character varying",
+        "comment": "Тип накладных расходов"
+      },
+      {
+        "columnName": "allocation_method_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Метод распределения"
+      },
+      {
+        "columnName": "is_direct",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": "Прямые расходы (не распределяются)"
+      },
+      {
+        "columnName": "is_active",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": null
+      },
+      {
+        "columnName": "default_amount",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 15,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "priority",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      },
+      {
+        "columnName": "updated_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      }
+    ],
+    "foreignKeys": [
+      {
+        "constraintName": "finance_overhead_articles_allocation_method_id_fkey",
+        "columnName": "allocation_method_id",
+        "foreignTableName": "finance_allocation_methods",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "SET NULL"
+      },
+      {
+        "constraintName": "finance_overhead_articles_parent_id_fkey",
+        "columnName": "parent_id",
+        "foreignTableName": "finance_overhead_articles",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "CASCADE"
+      }
+    ],
+    "indexes": [
+      {
+        "indexName": "finance_overhead_articles_code_key",
+        "isUnique": true,
+        "isPrimary": false,
+        "columns": "{code}"
+      },
+      {
+        "indexName": "finance_overhead_articles_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      },
+      {
+        "indexName": "idx_finance_overhead_articles_active",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{is_active}"
+      },
+      {
+        "indexName": "idx_finance_overhead_articles_code",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{code}"
+      },
+      {
+        "indexName": "idx_finance_overhead_articles_parent",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{parent_id}"
+      },
+      {
+        "indexName": "idx_finance_overhead_articles_type",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{article_type}"
+      }
+    ]
+  },
+  "finance_payments": {
+    "description": null,
+    "rowCount": "17",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "kind",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "invoice_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "project_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "contractor_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "amount",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 14,
+        "numericScale": 2,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "currency",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "'RUB'::text",
+        "comment": null
+      },
+      {
+        "columnName": "payment_date",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "method",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "comment",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "created_by",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "now()",
+        "comment": null
+      },
+      {
+        "columnName": "category_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "task_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "updated_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "now()",
+        "comment": "Время последнего изменения записи"
+      },
+      {
+        "columnName": "payment_number",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Номер платежного поручения (из выписки или вручную)"
+      },
+      {
+        "columnName": "contract_id",
+        "dataType": "uuid",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "campaign_id",
+        "dataType": "uuid",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "currency_code",
+        "dataType": "character varying",
+        "characterMaximumLength": 3,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'RUB'::character varying",
+        "comment": null
+      },
+      {
+        "columnName": "exchange_rate",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 15,
+        "numericScale": 6,
+        "isNullable": "YES",
+        "columnDefault": "1.0",
+        "comment": null
+      }
+    ],
+    "foreignKeys": [
+      {
+        "constraintName": "finance_payments_campaign_id_fkey",
+        "columnName": "campaign_id",
+        "foreignTableName": "marketing_campaigns",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "SET NULL"
+      },
+      {
+        "constraintName": "finance_payments_category_id_fkey",
+        "columnName": "category_id",
+        "foreignTableName": "finance_expense_categories",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "NO ACTION"
+      },
+      {
+        "constraintName": "finance_payments_contract_id_fkey",
+        "columnName": "contract_id",
+        "foreignTableName": "contracts",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "SET NULL"
+      },
+      {
+        "constraintName": "finance_payments_currency_code_fkey",
+        "columnName": "currency_code",
+        "foreignTableName": "finance_currencies",
+        "foreignColumnName": "code",
+        "updateRule": "NO ACTION",
+        "deleteRule": "NO ACTION"
+      }
+    ],
+    "indexes": [
+      {
+        "indexName": "finance_payments_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      },
+      {
+        "indexName": "idx_finance_payments_campaign_id",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{campaign_id}"
+      },
+      {
+        "indexName": "idx_finance_payments_contract_id",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{contract_id}"
+      },
+      {
+        "indexName": "idx_finance_payments_invoice_id",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{invoice_id}"
+      },
+      {
+        "indexName": "idx_finance_payments_payment_number",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{payment_number}"
+      },
+      {
+        "indexName": "idx_finance_payments_project_id",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{project_id}"
+      },
+      {
+        "indexName": "idx_finance_payments_unique",
+        "isUnique": true,
+        "isPrimary": false,
+        "columns": "{kind,amount,payment_date}"
+      }
+    ]
+  },
+  "finance_statement_lines": {
+    "description": null,
+    "rowCount": "0",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "statement_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "line_date",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "amount",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 14,
+        "numericScale": 2,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "direction",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "counterparty",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "purpose",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "reference",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "invoice_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "payment_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "reconcile_status",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "'unmatched'::text",
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp with time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": "now()",
+        "comment": null
+      },
+      {
+        "columnName": "category_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "contractor_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "counterparty_inn",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "account_number",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "import_session_id",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      }
+    ],
+    "foreignKeys": [
+      {
+        "constraintName": "finance_statement_lines_invoice_id_fkey",
+        "columnName": "invoice_id",
+        "foreignTableName": "finance_invoices",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "NO ACTION"
+      },
+      {
+        "constraintName": "finance_statement_lines_payment_id_fkey",
+        "columnName": "payment_id",
+        "foreignTableName": "finance_payments",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "NO ACTION"
+      },
+      {
+        "constraintName": "finance_statement_lines_statement_id_fkey",
+        "columnName": "statement_id",
+        "foreignTableName": "finance_bank_statements",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "CASCADE"
+      }
+    ],
+    "indexes": [
+      {
+        "indexName": "finance_statement_lines_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      },
+      {
+        "indexName": "idx_finance_statement_lines_session",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{import_session_id}"
+      }
+    ]
+  },
+  "finance_tax_rates": {
+    "description": null,
+    "rowCount": "16",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": "nextval('finance_tax_rates_id_seq'::regclass)",
+        "comment": null
+      },
+      {
+        "columnName": "tax_regime_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Ссылка на режим налогообложения"
+      },
+      {
+        "columnName": "tax_type",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Тип налога (vat, profit_tax, usn, insurance, ndfl)"
+      },
+      {
+        "columnName": "name",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "rate",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 5,
+        "numericScale": 2,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": "Ставка налога в процентах"
+      },
+      {
+        "columnName": "is_fixed",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": "Фиксированная сумма вместо процента"
+      },
+      {
+        "columnName": "fixed_amount",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 15,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "0",
+        "comment": null
+      },
+      {
+        "columnName": "min_base",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 15,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "max_base",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 15,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "description",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "is_active",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": null
+      },
+      {
+        "columnName": "effective_from",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Дата начала действия ставки"
+      },
+      {
+        "columnName": "effective_to",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Дата окончания действия ставки"
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      },
+      {
+        "columnName": "updated_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      },
+      {
+        "columnName": "rate_value",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 5,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "0",
+        "comment": "Значение ставки (дублирует rate для совместимости)"
+      },
+      {
+        "columnName": "applies_from",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_DATE",
+        "comment": "Дата начала действия ставки (синоним effective_from)"
+      },
+      {
+        "columnName": "is_default",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": "Является ли ставкой по умолчанию для данного типа налога в режиме"
+      },
+      {
+        "columnName": "legal_forms",
+        "dataType": "ARRAY",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'{}'::text[]",
+        "comment": "Массив кодов юридических форм, для которых действует ставка (пусто = для всех)"
+      },
+      {
+        "columnName": "tax_type_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      }
+    ],
+    "foreignKeys": [
+      {
+        "constraintName": "finance_tax_rates_tax_regime_id_fkey",
+        "columnName": "tax_regime_id",
+        "foreignTableName": "finance_tax_regimes",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "CASCADE"
+      },
+      {
+        "constraintName": "finance_tax_rates_tax_type_id_fkey",
+        "columnName": "tax_type_id",
+        "foreignTableName": "finance_tax_types",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "NO ACTION"
+      }
+    ],
+    "indexes": [
+      {
+        "indexName": "finance_tax_rates_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      },
+      {
+        "indexName": "idx_finance_tax_rates_active",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{is_active}"
+      },
+      {
+        "indexName": "idx_finance_tax_rates_legal_forms",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{legal_forms}"
+      },
+      {
+        "indexName": "idx_finance_tax_rates_regime_id",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{tax_regime_id}"
+      },
+      {
+        "indexName": "idx_finance_tax_rates_type",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{tax_type}"
+      }
+    ]
+  },
+  "finance_tax_regimes": {
+    "description": null,
+    "rowCount": "7",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "code",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": "Код режима (OSN, USN_INCOME, USN_INCOME_EXPENSES)"
+      },
+      {
+        "columnName": "name",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": "Название режима"
+      },
+      {
+        "columnName": "description",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "is_active",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": null
+      },
+      {
+        "columnName": "default_vat_rate",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 5,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "20.00",
+        "comment": null
+      },
+      {
+        "columnName": "default_profit_tax_rate",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 5,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "20.00",
+        "comment": null
+      },
+      {
+        "columnName": "default_usn_rate",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 5,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "6.00",
+        "comment": null
+      },
+      {
+        "columnName": "default_insurance_rate",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 5,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "30.00",
+        "comment": null
+      },
+      {
+        "columnName": "default_ndfl_rate",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 5,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "13.00",
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      },
+      {
+        "columnName": "updated_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      },
+      {
+        "columnName": "applies_to_legal_forms",
+        "dataType": "ARRAY",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'{}'::text[]",
+        "comment": "Массив кодов юридических форм, для которых применим режим ([\"IP\", \"OOO\", \"AO\"])"
+      },
+      {
+        "columnName": "valid_from",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'2024-01-01'::date",
+        "comment": "Дата начала действия режима"
+      },
+      {
+        "columnName": "valid_to",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'2099-12-31'::date",
+        "comment": "Дата окончания действия режима (NULL - бессрочно)"
+      },
+      {
+        "columnName": "requires_nds",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": "Требуется ли НДС (синоним has_vat)"
+      },
+      {
+        "columnName": "max_income_limit",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 14,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Максимальный лимит годового дохода для применения режима"
+      },
+      {
+        "columnName": "max_employees_limit",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Максимальный лимит численности сотрудников"
+      },
+      {
+        "columnName": "requires_online_cashier",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": "Требуется ли использование онлайн-кассы"
+      }
+    ],
+    "foreignKeys": [],
+    "indexes": [
+      {
+        "indexName": "finance_tax_regimes_code_key",
+        "isUnique": true,
+        "isPrimary": false,
+        "columns": "{code}"
+      },
+      {
+        "indexName": "finance_tax_regimes_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      },
+      {
+        "indexName": "idx_finance_tax_regimes_active",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{is_active}"
+      },
+      {
+        "indexName": "idx_finance_tax_regimes_code",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{code}"
+      },
+      {
+        "indexName": "idx_finance_tax_regimes_legal_forms",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{applies_to_legal_forms}"
+      },
+      {
+        "indexName": "idx_finance_tax_regimes_valid_dates",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{valid_from,valid_to}"
+      }
+    ]
+  },
+  "finance_tax_types": {
+    "description": null,
+    "rowCount": "6",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": "nextval('finance_tax_types_id_seq'::regclass)",
+        "comment": null
+      },
+      {
+        "columnName": "code",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "name",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "description",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "country",
+        "dataType": "character varying",
+        "characterMaximumLength": 2,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'RU'::character varying",
+        "comment": null
+      },
+      {
+        "columnName": "is_active",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      },
+      {
+        "columnName": "updated_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      }
+    ],
+    "foreignKeys": [],
+    "indexes": [
+      {
+        "indexName": "finance_tax_types_code_key",
+        "isUnique": true,
+        "isPrimary": false,
+        "columns": "{code}"
+      },
+      {
+        "indexName": "finance_tax_types_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      }
+    ]
+  },
+  "projects": {
+    "description": null,
+    "rowCount": "2",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "name",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "client",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "manager",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "status",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "stage",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "priority",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "budget",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 15,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "budgetused",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 15,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "deadline",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "taskscount",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "completedtasks",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "parent_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "start_date",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Дата начала проекта"
+      },
+      {
+        "columnName": "end_date",
+        "dataType": "date",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Дата окончания проекта"
+      },
+      {
+        "columnName": "budget_currency",
+        "dataType": "character varying",
+        "characterMaximumLength": 3,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'RUB'::character varying",
+        "comment": "Валюта бюджета (RUB, USD, EUR)"
+      },
+      {
+        "columnName": "tax_regime_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "Ссылка на режим налогообложения из Finance"
+      },
+      {
+        "columnName": "overhead_allocated",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 15,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "0",
+        "comment": "Распределённые накладные расходы"
+      },
+      {
+        "columnName": "profit_actual",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 15,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "0",
+        "comment": "Фактическая прибыль"
+      },
+      {
+        "columnName": "profit_plan",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 15,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "0",
+        "comment": "Плановая прибыль"
+      },
+      {
+        "columnName": "wip_amount",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 15,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "0",
+        "comment": "Незавершённое производство (WIP)"
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      },
+      {
+        "columnName": "updated_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      }
+    ],
+    "foreignKeys": [
+      {
+        "constraintName": "projects_parent_id_fkey",
+        "columnName": "parent_id",
+        "foreignTableName": "projects",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "NO ACTION"
+      }
+    ],
+    "indexes": [
+      {
+        "indexName": "idx_projects_created_at",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{created_at}"
+      },
+      {
+        "indexName": "idx_projects_end_date",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{end_date}"
+      },
+      {
+        "indexName": "idx_projects_start_date",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{start_date}"
+      },
+      {
+        "indexName": "idx_projects_tax_regime_id",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{tax_regime_id}"
+      },
+      {
+        "indexName": "idx_projects_updated_at",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{updated_at}"
+      },
+      {
+        "indexName": "projects_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      }
+    ]
+  },
+  "tasks": {
+    "description": null,
+    "rowCount": "10",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "identifier",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "title",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "project",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "assignee",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "assignee_initials",
+        "dataType": "character varying",
+        "characterMaximumLength": 10,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "priority",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "status",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "due_date",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "project_stage_id",
+        "dataType": "integer",
+        "characterMaximumLength": null,
+        "numericPrecision": 32,
+        "numericScale": 0,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": "ID этапа проекта, к которому привязана задача"
+      }
+    ],
+    "foreignKeys": [
+      {
+        "constraintName": "fk_tasks_project_stage",
+        "columnName": "project_stage_id",
+        "foreignTableName": "project_stages",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "SET NULL"
+      },
+      {
+        "constraintName": "tasks_project_stage_id_fkey",
+        "columnName": "project_stage_id",
+        "foreignTableName": "project_stages",
+        "foreignColumnName": "id",
+        "updateRule": "NO ACTION",
+        "deleteRule": "SET NULL"
+      }
+    ],
+    "indexes": [
+      {
+        "indexName": "idx_tasks_project_stage",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{project_stage_id}"
+      },
+      {
+        "indexName": "idx_tasks_project_stage_id",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{project_stage_id}"
+      },
+      {
+        "indexName": "tasks_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      }
+    ]
+  },
+  "users": {
+    "description": null,
+    "rowCount": "9",
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "name",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "NO",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "initials",
+        "dataType": "character varying",
+        "characterMaximumLength": 10,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "role",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "status",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "avatar",
+        "dataType": "character varying",
+        "characterMaximumLength": 10,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "phone",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "department",
+        "dataType": "character varying",
+        "characterMaximumLength": 100,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "email",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "specializations",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "created_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      },
+      {
+        "columnName": "nickname",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "telegram_token",
+        "dataType": "character varying",
+        "characterMaximumLength": 100,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "reset_token",
+        "dataType": "character varying",
+        "characterMaximumLength": 100,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "reset_token_expires",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "password_hash",
+        "dataType": "character varying",
+        "characterMaximumLength": 255,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "rating",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 3,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "0.00",
+        "comment": null
+      },
+      {
+        "columnName": "hourly_rate",
+        "dataType": "numeric",
+        "characterMaximumLength": null,
+        "numericPrecision": 10,
+        "numericScale": 2,
+        "isNullable": "YES",
+        "columnDefault": "0.00",
+        "comment": null
+      },
+      {
+        "columnName": "last_active_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "is_blocked",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "false",
+        "comment": null
+      },
+      {
+        "columnName": "blocked_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "blocked_by",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "block_reason",
+        "dataType": "text",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "first_name",
+        "dataType": "character varying",
+        "characterMaximumLength": 100,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "last_name",
+        "dataType": "character varying",
+        "characterMaximumLength": 100,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "role_id",
+        "dataType": "character varying",
+        "characterMaximumLength": 50,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": null,
+        "comment": null
+      },
+      {
+        "columnName": "is_active",
+        "dataType": "boolean",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "true",
+        "comment": null
+      },
+      {
+        "columnName": "updated_at",
+        "dataType": "timestamp without time zone",
+        "characterMaximumLength": null,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "CURRENT_TIMESTAMP",
+        "comment": null
+      },
+      {
+        "columnName": "language",
+        "dataType": "character varying",
+        "characterMaximumLength": 10,
+        "numericPrecision": null,
+        "numericScale": null,
+        "isNullable": "YES",
+        "columnDefault": "'ru'::character varying",
+        "comment": null
+      }
+    ],
+    "foreignKeys": [],
+    "indexes": [
+      {
+        "indexName": "idx_users_hourly_rate",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{hourly_rate}"
+      },
+      {
+        "indexName": "idx_users_is_blocked",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{is_blocked}"
+      },
+      {
+        "indexName": "idx_users_last_active",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{last_active_at}"
+      },
+      {
+        "indexName": "idx_users_last_active_at",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{last_active_at}"
+      },
+      {
+        "indexName": "idx_users_nickname",
+        "isUnique": true,
+        "isPrimary": false,
+        "columns": "{nickname}"
+      },
+      {
+        "indexName": "idx_users_rating",
+        "isUnique": false,
+        "isPrimary": false,
+        "columns": "{rating}"
+      },
+      {
+        "indexName": "users_pkey",
+        "isUnique": true,
+        "isPrimary": true,
+        "columns": "{id}"
+      }
+    ]
+  }
+}

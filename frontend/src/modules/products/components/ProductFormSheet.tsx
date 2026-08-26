@@ -1,0 +1,416 @@
+import React, { useState, useEffect } from "react";
+import { ProductCategory, Product } from "../types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useCreateProduct, useUpdateProduct } from "../hooks";
+import { Plus, Trash2, Info, ListChecks, Package, Globe, Languages } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { useContentLanguages } from "@/modules/settings/hooks";
+import { useModuleSettings } from "@/modules/settings/hooks/useModuleSettings";
+import { useSheetTabs } from "@/hooks/useSheetTabs";
+import { ResizableSheet, SheetTabSettings } from "@/components/shared";
+import { TagInput, useStatuses } from "@/components/ui/status-system";
+import { useTranslation } from "@/lib/i18n";
+import { ProductBalancesTab } from "./ProductBalancesTab";
+
+interface ProductFormSheetProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  categories: ProductCategory[];
+  product?: Product | null;
+}
+
+interface StatusType {
+  id: string;
+  name: string;
+}
+
+export function ProductFormSheet({ open, onOpenChange, categories, product }: ProductFormSheetProps) {
+  const { t } = useTranslation();
+  const createProductMutation = useCreateProduct();
+  const updateProductMutation = useUpdateProduct();
+  const { settings } = useModuleSettings("products");
+  const { statuses } = useStatuses({ module: "products" });
+  const types = (settings?.types || []) as StatusType[];
+
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [skuInternal, setSkuInternal] = useState("");
+  const [skuExternal, setSkuExternal] = useState("");
+  const [purchasePrice, setPurchasePrice] = useState("");
+  const [vatRate, setVatRate] = useState("0");
+  const [categoryId, setCategoryId] = useState<string>("");
+  const [status, setStatus] = useState<string>("active");
+  const [type, setType] = useState<string>("");
+  const [tags, setTags] = useState<string[]>([]);
+  
+  const [characteristics, setCharacteristics] = useState<Array<{ id: string, name: string, value: string, unit: string }>>([]);
+  
+  // CMS fields
+  const [imageUrls, setImageUrls] = useState("");
+  const { languages, defaultLanguage } = useContentLanguages();
+  const [translations, setTranslations] = useState<Record<string, {name: string, description: string}>>({});
+
+  const resetForm = () => {
+    setName("");
+    setDescription("");
+    setSkuInternal("");
+    setSkuExternal("");
+    setPurchasePrice("");
+    setVatRate("0");
+    setCategoryId("");
+    setStatus("active");
+    setType("");
+    setTags([]);
+    setCharacteristics([]);
+    setTranslations({});
+    setImageUrls("");
+  };
+
+  const { tabs, toggleTab, moveTab } = useSheetTabs([
+    { id: "main", label: "products.form.tabs.main", visible: true, icon: Info },
+    { id: "characteristics", label: "products.form.tabs.characteristics", visible: true, icon: ListChecks },
+    { id: "balances", label: "warehouse.tabs.balances", visible: !!product?.id, icon: Package },
+    { id: "cms", label: "products.form.tabs.cms", visible: true, icon: Globe },
+    ...languages.filter(l => !l.isDefault).map(lang => ({
+      id: `lang_${lang.code}`,
+      label: `products.form.tabs.translation (${lang.code.toUpperCase()})`,
+      visible: true,
+      icon: Languages
+    }))
+  ], "product-form-sheet");
+  const [activeTab, setActiveTab] = useState("main");
+
+  useEffect(() => {
+    const currentTab = tabs.find(t => t.id === activeTab);
+    if (currentTab && !currentTab.visible) {
+      const firstVisible = tabs.find(t => t.visible);
+      if (firstVisible) {
+        setTimeout(() => setActiveTab(firstVisible.id), 0);
+      }
+    }
+  }, [tabs, activeTab]);
+
+  useEffect(() => {
+    queueMicrotask(() => {
+      if (open && product) {
+        setName(product.name || "");
+        setDescription(product.description || "");
+        setSkuInternal(product.skuInternal || "");
+        setSkuExternal(product.skuExternal || "");
+        setPurchasePrice(product.purchasePrice?.toString() || "");
+        setVatRate(product.vatRate?.toString() || "0");
+        setCategoryId(product.categoryId?.toString() || "");
+        setStatus(product.status || "active");
+        setType(product.type || "");
+        setTags(product.tags || []);
+        setCharacteristics((product.characteristics || []).map(c => ({ id: crypto.randomUUID(), name: c.name, value: c.value, unit: c.unit })));
+        setImageUrls((product.images || []).join('\n'));
+        const rawTr = product.translations || {};
+        setTranslations(Object.fromEntries(Object.entries(rawTr).map(([k, v]) => [k, { name: v?.name || '', description: v?.description || '' }])));
+      } else if (open && !product) {
+        resetForm();
+      }
+    });
+  }, [open, product]);
+
+  const handleTranslationChange = (langCode: string, field: 'name' | 'description', value: string) => {
+    setTranslations(prev => ({
+      ...prev,
+      [langCode]: {
+        ...(prev[langCode] || { name: '', description: '' }),
+        [field]: value
+      }
+    }));
+  };
+
+  const addCharacteristic = () => {
+    setCharacteristics(prev => [...prev, { id: crypto.randomUUID(), name: "", value: "", unit: "" }]);
+  };
+
+  const updateCharacteristic = (id: string, field: "name" | "value" | "unit", val: string) => {
+    setCharacteristics(prev => prev.map(c => c.id === id ? { ...c, [field]: val } : c));
+  };
+
+  const removeCharacteristic = (id: string) => {
+    setCharacteristics(prev => prev.filter(c => c.id !== id));
+  };
+
+  const flattenCategories = (cats: ProductCategory[], depth = 0): {id: number, name: string, depth: number}[] => {
+    let result: {id: number, name: string, depth: number}[] = [];
+    cats.forEach(c => {
+      result.push({ id: c.id, name: c.name, depth });
+      if (c.children && c.children.length > 0) {
+        result = result.concat(flattenCategories(c.children, depth + 1));
+      }
+    });
+    return result;
+  };
+
+  const flatCats = flattenCategories(categories || []);
+
+  const handleSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    
+    // Parse image URLs from multiline string
+    const images = imageUrls.split('\n').map(url => url.trim()).filter(url => url.length > 0);
+    
+    const payload = {
+      name,
+      description: description || undefined,
+      skuInternal: skuInternal || undefined,
+      skuExternal: skuExternal || undefined,
+      categoryId: categoryId && categoryId !== "none" ? parseInt(categoryId) : undefined,
+      purchasePrice: parseFloat(purchasePrice) || 0,
+      vatRate: parseFloat(vatRate) || 0,
+      status: status || undefined,
+      type: type || undefined,
+      tags: tags.length > 0 ? tags : undefined,
+      characteristics: characteristics.map(({ name, value, unit }) => ({ name, value, unit })),
+      images: images.length > 0 ? images : undefined,
+      translations: Object.keys(translations).length > 0 ? translations : undefined
+    };
+
+    if (product?.id) {
+      updateProductMutation.mutate({ id: product.id, data: payload }, {
+        onSuccess: () => {
+          onOpenChange(false);
+          resetForm();
+        }
+      });
+    } else {
+      createProductMutation.mutate(payload, {
+        onSuccess: () => {
+          onOpenChange(false);
+          resetForm();
+        }
+      });
+    }
+  };
+
+
+  return (
+    <ResizableSheet
+      open={open}
+      onOpenChange={(val) => {
+        if (!val) resetForm();
+        onOpenChange(val);
+      }}
+      onSave={handleSubmit}
+      title={product ? t('products.form.title_edit') : t('products.form.title_add')}
+      description={t('products.form.description')}
+      defaultWidth="2xl"
+      moduleKey="products"
+      saveButtonLabel="common.save"
+      cancelButtonLabel="common.cancel"
+    >
+      <form id="product-form" onSubmit={handleSubmit} className="flex flex-col h-full">
+        <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex items-center gap-2 mb-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="w-full justify-start overflow-x-auto">
+                {tabs.map(tab => {
+                  if (!tab.visible) return null;
+                  const label = tab.label.includes('(') ? tab.label : t(tab.label);
+                  return (
+                    <TabsTrigger key={tab.id} value={tab.id} className="gap-1.5 text-xs">
+                      {tab.id === 'main' ? `${label} (${defaultLanguage.code.toUpperCase()})` : label}
+                    </TabsTrigger>
+                  );
+                })}
+              </TabsList>
+            </Tabs>
+            <SheetTabSettings tabs={tabs} onToggle={toggleTab} onMove={moveTab} />
+          </div>
+
+          {tabs.find(t => t.id === "main")?.visible && activeTab === "main" && (
+            <div className="space-y-4 animate-in fade-in-50">
+              <div className="space-y-2">
+                <Label>{t('products.form.fields.name')} ({defaultLanguage.code.toUpperCase()}) *</Label>
+                <Input required value={name} onChange={e => setName(e.target.value)} placeholder={t('products.form.placeholders.name')} />
+              </div>
+              
+              <div className="space-y-2">
+                <Label>{t('products.form.fields.description')} ({defaultLanguage.code.toUpperCase()})</Label>
+                <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder={t('products.form.placeholders.description')} />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>{t('products.form.fields.sku_internal')}</Label>
+                  <Input value={skuInternal} onChange={e => setSkuInternal(e.target.value)} placeholder={t('products.form.placeholders.sku_internal')} />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t('products.form.fields.sku_external')}</Label>
+                  <Input value={skuExternal} onChange={e => setSkuExternal(e.target.value)} placeholder={t('products.form.placeholders.sku_external')} />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>{t('products.form.fields.category')}</Label>
+                <Select value={categoryId} onValueChange={setCategoryId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('products.form.placeholders.category')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">{t('products.form.without_category')}</SelectItem>
+                    {flatCats.map(cat => (
+                      <SelectItem key={cat.id} value={cat.id.toString()}>
+                        {'\u00A0'.repeat(cat.depth * 4)}{cat.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>{t('products.form.fields.purchase_price')}</Label>
+                  <Input type="number" step="0.01" value={purchasePrice} onChange={e => setPurchasePrice(e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t('products.form.fields.vat_rate')}</Label>
+                  <Input type="number" value={vatRate} onChange={e => setVatRate(e.target.value)} />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>{t('products.form.fields.product_type')}</Label>
+                  <Select value={type} onValueChange={setType}>
+                    <SelectTrigger>
+                      <SelectValue placeholder={t('products.form.placeholders.product_type')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {types.map(t => (
+                        <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>{t('products.form.fields.status')}</Label>
+                  <Select value={status} onValueChange={setStatus}>
+                    <SelectTrigger>
+                      <SelectValue placeholder={t('products.form.placeholders.status')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {statuses.map(s => (
+                        <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>{t('products.form.fields.tags')}</Label>
+                <TagInput placeholder={t('products.form.placeholders.tags')} value={tags} onChange={setTags} module="products" />
+              </div>
+          </div>
+        )}
+
+        {tabs.find(t => t.id === "characteristics")?.visible && activeTab === "characteristics" && (
+          <div className="space-y-4 animate-in fade-in-50">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-medium">{t('products.form.fields.characteristics')}</h3>
+                <p className="text-sm text-muted-foreground">{t('products.form.fields.characteristics_desc')}</p>
+              </div>
+              <Button type="button" variant="outline" size="sm" onClick={addCharacteristic}>
+                <Plus className="w-4 h-4 mr-2" />
+                {t('products.form.fields.add_characteristic')}
+              </Button>
+            </div>
+
+            {characteristics.length === 0 ? (
+              <div className="text-center p-8 border border-dashed rounded-md text-muted-foreground text-sm">
+                {t('products.form.fields.no_characteristics')}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {characteristics.map((char, index) => (
+                  <div key={char.id} className="flex gap-2 items-start">
+                    <div className="flex-1 space-y-1">
+                      {index === 0 && <Label className="text-xs text-muted-foreground">{t('products.form.fields.characteristic_name_placeholder')}</Label>}
+                      <Input value={char.name} onChange={e => updateCharacteristic(char.id, "name", e.target.value)} placeholder={t('products.form.fields.characteristic_name')} />
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      {index === 0 && <Label className="text-xs text-muted-foreground">{t('products.form.fields.characteristic_value_placeholder')}</Label>}
+                      <Input value={char.value} onChange={e => updateCharacteristic(char.id, "value", e.target.value)} placeholder={t('products.form.fields.characteristic_value')} />
+                    </div>
+                    <div className="w-24 space-y-1">
+                      {index === 0 && <Label className="text-xs text-muted-foreground">{t('products.form.fields.characteristic_unit_placeholder')}</Label>}
+                      <Input value={char.unit} onChange={e => updateCharacteristic(char.id, "unit", e.target.value)} placeholder={t('products.form.fields.characteristic_unit')} />
+                    </div>
+                    <div className={index === 0 ? "pt-5" : ""}>
+                      <Button type="button" variant="ghost" size="icon" onClick={() => removeCharacteristic(char.id)} className="text-destructive hover:bg-destructive/10">
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {tabs.find(t => t.id === "balances")?.visible && activeTab === "balances" && (
+          <div className="space-y-4 animate-in fade-in-50">
+            <ProductBalancesTab productId={product?.id} />
+          </div>
+        )}
+        
+        {tabs.find(t => t.id === "cms")?.visible && activeTab === "cms" && (
+          <div className="space-y-4 animate-in fade-in-50">
+            <div>
+              <h3 className="text-lg font-medium">{t('products.form.fields.images')}</h3>
+              <p className="text-sm text-muted-foreground mb-4">{t('products.form.fields.images_desc')}</p>
+              <Textarea 
+                value={imageUrls} 
+                onChange={e => setImageUrls(e.target.value)} 
+                placeholder={t('products.form.placeholders.images')} 
+                rows={4}
+              />
+            </div>
+          </div>
+        )}
+
+        {languages.filter(l => !l.isDefault).map(lang => (
+          tabs.find(t => t.id === `lang_${lang.code}`)?.visible && activeTab === `lang_${lang.code}` && (
+            <div key={lang.code} className="space-y-4 animate-in fade-in-50">
+              <div>
+                <h3 className="text-lg font-medium">{t('products.form.fields.version')} ({lang.code.toUpperCase()})</h3>
+                <p className="text-sm text-muted-foreground mb-4">{t('products.form.fields.translations_desc')} ({lang.name}).</p>
+                
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>{t('products.form.fields.name')} ({lang.code.toUpperCase()})</Label>
+                    <Input 
+                      value={translations[lang.code]?.name || ""} 
+                      onChange={e => handleTranslationChange(lang.code, 'name', e.target.value)} 
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label>{t('products.form.fields.description')} ({lang.code.toUpperCase()})</Label>
+                    <Textarea 
+                      value={translations[lang.code]?.description || ""} 
+                      onChange={e => handleTranslationChange(lang.code, 'description', e.target.value)} 
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        ))}
+        </div>
+      </form>
+    </ResizableSheet>
+  );
+}

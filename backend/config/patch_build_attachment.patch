@@ -1,0 +1,34 @@
+--- a/modules/mail/utils/helpers.js
++++ b/modules/mail/utils/helpers.js
+@@ -130,7 +130,7 @@
+ 
+ // Построить структурированный путь для вложения
+ // Возвращает { storedPath, directory } — относительный путь для БД и абсолютную директорию
+-function buildAttachmentPath(accountId, folderId, mailId, originalName) {
++function buildAttachmentPath(accountId, folderId, mailId, originalName, mailInfo = null) {
+   const storageSettings = settings.attachmentStorage || {};
+   const mode = storageSettings.mode || 'structured';
+   const preserveName = storageSettings.preserveOriginalName !== false;
+@@ -147,8 +147,19 @@
+       ? `${uuid}_${(originalName || 'attachment').replace(/[^a-zA-Z0-9._-\u0400-\u04FF]/g, '_')}`
+       : `${uuid}${ext}`;
+ 
+-    storedPath = path.posix.join(accountId, folderId || 'unknown', mailId, safeName);
+-    directory = path.join(uploadsDir, accountId, folderId || 'unknown', mailId);
++    if (mailInfo) {
++      const safeFolder = (mailInfo.folderName || 'unknown').replace(/[^a-zA-Z0-9.\- \u0400-\u04FF]/g, '_').trim() || 'unknown';
++      let dateStr = 'unknown_date';
++      if (mailInfo.date) {
++        try { dateStr = new Date(mailInfo.date).toISOString().split('T')[0]; } catch(e) {}
++      }
++      const safeSubject = (mailInfo.subject || 'Без темы').replace(/[^a-zA-Z0-9.\- \u0400-\u04FF]/g, '_').replace(/\s+/g, ' ').trim().substring(0, 50);
++      const mailDirName = `${dateStr} ${safeSubject} [${mailId.substring(0, 8)}]`.trim();
++      storedPath = path.posix.join(safeFolder, mailDirName, safeName);
++      directory = path.join(uploadsDir, safeFolder, mailDirName);
++    } else {
++      storedPath = path.posix.join(accountId, folderId || 'unknown', mailId, safeName);
++      directory = path.join(uploadsDir, accountId, folderId || 'unknown', mailId);
++    }
+   } else {
+     // Legacy flat mode
+     const ext = path.extname(originalName || '.bin');
