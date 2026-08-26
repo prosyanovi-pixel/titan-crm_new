@@ -96,6 +96,8 @@ export function Tag({
     md: 'rounded',
     full: 'pill',
   };
+  
+  const { t } = useTranslation();
 
   return (
     <Badge
@@ -123,7 +125,7 @@ export function Tag({
             e.stopPropagation();
             onRemove();
           }}
-          aria-label={`Удалить тег`}
+          aria-label={t('components.status_system.tag.remove') || 'Удалить тег'}
         >
           <X className="w-3 h-3" />
         </button>
@@ -195,12 +197,13 @@ export interface TagInputProps {
 export function TagInput({
   value,
   onChange,
-  placeholder = 'Добавьте тег...',
+  placeholder,
   className,
   disabled = false,
   module,
 }: TagInputProps & { module?: string }) {
   const { t } = useTranslation();
+  const finalPlaceholder = placeholder || t('components.status_system.tag.placeholder');
   const [input, setInput] = React.useState('');
   const [isOpen, setIsOpen] = React.useState(false);
   const { tags: existingTags } = useTags({ module });
@@ -259,7 +262,7 @@ export function TagInput({
           }}
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          placeholder={value.length === 0 ? placeholder : ''}
+          placeholder={value.length === 0 ? finalPlaceholder : ''}
           disabled={disabled}
           className="flex-1 min-w-[120px] outline-none text-sm bg-transparent"
         />

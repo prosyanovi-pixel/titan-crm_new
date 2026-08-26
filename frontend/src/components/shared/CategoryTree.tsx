@@ -84,6 +84,7 @@ interface TreeNodeProps {
 }
 
 function TreeNode({ node, level, selectedId, onSelect, onAddCategory, onEditCategory, onDeleteCategory }: TreeNodeProps) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const hasChildren = node.children && node.children.length > 0;
   const isSelected = selectedId === node.id;
