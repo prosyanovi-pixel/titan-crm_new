@@ -40,13 +40,13 @@ export function ContractorDashboardTab({ contractor, onNavigate, onUpdateField }
 
   // Use real data or fallback to empty array
   const displayActivityData = chartData.length > 0 ? chartData : [
-    { name: 'Янв', value: 0 },
-    { name: 'Фев', value: 0 },
-    { name: 'Мар', value: 0 },
-    { name: 'Апр', value: 0 },
-    { name: 'Май', value: 0 },
-    { name: 'Июн', value: 0 },
-    { name: 'Июл', value: 0 },
+    { name: t('contractors.contractor_sheet.dashboard.months_short.jan'), value: 0 },
+    { name: t('contractors.contractor_sheet.dashboard.months_short.feb'), value: 0 },
+    { name: t('contractors.contractor_sheet.dashboard.months_short.mar'), value: 0 },
+    { name: t('contractors.contractor_sheet.dashboard.months_short.apr'), value: 0 },
+    { name: t('contractors.contractor_sheet.dashboard.months_short.may'), value: 0 },
+    { name: t('contractors.contractor_sheet.dashboard.months_short.jun'), value: 0 },
+    { name: t('contractors.contractor_sheet.dashboard.months_short.jul'), value: 0 },
   ];
 
   return (
@@ -102,8 +102,8 @@ export function ContractorDashboardTab({ contractor, onNavigate, onUpdateField }
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">{contractor.manager || "Не назначен"}</p>
-              <p className="text-xs text-muted-foreground truncate">Ответственный</p>
+              <p className="text-sm font-medium text-foreground truncate">{contractor.manager || t('contractors.contractor_sheet.dashboard.not_assigned')}</p>
+              <p className="text-xs text-muted-foreground truncate">{t('contractors.contractor_sheet.dashboard.responsible')}</p>
             </div>
           </div>
         </div>
@@ -113,7 +113,7 @@ export function ContractorDashboardTab({ contractor, onNavigate, onUpdateField }
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <MetricCard 
           icon={<Wallet className="w-5 h-5" />} 
-          label="Оборот (Mock)" 
+          label={t('contractors.contractor_sheet.dashboard.turnover_mock')} 
           value="₽ 1.2M" 
           trend="+15%" 
           color="text-emerald-500" 
@@ -121,7 +121,7 @@ export function ContractorDashboardTab({ contractor, onNavigate, onUpdateField }
         />
         <MetricCard 
           icon={<Briefcase className="w-5 h-5" />} 
-          label="Сделки (Mock)" 
+          label={t('contractors.contractor_sheet.dashboard.deals_mock')} 
           value="4" 
           onClick={() => onNavigate && onNavigate("deals")}
           color="text-blue-500" 
@@ -129,7 +129,7 @@ export function ContractorDashboardTab({ contractor, onNavigate, onUpdateField }
         />
         <MetricCard 
           icon={<CalendarCheck className="w-5 h-5" />} 
-          label="Активные задачи" 
+          label={t('contractors.contractor_sheet.dashboard.active_tasks')} 
           value="2" 
           onClick={() => onNavigate && onNavigate("activity")}
           color="text-amber-500" 
@@ -137,7 +137,7 @@ export function ContractorDashboardTab({ contractor, onNavigate, onUpdateField }
         />
         <MetricCard 
           icon={<Network className="w-5 h-5" />} 
-          label="Проекты" 
+          label={t('contractors.contractor_sheet.dashboard.projects')} 
           value="1" 
           color="text-purple-500" 
           bg="bg-purple-500/10"
@@ -163,14 +163,14 @@ export function ContractorDashboardTab({ contractor, onNavigate, onUpdateField }
           <div className="flex-1 mt-2">
             {isChartLoading ? (
               <div className="h-[180px] w-full flex items-center justify-center">
-                <span className="text-sm text-muted-foreground animate-pulse">Загрузка...</span>
+                <span className="text-sm text-muted-foreground animate-pulse">{t('common.loading')}...</span>
               </div>
             ) : (
               <MiniAreaChart 
                 data={displayActivityData} 
                 color="#3b82f6" 
                 height={180}
-                valueFormatter={(val) => `${val} событий`}
+                valueFormatter={(val) => `${val} ${t('contractors.contractor_sheet.dashboard.events_count')}`}
               />
             )}
           </div>
@@ -189,7 +189,7 @@ export function ContractorDashboardTab({ contractor, onNavigate, onUpdateField }
               className="flex-1 w-full min-h-[160px] rounded-xl border border-input bg-muted/20 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:bg-background focus:ring-1 focus:ring-primary outline-none resize-none transition-colors"
               value={contractor.notes || ""}
               onChange={(e) => onUpdateField && onUpdateField("notes", e.target.value)}
-              placeholder="Дополнительные заметки..."
+              placeholder={t('contractors.placeholder.notes')}
             />
           </div>
         </div>

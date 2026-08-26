@@ -74,7 +74,7 @@ export function ContractorSheet({
   
   // Tab Management
   const { tabs, toggleTab, moveTab } = useSheetTabs([
-    { id: "dashboard", label: "Дашборд", icon: Activity, visible: true },
+    { id: "dashboard", label: t('contractors.contractor_sheet.tabs.dashboard'), icon: Activity, visible: true },
     { id: "overview", label: "contractors.tabs.card", icon: CircleDot, visible: true },
     { id: "comments", label: "components.comments.title", icon: MessageSquare, visible: true },
     { id: "contacts", label: "contractors.tabs.contacts", icon: Users, visible: true },

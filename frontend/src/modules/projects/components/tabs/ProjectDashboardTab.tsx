@@ -43,13 +43,13 @@ export function ProjectDashboardTab({ project, onNavigate, onUpdateField }: Proj
 
   // Use real data or fallback to empty array
   const displayChartData = chartData.length > 0 ? chartData : [
-    { name: 'Пн', value: 0 },
-    { name: 'Вт', value: 0 },
-    { name: 'Ср', value: 0 },
-    { name: 'Чт', value: 0 },
-    { name: 'Пт', value: 0 },
-    { name: 'Сб', value: 0 },
-    { name: 'Вс', value: 0 },
+    { name: t('common.calendar.weekdays.mon'), value: 0 },
+    { name: t('common.calendar.weekdays.tue'), value: 0 },
+    { name: t('common.calendar.weekdays.wed'), value: 0 },
+    { name: t('common.calendar.weekdays.thu'), value: 0 },
+    { name: t('common.calendar.weekdays.fri'), value: 0 },
+    { name: t('common.calendar.weekdays.sat'), value: 0 },
+    { name: t('common.calendar.weekdays.sun'), value: 0 },
   ];
 
   return (
@@ -104,8 +104,8 @@ export function ProjectDashboardTab({ project, onNavigate, onUpdateField }: Proj
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">{project.manager || "Не назначен"}</p>
-              <p className="text-xs text-muted-foreground truncate">Ответственный</p>
+              <p className="text-sm font-medium text-foreground truncate">{project.manager || t('projects.sheet.dashboard.not_assigned')}</p>
+              <p className="text-xs text-muted-foreground truncate">{t('projects.sheet.dashboard.responsible')}</p>
             </div>
           </div>
         </div>
@@ -115,21 +115,21 @@ export function ProjectDashboardTab({ project, onNavigate, onUpdateField }: Proj
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <MetricCard 
           icon={<Wallet className="w-5 h-5" />} 
-          label="Бюджет" 
+          label={t('projects.sheet.dashboard.budget')} 
           value={`₽ ${(project.budget || 0).toLocaleString()}`} 
           color="text-emerald-500" 
           bg="bg-emerald-500/10"
         />
         <MetricCard 
           icon={<Activity className="w-5 h-5" />} 
-          label="Использовано" 
+          label={t('projects.sheet.dashboard.used')} 
           value={`₽ ${(project.budgetUsed || 0).toLocaleString()}`} 
           color="text-blue-500" 
           bg="bg-blue-500/10"
         />
         <MetricCard 
           icon={<CalendarCheck className="w-5 h-5" />} 
-          label="Задачи" 
+          label={t('projects.sheet.dashboard.tasks')} 
           value={`${project.completedTasks || 0} / ${project.tasksCount || 0}`} 
           onClick={() => onNavigate && onNavigate("general")}
           color="text-amber-500" 
@@ -137,7 +137,7 @@ export function ProjectDashboardTab({ project, onNavigate, onUpdateField }: Proj
         />
         <MetricCard 
           icon={<ListChecks className="w-5 h-5" />} 
-          label="Этапы" 
+          label={t('projects.sheet.dashboard.stages')} 
           value="0" 
           onClick={() => onNavigate && onNavigate("stages")}
           color="text-purple-500" 
@@ -164,7 +164,7 @@ export function ProjectDashboardTab({ project, onNavigate, onUpdateField }: Proj
           <div className="flex-1 mt-2">
             {isChartLoading ? (
               <div className="h-[180px] w-full flex items-center justify-center">
-                <span className="text-sm text-muted-foreground animate-pulse">Загрузка...</span>
+                <span className="text-sm text-muted-foreground animate-pulse">{t('common.loading')}...</span>
               </div>
             ) : (
               <MiniAreaChart 
@@ -190,7 +190,7 @@ export function ProjectDashboardTab({ project, onNavigate, onUpdateField }: Proj
               className="flex-1 w-full min-h-[160px] rounded-xl border border-input bg-muted/20 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:bg-background focus:ring-1 focus:ring-primary outline-none resize-none transition-colors"
               value={project.description || ""}
               onChange={(e) => onUpdateField && onUpdateField("description", e.target.value)}
-              placeholder="Дополнительные заметки..."
+              placeholder={t('projects.sheet.dashboard.notes_placeholder')}
             />
           </div>
         </div>

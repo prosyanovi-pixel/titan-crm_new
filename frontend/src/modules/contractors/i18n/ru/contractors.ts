@@ -96,6 +96,7 @@ export const contractors = {
     summary_desc: "Автоматически сгенерированный анализ контрагента."
   },
   conversion_wizard: {
+    title: "Смена организационно-правовой формы",
     success: "Контрагент успешно сконвертирован",
     description: "Создание преемника с переносом истории, связей и контактов.",
     how_it_works_title: "Как это работает?",
@@ -199,8 +200,32 @@ export const contractor_sheet = {
   },
   tabs: {
     card: "Карточка",
+    dashboard: "Дашборд",
     activity: "Активность",
     contacts: "Контакты"
+  },
+  dashboard: {
+    months_short: {
+      jan: "Янв",
+      feb: "Фев",
+      mar: "Мар",
+      apr: "Апр",
+      may: "Май",
+      jun: "Июн",
+      jul: "Июл",
+      aug: "Авг",
+      sep: "Сен",
+      oct: "Окт",
+      nov: "Ноя",
+      dec: "Дек"
+    },
+    not_assigned: "Не назначен",
+    responsible: "Ответственный",
+    turnover_mock: "Оборот (Mock)",
+    deals_mock: "Сделки (Mock)",
+    active_tasks: "Активные задачи",
+    projects: "Проекты",
+    events_count: "событий"
   },
   action: {
     configure: "настроить",
@@ -251,7 +276,8 @@ export const contractor_sheet = {
     private_name_placeholder: "Иванов Иван Иванович",
     company_name_placeholder: "ООО «Название компании»",
     legal_address_placeholder: "127030, РОССИЯ, Г. МОСКВА, УЛ. СУЩЁВСКАЯ, Д. 12",
-    date_format_placeholder: "ДД.ММ.ГГГГ"
+    date_format_placeholder: "ДД.ММ.ГГГГ",
+    rf: "РФ"
   },
   enrichment: {
     sources: {

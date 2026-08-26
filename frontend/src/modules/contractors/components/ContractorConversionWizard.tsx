@@ -96,7 +96,7 @@ export function ContractorConversionWizard({
         payload
       );
       
-      toast.success('Контрагент успешно сконвертирован');
+      toast.success(t('contractors.conversion_wizard.success'));
       onSuccess(data.data);
       onOpenChange(false);
     } catch (error: any) {
@@ -114,10 +114,10 @@ export function ContractorConversionWizard({
       title={
         <div className="flex items-center gap-2">
           <RefreshCw className="w-5 h-5 text-primary" />
-          Смена организационно-правовой формы
+          {t('contractors.conversion_wizard.title')}
         </div>
       }
-      description="Создание преемника с переносом истории, связей и контактов."
+      description={t('contractors.conversion_wizard.description')}
       hideFooter
     >
       <div className="flex flex-col h-full">
@@ -126,16 +126,16 @@ export function ContractorConversionWizard({
             <div className="space-y-4">
               <Alert variant="default" className="bg-primary/5 border-primary/20">
                 <AlertTriangle className="h-4 w-4 text-primary" />
-                <AlertTitle>Как это работает?</AlertTitle>
+                <AlertTitle>{t('contractors.conversion_wizard.how_it_works_title')}</AlertTitle>
                 <AlertDescription className="text-xs text-muted-foreground mt-2 space-y-2">
-                  <p>1. Текущая карточка будет переведена в статус "Неактивна".</p>
-                  <p>2. Будет создана <b>новая</b> карточка контрагента, связанная с текущей (преемник).</p>
-                  <p>3. Контакты, счета, теги и файлы будут автоматически скопированы.</p>
+                  <p>{t('contractors.conversion_wizard.step_1')}</p>
+                  <p>{t('contractors.conversion_wizard.step_2_part_1')} <b>{t('contractors.conversion_wizard.step_2_bold')}</b> {t('contractors.conversion_wizard.step_2_part_2')}</p>
+                  <p>{t('contractors.conversion_wizard.step_3')}</p>
                 </AlertDescription>
               </Alert>
 
               <div className="space-y-2">
-                <Label>Текущая форма</Label>
+                <Label>{t('contractors.conversion_wizard.current_form')}</Label>
                 <div className="p-3 bg-muted rounded-md text-sm border font-medium">
                   {legalForms.find(f => f.id === contractor.legalForm)?.name || contractor.legalForm}
                   <span className="text-muted-foreground ml-2">({contractor.name})</span>
@@ -147,10 +147,10 @@ export function ContractorConversionWizard({
               </div>
 
               <div className="space-y-2">
-                <Label>Новая форма</Label>
+                <Label>{t('contractors.conversion_wizard.new_form')}</Label>
                 <Select value={targetFormCode} onValueChange={setTargetFormCode}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Выберите новую организационно-правовую форму..." />
+                    <SelectValue placeholder={t('contractors.conversion_wizard.select_new_form_placeholder')} />
                   </SelectTrigger>
                   <SelectContent>
                     {legalForms.filter(f => f.id !== contractor.legalForm).map(f => (
@@ -168,12 +168,12 @@ export function ContractorConversionWizard({
             <div className="space-y-4">
               <div className="flex items-center gap-3 p-3 bg-muted rounded-lg border">
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs text-muted-foreground">Источник</div>
+                  <div className="text-xs text-muted-foreground">{t('contractors.conversion_wizard.source')}</div>
                   <div className="font-medium truncate">{contractor.name}</div>
                 </div>
                 <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                 <div className="flex-1 min-w-0 text-right">
-                  <div className="text-xs text-muted-foreground">Целевая форма</div>
+                  <div className="text-xs text-muted-foreground">{t('contractors.conversion_wizard.target_form')}</div>
                   <div className="font-medium text-primary truncate">{targetForm?.name}</div>
                 </div>
               </div>
@@ -207,7 +207,7 @@ export function ContractorConversionWizard({
                     <Input 
                       value={mappedData.inn || ''} 
                       onChange={e => setMappedData(p => ({ ...p, inn: e.target.value }))} 
-                      placeholder="12 цифр"
+                      placeholder={t('contractors.conversion_wizard.placeholder_12_digits')}
                     />
                   </div>
                 </div>
@@ -233,7 +233,7 @@ export function ContractorConversionWizard({
                     <Input 
                       value={mappedData.inn || ''} 
                       onChange={e => setMappedData(p => ({ ...p, inn: e.target.value }))} 
-                      placeholder="10 цифр"
+                      placeholder={t('contractors.conversion_wizard.placeholder_10_digits')}
                     />
                   </div>
                   <div className="space-y-2">

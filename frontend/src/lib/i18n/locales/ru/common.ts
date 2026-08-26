@@ -379,6 +379,7 @@ export const common = {
   new_category: "Новая категория",
   no_actions: "Нет действий",
   not_specified: "Не указано",
+  unknown: "Неизвестный",
   reason: "Причина",
   reset_success: "Настройки сброшены",
   select: "Выбрать",

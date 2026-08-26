@@ -76,7 +76,7 @@ export function TaskGeneralTab({ formData, handleChange, projects = [], referenc
     const allCompleted = updated.length > 0 && updated.every(s => s.completed);
     
     if (allCompleted && formData.status !== 'Done') {
-      if (confirm(t('tasks.confirm.complete_task_all_subtasks') || 'Все подзадачи выполнены. Отметить задачу как выполненную?')) {
+      if (confirm(t('tasks.confirm.complete_task_all_subtasks'))) {
         // Обновляем статус и подзадачи вместе
         handleChange("status", 'Done');
         handleChange("subTasks", updated);

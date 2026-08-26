@@ -229,7 +229,7 @@ export function ProjectStagesTab({ projectId, projectName, onOpenTaskSheet }: Pr
     setEditingTask(null);
     setTargetStageId(stageId);
     setTaskFormData({
-      title: stageName ? `Задача: ${stageName}` : "",
+        title: stageName ? t('projects.stages.task_prefix', { name: stageName }) : "",
       status: "To Do",
       priority: "Medium",
       assignee: currentUserName,
@@ -309,7 +309,7 @@ export function ProjectStagesTab({ projectId, projectName, onOpenTaskSheet }: Pr
     const allCompleted = updated.length > 0 && updated.every(s => s.completed);
     
     if (allCompleted && taskFormData.status !== 'Done') {
-      if (confirm(t('tasks.confirm.complete_task_all_subtasks') || 'Все подзадачи выполнены. Отметить задачу как выполненную?')) {
+      if (confirm(t('tasks.confirm.complete_task_all_subtasks'))) {
         setTaskFormData({ ...taskFormData, subTasks: updated, status: 'Done' });
         return;
       }

@@ -18,6 +18,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { t } from '@/lib/i18n';
 import { useTranslation } from '@/lib/i18n';
 
 export interface StageTemplate {
@@ -31,57 +32,57 @@ export interface StageTemplate {
 const STAGE_TEMPLATES: StageTemplate[] = [
   {
     id: 'advance',
-    name: 'Аванс',
-    description: 'Получение авансового платежа',
+    name: t('projects.stages.templates.advance.name'),
+    description: t('projects.stages.templates.advance.description'),
     color: '#f59e0b',
     icon: <DollarSign className="w-5 h-5" />
   },
   {
     id: 'design',
-    name: 'Проектирование',
-    description: 'Разработка и согласование проектной документации',
+    name: t('projects.stages.templates.design.name'),
+    description: t('projects.stages.templates.design.description'),
     color: '#3b82f6',
     icon: <DraftingCompass className="w-5 h-5" />
   },
   {
     id: 'procurement',
-    name: 'Закупки',
-    description: 'Закупка необходимых материалов и оборудования',
+    name: t('projects.stages.templates.procurement.name'),
+    description: t('projects.stages.templates.procurement.description'),
     color: '#8b5cf6',
     icon: <ShoppingCart className="w-5 h-5" />
   },
   {
     id: 'production',
-    name: 'Производство',
-    description: 'Изготовление конструкций или продукции',
+    name: t('projects.stages.templates.production.name'),
+    description: t('projects.stages.templates.production.description'),
     color: '#10b981',
     icon: <Hammer className="w-5 h-5" />
   },
   {
     id: 'installation',
-    name: 'Монтаж',
-    description: 'Монтажные и пусконаладочные работы на объекте',
+    name: t('projects.stages.templates.installation.name'),
+    description: t('projects.stages.templates.installation.description'),
     color: '#14b8a6',
     icon: <Truck className="w-5 h-5" />
   },
   {
     id: 'handover',
-    name: 'Сдача-приемка',
-    description: 'Подписание актов и окончательная сдача работ',
+    name: t('projects.stages.templates.acceptance.name'),
+    description: t('projects.stages.templates.acceptance.description'),
     color: '#22c55e',
     icon: <CheckCircle2 className="w-5 h-5" />
   },
   {
     id: 'contracting',
-    name: 'Договор',
-    description: 'Подготовка и подписание договора',
+    name: t('projects.stages.templates.contract.name'),
+    description: t('projects.stages.templates.contract.description'),
     color: '#6366f1',
     icon: <FileText className="w-5 h-5" />
   },
   {
     id: 'blank',
-    name: 'Пустой этап',
-    description: 'Создать этап с произвольными данными',
+    name: t('projects.stages.templates.empty.name'),
+    description: t('projects.stages.templates.empty.description'),
     color: '',
     icon: <Plus className="w-5 h-5" />
   },
@@ -122,7 +123,7 @@ export function StageTemplatePicker({ onSelect, trigger, open: controlledOpen, o
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Поиск блоков..."
+              placeholder={t('projects.stages.search_blocks')}
               className="pl-9 h-9 border-primary/20 focus-visible:ring-primary/20"
               value={search}
               onChange={(e) => setSearch(e.target.value)}

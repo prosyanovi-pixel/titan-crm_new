@@ -98,7 +98,7 @@ export const ProjectKanbanCard = ({ project, onEdit, onDelete, onArchive, onDupl
                 setIsMenuOpen(false);
               }}>
                 <Copy className="w-4 h-4 mr-2" />
-                {t('general.actions.duplicate') || 'Дублировать'}
+                {t('general.actions.duplicate')}
               </DropdownMenuItem>
               
               {(onArchive || onDelete) && <DropdownMenuSeparator />}
@@ -110,7 +110,7 @@ export const ProjectKanbanCard = ({ project, onEdit, onDelete, onArchive, onDupl
                   setIsMenuOpen(false);
                 }}>
                   <Archive className="w-4 h-4 mr-2" />
-                  {t('general.actions.archive') || 'Архивировать'}
+                  {t('general.actions.archive')}
                 </DropdownMenuItem>
               )}
               

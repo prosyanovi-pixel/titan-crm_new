@@ -119,7 +119,7 @@ export function ProjectSheet({
 
   // Tab Management with Persistence
   const { tabs, toggleTab, moveTab } = useSheetTabs([
-    { id: "dashboard", label: "Дашборд", icon: Activity, visible: true },
+    { id: "dashboard", label: "sheet.tabs.dashboard", icon: Activity, visible: true },
     { id: "general", label: "sheet.tabs.overview", icon: Info, visible: true },
     { id: "comments", label: "components.comments.title", icon: MessageSquare, visible: true },
     { id: "stages", label: "sheet.tabs.stages", icon: ListChecks, visible: settings.features?.enableMilestones !== false },

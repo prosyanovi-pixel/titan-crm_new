@@ -17,7 +17,8 @@ export const projects = {
     parent_project: "Родительский проект"
   },
   placeholder: {
-    no_parent: "Нет родительского проекта"
+    no_parent: "Нет родительского проекта",
+    description: "Введите описание проекта..."
   },
   stats: {
     total: "Всего проектов",
@@ -109,9 +110,28 @@ export const projects = {
     payment_date_format: "Неверный формат даты платежа (ДД.ММ.ГГГГ)",
   },
   sheet: {
+    tabs: {
+      overview: "Обзор",
+      stages: "Этапы",
+      contracts: "Договоры",
+      revenues: "Доходы",
+      expenses: "Расходы",
+      finance: "Финансы",
+      activity: "Активность",
+      dashboard: "Дашборд"
+    },
     contractor_label: "Контрагент",
     tax_regime_label: "Режим налогообложения",
     tax_regime_placeholder: "Выберите режим налогообложения",
+    dashboard: {
+      not_assigned: "Не назначен",
+      responsible: "Ответственный",
+      budget: "Бюджет",
+      used: "Использовано",
+      tasks: "Задачи",
+      stages: "Этапы",
+      notes_placeholder: "Дополнительные заметки..."
+    },
     width: {
       drag_to_resize: "Потяните для изменения ширины",
       presets: {
@@ -154,10 +174,11 @@ export const projects = {
       link: "Привязать существующий",
       link_existing: "Привязать существующий договор",
       link_warning_title: "Внимание",
+      link_warning_description: "Этот договор уже привязан к проекту «{project}». Вы уверены, что хотите перенести его в текущий проект?",
       type_to_search: "Введите текст для поиска",
       unlink: "Отвязать",
       unlink_title: "Отвязать договор",
-      unlink_confirm: "Вы уверены, что хотите отвязать этот договор от проекта?"
+      unlink_confirm: "Вы уверены, что хотите отвязать договор «{contract}» от проекта?"
     },
     analytics: {
       budget_by_client: "Бюджет по клиентам",
@@ -176,6 +197,18 @@ export const projects = {
   },
   stages: {
     title: "Этапы",
+    task_prefix: "Задача: {name}",
+    templates: {
+      advance: { name: "Аванс", description: "Получение авансового платежа" },
+      design: { name: "Проектирование", description: "Разработка и согласование проектной документации" },
+      procurement: { name: "Закупки", description: "Закупка необходимых материалов и оборудования" },
+      production: { name: "Производство", description: "Изготовление конструкций или продукции" },
+      installation: { name: "Монтаж", description: "Монтажные и пусконаладочные работы на объекте" },
+      acceptance: { name: "Сдача-приемка", description: "Подписание актов и окончательная сдача работ" },
+      contract: { name: "Договор", description: "Подготовка и подписание договора" },
+      empty: { name: "Пустой этап", description: "Создать этап с произвольными данными" }
+    },
+    search_blocks: "Поиск блоков...",
     add: "Добавить этап",
     edit_title: "Редактировать этап «{name}»",
     edit_title_base: "Редактировать этап",
@@ -368,6 +401,7 @@ export const projects = {
   },
   revenues: {
     title: "Доходы проекта",
+    without_vat: "Без НДС",
     add: "Добавить доход",
     edit_title: "Редактировать доход «{name}»",
     create_title: "Новый доход",

@@ -37,10 +37,10 @@ function ContractRow({ contract }: { contract: Contract }) {
 
   const handleUnlink = async () => {
     const isConfirmed = await confirm({
-      title: t('projects.contracts.unlink_title') || 'Отвязать договор',
-      description: t('projects.contracts.unlink_confirm') || `Вы уверены, что хотите отвязать договор «${contract.name}» от этого проекта?`,
-      confirmText: t('common.yes') || 'Да',
-      cancelText: t('common.no') || 'Нет',
+      title: t('projects.contracts.unlink_title'),
+      description: t('projects.contracts.unlink_confirm', { contract: contract.name }),
+      confirmText: t('common.yes'),
+      cancelText: t('common.no'),
       variant: 'destructive',
     });
 
@@ -65,7 +65,7 @@ function ContractRow({ contract }: { contract: Contract }) {
           size="icon"
           onClick={handleUnlink}
           disabled={updateMutation.isPending}
-          title={t('projects.contracts.unlink') || 'Отвязать'}
+          title={t('projects.contracts.unlink')}
         >
           {updateMutation.isPending ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -120,7 +120,7 @@ export function ProjectContractsTab({ project }: ProjectContractsTabProps) {
       <div className="flex justify-end gap-2">
         <Button variant="outline" onClick={handleLinkContract} className="gap-2">
           <LinkIcon className="h-4 w-4" />
-          {t('projects.contracts.link') || 'Привязать существующий'}
+          {t('projects.contracts.link')}
         </Button>
         <Button onClick={handleCreateContract} className="gap-2">
           <Plus className="h-4 w-4" />

@@ -119,7 +119,7 @@ export const BasicInfoSection = ({
               <Input
                 value={formData.citizenship || ""}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange("citizenship", e.target.value)}
-                placeholder="РФ"
+                placeholder={t('contractors.contractor_sheet.placeholder.rf')}
               />
             </div>
           </div>

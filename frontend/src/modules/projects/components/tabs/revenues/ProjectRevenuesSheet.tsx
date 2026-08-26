@@ -197,7 +197,7 @@ export function ProjectRevenuesSheet({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="0">Без НДС</SelectItem>
+                    <SelectItem value="0">{t('projects.revenues.without_vat')}</SelectItem>
                     {vatRateOptions.filter(r => r > 0).map(rate => (
                       <SelectItem key={rate} value={String(rate)}>{rate}%</SelectItem>
                     ))}

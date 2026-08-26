@@ -241,12 +241,12 @@ export function ProjectGeneralTab({
       </div>
 
       <div className="space-y-2">
-          <Label>{t('common.description') || 'Описание'}</Label>
+          <Label>{t('common.description')}</Label>
           <textarea
               className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               value={formData.description || ""}
               onChange={(e) => handleChange("description", e.target.value)}
-              placeholder="Введите описание проекта..."
+              placeholder={t('projects.placeholder.description')}
           />
       </div>
 

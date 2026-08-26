@@ -30,10 +30,10 @@ export function LinkContractDialog({ open, onOpenChange, projectId }: LinkContra
 
     if (selectedContract.projectId && selectedContract.projectId !== projectId) {
       const isConfirmed = await confirm({
-        title: t('projects.contracts.link_warning_title') || 'Внимание',
-        description: `Этот договор уже привязан к проекту «${selectedContract.projectName || 'Неизвестный'}». Вы уверены, что хотите перенести его в текущий проект?`,
-        confirmText: t('common.yes') || 'Да',
-        cancelText: t('common.no') || 'Нет',
+        title: t('projects.contracts.link_warning_title'),
+        description: t('projects.contracts.link_warning_description', { project: selectedContract.projectName || t('common.unknown') }),
+        confirmText: t('common.yes'),
+        cancelText: t('common.no'),
         variant: 'destructive',
       });
 
@@ -58,14 +58,14 @@ export function LinkContractDialog({ open, onOpenChange, projectId }: LinkContra
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>{t('projects.contracts.link_existing') || 'Привязать существующий договор'}</DialogTitle>
+          <DialogTitle>{t('projects.contracts.link_existing')}</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4 py-4">
           <div className="relative">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder={t('contracts.toolbar.search') || 'Поиск договоров...'}
+              placeholder={t('contracts.toolbar.search')}
               className="pl-9"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -79,7 +79,7 @@ export function LinkContractDialog({ open, onOpenChange, projectId }: LinkContra
               </div>
             ) : contracts.length === 0 ? (
               <div className="flex justify-center items-center h-full text-muted-foreground">
-                {search ? (t('common.no_results') || 'Ничего не найдено') : (t('projects.contracts.type_to_search') || 'Введите текст для поиска')}
+                {search ? t('common.no_results') : t('projects.contracts.type_to_search')}
               </div>
             ) : (
               <div className="space-y-2">
@@ -116,12 +116,12 @@ export function LinkContractDialog({ open, onOpenChange, projectId }: LinkContra
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={updateMutation.isPending}>
-            {t('common.cancel') || 'Отмена'}
+            {t('common.cancel')}
           </Button>
           <Button onClick={handleLink} disabled={!selectedContract || updateMutation.isPending}>
             {updateMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             <LinkIcon className="mr-2 h-4 w-4" />
-            {t('common.link') || 'Привязать'}
+            {t('common.link')}
           </Button>
         </DialogFooter>
       </DialogContent>
