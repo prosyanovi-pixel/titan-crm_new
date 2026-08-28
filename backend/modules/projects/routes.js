@@ -18,6 +18,9 @@ const financeControllers = require('./controllers/projectFinanceController');
 // GET /api/projects/stats - Статистика проектов (должен быть выше /:id)
 router.get('/stats', controllers.getStats);
 
+// GET /api/projects/sales-pipeline - Воронка продаж
+router.get('/sales-pipeline', controllers.getSalesPipeline);
+
 // GET /api/projects - Получить все проекты
 router.get('/', controllers.getAll);
 

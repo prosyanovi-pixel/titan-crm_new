@@ -14,7 +14,11 @@ export const projects = {
     unavailable: "Активность недоступна",
   },
   field: {
-    parent_project: "Родительский проект"
+    parent_project: "Родительский проект",
+    workflow_id: "Бизнес-процесс",
+    workflow_placeholder: "Выберите процесс",
+    deadline_order: "Срок по заказу",
+    deadline_payment: "Срок по оплате"
   },
   placeholder: {
     no_parent: "Нет родительского проекта",
@@ -51,7 +55,14 @@ export const projects = {
     payments: "График платежей",
     revenues: "Доходы",
     expenses: "Расходы",
-    finance: "Финансы"
+    finance: "Финансы",
+    quotes: "Коммерческие предложения",
+    contracts: "Договоры",
+    claims: "Рекламации",
+    activity: "Активность",
+    notes: "Комментарии",
+    dashboard: "Обзор",
+    quotes_empty: "Нет коммерческих предложений"
   },
   columns: {
     todo: "К выполнению",
@@ -118,7 +129,10 @@ export const projects = {
       expenses: "Расходы",
       finance: "Финансы",
       activity: "Активность",
-      dashboard: "Дашборд"
+      dashboard: "Дашборд",
+      notes: "Комментарии",
+      claims: "Рекламации",
+      quotes: "Коммерческие предложения"
     },
     contractor_label: "Контрагент",
     tax_regime_label: "Режим налогообложения",
@@ -153,7 +167,13 @@ export const projects = {
     priority_label: "Приоритет",
     manager_label: "Менеджер",
     hide_archived: "Кроме архивных",
-    tree_view: "Дерево проектов"
+    tree_view: "Дерево проектов",
+    type_label: "Тип проекта"
+  },
+  type: {
+    standard: "Стандартный",
+    sale: "Сделка",
+    internal: "Внутренний"
   },
   archive: {
     title: "Архивировать проект",
@@ -165,7 +185,16 @@ export const projects = {
     value: "Новое значение",
     button: "Изменить выбранные"
   },
-    gantt: {
+  claims: {
+    empty_title: 'Рекламации не найдены',
+    empty_desc: 'В этом проекте пока нет ни одной рекламации. Вы можете создать новую при возникновении претензий от клиента.',
+    create: 'Создать рекламацию',
+  },
+  quotes: {
+    empty_desc: 'Здесь будут отображаться коммерческие предложения.',
+    create: 'Создать КП',
+  },
+  gantt: {
       timeline: "Временная шкала",
       month: "Месяц"
     },

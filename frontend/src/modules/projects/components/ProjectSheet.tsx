@@ -12,6 +12,8 @@ import { ProjectRevenuesTab } from "./tabs/ProjectRevenuesTab";
 import { ProjectExpensesTab } from "./tabs/ProjectExpensesTab";
 import { ProjectFinanceTab } from "./tabs/ProjectFinanceTab";
 import { ProjectContractsTab } from "./tabs/ProjectContractsTab";
+import { ProjectQuotesTab } from "./tabs/ProjectQuotesTab";
+import { ProjectClaimsTab } from "./tabs/ProjectClaimsTab";
 import { ProjectDashboardTab } from "./tabs/ProjectDashboardTab";
 import ActivityList from '@/components/shared/ActivityList';
 import { CommentsSection } from '@/components/shared/CommentsSection';
@@ -50,6 +52,7 @@ interface ProjectSheetProps {
   references?: ReferenceData;
   /** Обработчик открытия панели задач */
   onOpenTaskSheet?: (request: OpenProjectTaskSheetRequest) => void;
+  defaultValues?: Partial<Project>;
 }
 
 /**
@@ -89,8 +92,10 @@ export function ProjectSheet({
   onSave,
   onDelete,
   contractors,
+  onAddContractor,
   references,
   onOpenTaskSheet,
+  defaultValues,
 }: ProjectSheetProps) {
   const { t } = useTranslation();
   const { confirm, alert } = useConfirm();
@@ -113,6 +118,7 @@ export function ProjectSheet({
     open,
     references,
     onOpenTaskSheet,
+    defaultValues,
   });
 
   const { settings } = useModuleSettings("projects");
@@ -123,10 +129,12 @@ export function ProjectSheet({
     { id: "general", label: "sheet.tabs.overview", icon: Info, visible: true },
     { id: "comments", label: "components.comments.title", icon: MessageSquare, visible: true },
     { id: "stages", label: "sheet.tabs.stages", icon: ListChecks, visible: settings.features?.enableMilestones !== false },
+    { id: "quotes", label: "projects.tabs.quotes", icon: Calculator, visible: true },
     { id: "contracts", label: "sheet.tabs.contracts", icon: FolderKanban, visible: true },
     { id: "revenues", label: "sheet.tabs.revenues", icon: DollarSign, visible: settings.features?.enableBudgeting !== false },
     { id: "expenses", label: "sheet.tabs.expenses", icon: Wallet, visible: settings.features?.enableBudgeting !== false },
     { id: "finance", label: "sheet.tabs.finance", icon: Calculator, visible: settings.features?.enableBudgeting !== false },
+    { id: "claims", label: "projects.tabs.claims", icon: Activity, visible: true },
     { id: "activity", label: "sheet.tabs.activity", icon: Activity, visible: settings.features?.showActivityLog !== false },
   ], "project-sheet");
 
@@ -300,8 +308,14 @@ export function ProjectSheet({
           {activeTab === "finance" && project && (
             <ProjectFinanceTab projectId={project.id} />
           )}
+          {activeTab === "quotes" && project && (
+            <ProjectQuotesTab project={project} />
+          )}
           {activeTab === "contracts" && project && (
             <ProjectContractsTab project={project} />
+          )}
+          {activeTab === "claims" && project && (
+            <ProjectClaimsTab project={project} />
           )}
           {activeTab === "activity" && (
             project ? (

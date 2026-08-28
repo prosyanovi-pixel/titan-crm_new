@@ -25,7 +25,7 @@ import { TagInput } from "@/components/ui/status-system";
 import { SmartMetadataGrid } from "@/components/shared";
 import { AiInsightPanel } from "@/components/ai/AiInsightPanel";
 import { useState } from "react";
-import { FolderKanban, Calendar, DollarSign, Calculator } from "lucide-react";
+import { FolderKanban, Calendar, DollarSign, Calculator, Briefcase, GitMerge, FileCheck } from "lucide-react";
 
 /**
  * Свойства компонента ProjectGeneralTab
@@ -112,6 +112,12 @@ export function ProjectGeneralTab({
 
   const [editingField, setEditingField] = useState<string | null>(null);
 
+  const safeFormatDate = (dateVal: any) => {
+    if (!dateVal) return null;
+    const d = new Date(dateVal);
+    return isNaN(d.getTime()) ? null : d.toLocaleDateString();
+  };
+
   return (
     <div className="space-y-6">
       <div className="space-y-2">
@@ -139,6 +145,39 @@ export function ProjectGeneralTab({
                   value={formData.manager || ""}
                   onValueChange={(v) => handleChange("manager", v)}
               />
+          </div>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+              <Label>{t('projects.filters.type_label')}</Label>
+              <Select 
+                  value={formData.projectType || "standard"} 
+                  onValueChange={(v) => handleChange("projectType", v)}
+              >
+                  <SelectTrigger>
+                      <SelectValue placeholder={t('projects.filters.type_label')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                      <SelectItem value="standard">{t("projects.type.standard")}</SelectItem>
+                      <SelectItem value="sales_deal">{t("projects.type.sales_deal")}</SelectItem>
+                  </SelectContent>
+              </Select>
+          </div>
+          <div className="space-y-2">
+              <Label>{t('projects.field.workflow_id')}</Label>
+              <Select 
+                  value={formData.workflowId || ""} 
+                  onValueChange={(v) => handleChange("workflowId", v)}
+              >
+                  <SelectTrigger>
+                      <SelectValue placeholder={t('projects.field.workflow_placeholder')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                      {/* TODO: Add real workflows from reference data */}
+                      <SelectItem value="none">{t("common.none")}</SelectItem>
+                  </SelectContent>
+              </Select>
           </div>
       </div>
 
@@ -178,7 +217,7 @@ export function ProjectGeneralTab({
           },
           {
             id: "deadline",
-            value: editingField === "deadline" ? "__editing__" : (formData.deadline ? new Date(formData.deadline).toLocaleDateString() : null),
+            value: editingField === "deadline" ? "__editing__" : safeFormatDate(formData.deadline),
             label: t('projects.table.deadline'),
             icon: <Calendar className="w-4 h-4 text-purple-500" />,
             isCritical: true,
@@ -189,6 +228,40 @@ export function ProjectGeneralTab({
                 <DatePicker
                   value={formData.deadline || ""}
                   onChange={(date) => { handleChange("deadline", date); setEditingField(null); }}
+                  placeholder={t('lost.dd_mm_gggg')}
+                />
+              </div>
+            ) : undefined
+          },
+          {
+            id: "deadlineOrder",
+            value: editingField === "deadlineOrder" ? "__editing__" : safeFormatDate(formData.deadlineOrder),
+            label: t('projects.field.deadline_order'),
+            icon: <FileCheck className="w-4 h-4 text-orange-500" />,
+            onClick: () => setEditingField("deadlineOrder"),
+            onClickPlaceholder: () => setEditingField("deadlineOrder"),
+            renderCustomBadge: editingField === "deadlineOrder" ? () => (
+              <div className="min-w-[200px]">
+                <DatePicker
+                  value={formData.deadlineOrder || ""}
+                  onChange={(date) => { handleChange("deadlineOrder", date); setEditingField(null); }}
+                  placeholder={t('lost.dd_mm_gggg')}
+                />
+              </div>
+            ) : undefined
+          },
+          {
+            id: "deadlinePayment",
+            value: editingField === "deadlinePayment" ? "__editing__" : safeFormatDate(formData.deadlinePayment),
+            label: t('projects.field.deadline_payment'),
+            icon: <DollarSign className="w-4 h-4 text-green-500" />,
+            onClick: () => setEditingField("deadlinePayment"),
+            onClickPlaceholder: () => setEditingField("deadlinePayment"),
+            renderCustomBadge: editingField === "deadlinePayment" ? () => (
+              <div className="min-w-[200px]">
+                <DatePicker
+                  value={formData.deadlinePayment || ""}
+                  onChange={(date) => { handleChange("deadlinePayment", date); setEditingField(null); }}
                   placeholder={t('lost.dd_mm_gggg')}
                 />
               </div>

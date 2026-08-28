@@ -13,6 +13,7 @@ interface UseProjectSheetOptions {
   open: boolean;
   references?: ReferenceData;
   onOpenTaskSheet?: (request: OpenProjectTaskSheetRequest) => void;
+  defaultValues?: Partial<Project>;
 }
 
 /**
@@ -59,6 +60,7 @@ export function useProjectSheet({
   open,
   references,
   onOpenTaskSheet,
+  defaultValues,
 }: UseProjectSheetOptions): UseProjectSheetReturn {
   const [formData, setFormData] = useState<Partial<Project>>({});
   const [projectTasks, setProjectTasks] = useState<ProjectTask[]>([]);
@@ -128,7 +130,8 @@ export function useProjectSheet({
         tasksCount: 0,
         completedTasks: 0,
         subProjects: [],
-        parentId: null
+        parentId: null,
+        ...defaultValues,
       });
        
       setProjectTasks([]);

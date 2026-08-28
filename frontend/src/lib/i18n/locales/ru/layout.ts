@@ -6,6 +6,7 @@ export const layout = {
   sheet: {
     tabs: {
       overview: "Обзор",
+      dashboard: "Дашборд",
       activity: "Активность",
       contacts: "Контакты",
       requisites: "Реквизиты",
@@ -22,7 +23,8 @@ export const layout = {
       notes: "Комментарии",
       analytics: "Аналитика",
       updates: "Обновления",
-      contracts: "Договоры"
+      contracts: "Договоры",
+      sales: "Продажи"
     }
   },
   sidebar: {
@@ -30,6 +32,7 @@ export const layout = {
     dashboard: "Дашборд",
     contractors: "Контрагенты",
     projects: "Проекты",
+    sales: "Продажи",
     mail: "Входящие",
     documents: "Документы",
     tasks: "Задачи",

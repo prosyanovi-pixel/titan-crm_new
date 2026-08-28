@@ -1,14 +1,16 @@
 // frontend/src/modules/projects/hooks/useProjectFilters.ts
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Project } from "../types";
 
 interface UseProjectFiltersReturn {
   statusFilter: string;
   priorityFilter: string;
   managerFilter: string;
+  projectTypeFilter: string;
   setStatusFilter: (status: string) => void;
   setPriorityFilter: (priority: string) => void;
   setManagerFilter: (manager: string) => void;
+  setProjectTypeFilter: (type: string) => void;
   filteredProjects: Project[];
   resetFilters: () => void;
 }
@@ -18,12 +20,6 @@ interface UseProjectFiltersOptions {
   searchQuery: string;
 }
 
-/**
- * Хук для фильтрации и древовидного отображения списка проектов
- * 
- * @param options - Объект с исходным списком проектов и строкой поиска
- * @returns Состояния фильтров, обработчики их изменения и отфильтрованный список проектов
- */
 export function useProjectFilters({
   projects,
   searchQuery,
@@ -31,6 +27,7 @@ export function useProjectFilters({
   const [statusFilter, setStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [managerFilter, setManagerFilter] = useState("all");
+  const [projectTypeFilter, setProjectTypeFilter] = useState("all");
 
   const buildProjectTree = (items: Project[]) => {
     const map = new Map<number, Project>();
@@ -53,7 +50,8 @@ export function useProjectFilters({
       searchQuery ||
       statusFilter !== "all" ||
       priorityFilter !== "all" ||
-      managerFilter !== "all";
+      managerFilter !== "all" ||
+      projectTypeFilter !== "all";
 
     if (hasFilters) {
       return projects.filter((p) => {
@@ -62,28 +60,30 @@ export function useProjectFilters({
           p.name.toLowerCase().includes(q) &&
           (statusFilter === "all" || p.status === statusFilter) &&
           (priorityFilter === "all" || p.priority === priorityFilter) &&
-          (managerFilter === "all" || p.manager === managerFilter)
+          (managerFilter === "all" || p.manager === managerFilter) &&
+          (projectTypeFilter === "all" || p.projectType === projectTypeFilter)
         );
       });
     }
     return buildProjectTree(projects);
-  }, [projects, searchQuery, statusFilter, priorityFilter, managerFilter]);
+  }, [projects, searchQuery, statusFilter, priorityFilter, managerFilter, projectTypeFilter]);
 
   const resetFilters = () => {
     setStatusFilter("all");
     setPriorityFilter("all");
     setManagerFilter("all");
+    setProjectTypeFilter("all");
   };
-
-  // Removed auto-reset when projects change to preserve user filters across CRUD operations
 
   return {
     statusFilter,
     priorityFilter,
     managerFilter,
+    projectTypeFilter,
     setStatusFilter,
     setPriorityFilter,
     setManagerFilter,
+    setProjectTypeFilter,
     filteredProjects,
     resetFilters,
   };

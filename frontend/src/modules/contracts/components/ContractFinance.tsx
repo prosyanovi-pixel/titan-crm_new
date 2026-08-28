@@ -5,6 +5,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { GetContractResponse } from '../types/contract.types';
 import { formatDate } from '@/lib/formatters';
 import { Link } from 'react-router-dom';
+import { CreateInvoiceSheet } from '@/modules/finance/components/CreateInvoiceSheet';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 interface ContractFinanceProps {
   contract: GetContractResponse;
@@ -23,6 +26,8 @@ const formatCurrency = (amount: number | null | undefined, currency: string = 'R
 export function ContractFinance({ contract }: ContractFinanceProps) {
   const { t } = useTranslation();
   const { financeSummary, invoices, payments, currency } = contract;
+  
+  const [isCreateInvoiceOpen, setIsCreateInvoiceOpen] = React.useState(false);
 
   const totalDue = (financeSummary?.totalInvoiced || 0) - (financeSummary?.totalPaid || 0);
 
@@ -58,7 +63,13 @@ export function ContractFinance({ contract }: ContractFinanceProps) {
 
       {/* Invoices Table */}
       <div>
-        <h3 className="text-lg font-semibold mb-4">{t('contracts.finance.invoices')}</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold">{t('contracts.finance.invoices')}</h3>
+          <Button onClick={() => setIsCreateInvoiceOpen(true)} size="sm">
+            <Plus className="w-4 h-4 mr-2" />
+            {t('finance.invoice.create')}
+          </Button>
+        </div>
         <div className="rounded-md border">
           <Table>
             <TableHeader>
@@ -129,6 +140,19 @@ export function ContractFinance({ contract }: ContractFinanceProps) {
           </Table>
         </div>
       </div>
+      
+      <CreateInvoiceSheet
+        open={isCreateInvoiceOpen}
+        onOpenChange={setIsCreateInvoiceOpen}
+        invoice={{
+          contractId: contract.id,
+          contractorId: contract.contractorId || 0,
+          projectId: contract.projectId || undefined,
+          amountTotal: totalDue > 0 ? totalDue : 0,
+          currency: contract.currency || 'RUB',
+          status: 'draft'
+        } as any}
+      />
     </div>
   );
 }

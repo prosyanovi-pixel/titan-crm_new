@@ -101,6 +101,52 @@ async function getAllProjects() {
 }
 
 /**
+ * Получить воронку продаж (сделки со статистикой)
+ * @returns {Promise<Array<Object>>} Список сделок с агрегацией
+ */
+async function getSalesPipeline() {
+  const query = `
+    SELECT p.*, u.name as manager_name, u.avatar as manager_avatar,
+      (SELECT COUNT(*) FROM quotes q WHERE q.project_id = p.id) as quotes_count,
+      (SELECT COALESCE(SUM(total_amount), 0) FROM quotes q WHERE q.project_id = p.id AND q.status = 'approved') as quotes_sum,
+      (SELECT COUNT(*) FROM contracts c WHERE c.project_id = p.id) as contracts_count,
+      (SELECT COUNT(*) FROM claims cl WHERE cl.project_id = p.id AND cl.status != 'closed') as active_claims_count
+    FROM projects p
+    LEFT JOIN users u ON u.name = p.manager
+    WHERE p.deleted_at IS NULL AND p.project_type = 'sales_deal'
+    ORDER BY p.id DESC
+  `;
+  const { rows } = await db.query(query);
+  
+  const financeByProjectId = await loadFinanceForProjects(rows);
+  const tagsByProjectId = await loadTagsForProjects(rows);
+  
+  return rows.map((project) => {
+    const transformed = transformProject(project);
+    if (project.managerName) transformed.manager = project.managerName;
+    if (project.managerAvatar) transformed.managerAvatar = project.managerAvatar;
+    
+    const financeInfo = financeByProjectId.get(Number(project.id)) || {
+      hasOverdueInvoice: false,
+      financeStatus: null,
+      totalPaid: 0,
+      totalExpenses: 0,
+      budgetUsedPercent: 0,
+    };
+    
+    return {
+      ...transformed,
+      ...financeInfo,
+      tags: tagsByProjectId.get(Number(project.id)) || [],
+      quotesCount: parseInt(project.quotes_count) || 0,
+      quotesSum: parseFloat(project.quotes_sum) || 0,
+      contractsCount: parseInt(project.contracts_count) || 0,
+      activeClaimsCount: parseInt(project.active_claims_count) || 0
+    };
+  });
+}
+
+/**
  * Получить проект по ID с финансовыми данными
  * @param {number} id - ID проекта
  * @returns {Promise<Object|null>} Проект с финансами или null
@@ -182,15 +228,15 @@ async function getProjectStats() {
  * @returns {Promise<Object>} Созданный проект
  */
 async function createProject(projectData) {
-  const { name, client, manager, status, stage, priority, budget, deadline, parentId, taxRegimeId } = projectData;
+  const { name, client, manager, status, stage, priority, budget, deadline, parentId, taxRegimeId, projectType, workflowId, deadlineOrder, deadlinePayment } = projectData;
 
   // Получение следующего ID
   const idRes = await db.query('SELECT COALESCE(MAX(id), 0) + 1 as "nextId" FROM projects');
   const nextId = idRes.rows[0].nextId;
 
   const query = `
-    INSERT INTO projects (id, parent_id, name, client, manager, status, stage, priority, budget, budgetused, deadline, tax_regime_id, taskscount, completedtasks, description)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 0, $10, $11, 0, 0, $12)
+    INSERT INTO projects (id, parent_id, name, client, manager, status, stage, priority, budget, budgetused, deadline, tax_regime_id, taskscount, completedtasks, description, project_type, workflow_id, deadline_order, deadline_payment)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 0, $10, $11, 0, 0, $12, $13, $14, $15, $16)
     RETURNING *
   `;
 
@@ -206,7 +252,11 @@ async function createProject(projectData) {
     budget || 0,
     parseDate(deadline),
     taxRegimeId ?? null,
-    projectData.description || null
+    projectData.description || null,
+    projectType || 'standard',
+    workflowId || null,
+    parseDate(deadlineOrder),
+    parseDate(deadlinePayment)
   ];
 
   const { rows } = await db.query(query, values);
@@ -259,14 +309,18 @@ async function updateProject(id, projectData) {
     endDate: 'end_date',
     budgetCurrency: 'budget_currency',
     taxRegimeId: 'tax_regime_id',
-    description: 'description'
+    description: 'description',
+    projectType: 'project_type',
+    workflowId: 'workflow_id',
+    deadlineOrder: 'deadline_order',
+    deadlinePayment: 'deadline_payment'
   };
 
   for (const [jsField, dbColumn] of Object.entries(fieldMap)) {
     if (projectData[jsField] !== undefined) {
       fields.push(`${dbColumn} = $${index++}`);
       let value = projectData[jsField];
-      if (jsField === 'deadline' || jsField === 'startDate' || jsField === 'endDate') {
+      if (['deadline', 'startDate', 'endDate', 'deadlineOrder', 'deadlinePayment'].includes(jsField)) {
         value = parseDate(value);
       }
       values.push(value);
@@ -274,8 +328,8 @@ async function updateProject(id, projectData) {
   }
 
   let oldProject = null;
-  if (projectData.status) {
-    const { rows } = await db.query('SELECT status FROM projects WHERE id = $1', [id]);
+  if (projectData.status || projectData.stage) {
+    const { rows } = await db.query('SELECT status, stage FROM projects WHERE id = $1', [id]);
     if (rows.length > 0) oldProject = rows[0];
   }
 
@@ -308,6 +362,15 @@ async function updateProject(id, projectData) {
       projectId: updatedProject.id,
       oldStatus: oldProject.status,
       newStatus: updatedProject.status,
+      project: updatedProject
+    });
+  }
+
+  if (oldProject && oldProject.stage !== updatedProject.stage) {
+    eventBus.emitAsync('projects.stage_changed', {
+      projectId: updatedProject.id,
+      oldStage: oldProject.stage,
+      newStage: updatedProject.stage,
       project: updatedProject
     });
   }
@@ -410,4 +473,5 @@ module.exports = {
   bulkUpdateProjects,
   completeProject,
   archiveProject,
+  getSalesPipeline,
 };

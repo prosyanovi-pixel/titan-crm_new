@@ -1,0 +1,12 @@
+- [ ] **Standard Sales Workflows**
+  - [ ] Check `backend/scripts/seed-workflows.js` and add a "B2B Sales Standard" workflow if it doesn't exist.
+  - [ ] Add translation keys for the workflow and wizard to `sales` i18n module.
+- [ ] **CreateDealWizard (Frontend)**
+  - [ ] Create `frontend/src/modules/sales/components/CreateDealWizard.tsx`.
+  - [ ] Implement multi-step form logic (Client -> Deal Details -> Quote -> Task).
+  - [ ] Handle API submissions to create all required entities in sequence.
+- [ ] **Integration**
+  - [ ] Replace `ProjectSheet` with `CreateDealWizard` in `SalesPipelinePage.tsx` for creating new deals.
+- [ ] **Testing**
+  - [ ] Verify deal creation works and distributes data to projects, quotes, and tasks correctly.
+  - [ ] Ensure the created deal shows up in the Kanban pipeline.

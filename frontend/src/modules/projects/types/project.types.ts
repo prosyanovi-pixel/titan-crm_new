@@ -55,6 +55,12 @@ export interface Project {
   // Настройки
   taxRegimeId?: number; // Режим налогообложения
   tags?: string[]; // Теги проекта
+
+  // Продажи и процессы
+  projectType?: string; // e.g. 'standard'
+  workflowId?: string; // UUID процесса воронки
+  deadlineOrder?: string; // Дедлайн по заказу/поставке
+  deadlinePayment?: string; // Дедлайн по оплате
 }
 
 // ============================================================

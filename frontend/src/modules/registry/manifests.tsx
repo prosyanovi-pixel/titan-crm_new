@@ -34,6 +34,8 @@ const ReportsRouter = lazy(() => import("@/modules/reports").then(m => ({ defaul
 const MarketingPage = lazy(() => import("@/modules/marketing").then(m => ({ default: m.MarketingPage })));
 const TrashPage = lazy(() => import("@/modules/trash").then(m => ({ default: m.TrashPage })));
 import type { ModuleManifest } from "./types";
+
+import { SalesPipelinePage } from "../sales/pages/SalesPipelinePage";
 import { getModuleReferenceSeed } from "./referenceSeeds";
 import { PackageSearch, FileType, Warehouse } from "lucide-react";
 const ProductsPage = lazy(() => import("@/modules/products/pages/ProductsPage").then(m => ({ default: m.ProductsPage })));
@@ -93,6 +95,24 @@ export const moduleManifests: ModuleManifest[] = [
       labelKey: "sidebar.projects",
       icon: FolderKanban,
       order: 30,
+    },
+    settingsModuleId: "projects",
+    quickActionsModuleId: "projects",
+    reference: getModuleReferenceSeed("projects"),
+  },
+  {
+    id: "sales",
+    route: {
+      path: "/sales",
+      titleKey: "sidebar.sales",
+      featureFlag: "projects",
+      element: <SalesPipelinePage />,
+    },
+    navigation: {
+      href: "/sales",
+      labelKey: "sidebar.sales",
+      icon: FolderKanban,
+      order: 32,
     },
     settingsModuleId: "projects",
     quickActionsModuleId: "projects",

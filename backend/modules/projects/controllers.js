@@ -23,6 +23,21 @@ async function getAll(req, res) {
 }
 
 /**
+ * Получить воронку продаж
+ * @route GET /api/projects/sales-pipeline
+ * @returns {Array} Список сделок со статистикой
+ */
+async function getSalesPipeline(req, res) {
+  try {
+    const pipeline = await projectService.getSalesPipeline();
+    sendSuccess(res, pipeline);
+  } catch (error) {
+    console.error('Error in getSalesPipeline:', error);
+    sendSuccess(res, []);
+  }
+}
+
+/**
  * Получить статистику проектов
  * @route GET /api/projects/stats
  * @returns {Object} Статистика проектов
@@ -215,4 +230,5 @@ module.exports = {
   bulkDelete,
   complete,
   archive,
+  getSalesPipeline,
 };

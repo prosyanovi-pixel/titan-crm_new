@@ -1,4 +1,3 @@
-// frontend/src/modules/projects/pages/ProjectsPage.tsx
 import { usePageSettings } from "@/context/LayoutContext";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -35,6 +34,8 @@ export default function Projects() {
     setPriorityFilter,
     managerFilter,
     setManagerFilter,
+    projectTypeFilter,
+    setProjectTypeFilter,
     hideArchived,
     setHideArchived,
     projectActions,
@@ -164,6 +165,8 @@ export default function Projects() {
                 onPriorityChange={setPriorityFilter}
                 managerFilter={managerFilter}
                 onManagerChange={setManagerFilter}
+                projectTypeFilter={projectTypeFilter}
+                onProjectTypeChange={setProjectTypeFilter}
                 hideArchived={hideArchived}
                 onHideArchivedChange={setHideArchived}
                 isTreeView={isTreeView}

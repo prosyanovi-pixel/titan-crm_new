@@ -3,17 +3,20 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/lib/i18n';
 import { usePageSettings } from '@/context/LayoutContext';
 import { useQuote, useCreateQuote, useUpdateQuote } from '../hooks';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
-import { Trash2, Plus, Download } from 'lucide-react';
+import { Trash2, Plus, Download, Calculator, TrendingUp, FileText } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-
-// Since some standard imports might differ, I will use standard html inputs where complex custom selects aren't trivial without specific context
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/lib/api';
+import { Badge } from '@/components/ui/badge';
+import { usePermission } from '@/hooks/usePermission';
+import { PERMISSIONS } from '@/constants/permissions';
 
 export function QuoteFormPage() {
   const { id } = useParams();
@@ -22,10 +25,33 @@ export function QuoteFormPage() {
   
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { hasPermission, isAdmin } = usePermission();
+  const canSeeFinance = isAdmin || hasPermission(PERMISSIONS.finance.read);
   
   const { data: quote, isLoading } = useQuote(quoteId);
   const createQuote = useCreateQuote();
   const updateQuote = useUpdateQuote();
+
+  const handleConvertToContract = () => {
+    if (!quote) return;
+    navigate('/contracts/new', { state: { quote } });
+  };
+
+  const { data: contractors = [] } = useQuery({
+    queryKey: ['contractors-all'],
+    queryFn: async () => {
+      const res = await api.get("/contractors?all=true");
+      return res as any[];
+    },
+  });
+
+  const { data: users = [] } = useQuery({
+    queryKey: ['users-all'],
+    queryFn: async () => {
+      const res = await api.get("/users");
+      return res as any[];
+    },
+  });
 
   const { register, control, handleSubmit, reset, watch, setValue } = useForm({
     defaultValues: {
@@ -37,7 +63,17 @@ export function QuoteFormPage() {
       addressedTo: '',
       notes: '',
       items: [
-        { itemType: 'custom', name: '', quantity: 1, price: 0, discountPercent: 0, total: 0 }
+        { 
+          itemType: 'custom', 
+          name: '', 
+          quantity: 1, 
+          price: 0, 
+          discountPercent: 0, 
+          total: 0,
+          executorType: 'none',
+          executorId: '',
+          unitCost: 0
+        }
       ]
     }
   });
@@ -54,29 +90,67 @@ export function QuoteFormPage() {
         date: quote.date ? new Date(quote.date).toISOString().split('T')[0] : '',
         validUntil: quote.validUntil ? new Date(quote.validUntil).toISOString().split('T')[0] : '',
         contractorId: quote.contractorId?.toString() || '',
-        items: quote.items?.length ? quote.items : []
+        items: quote.items?.length ? quote.items.map((i: any) => ({
+          ...i,
+          executorType: i.executorType || 'none',
+          executorId: i.executorId ? String(i.executorId) : '',
+          unitCost: i.unitCost || 0
+        })) : []
       });
     }
   }, [quote, isNew, reset]);
 
   const watchItems = watch('items');
-  const calculateTotal = () => {
-    return watchItems.reduce((acc, item) => acc + (Number(item.total) || 0), 0);
+  
+  const calculateMetrics = () => {
+    let totalRevenue = 0;
+    let totalCost = 0;
+
+    watchItems.forEach(item => {
+      const qty = Number(item.quantity) || 0;
+      const price = Number(item.price) || 0;
+      const discount = Number(item.discountPercent) || 0;
+      const unitCost = Number(item.unitCost) || 0;
+      
+      const itemRevenue = (qty * price) * (1 - discount / 100);
+      const itemCost = qty * unitCost;
+
+      totalRevenue += itemRevenue;
+      totalCost += itemCost;
+    });
+
+    const totalMargin = totalRevenue - totalCost;
+    const marginPercent = totalRevenue > 0 ? (totalMargin / totalRevenue) * 100 : 0;
+
+    return { totalRevenue, totalCost, totalMargin, marginPercent };
   };
 
+  const metrics = calculateMetrics();
+
   const onSubmit = async (data: any) => {
-    // Process data to match API expectations
     const payload = {
       ...data,
-      totalAmount: calculateTotal(),
+      totalAmount: metrics.totalRevenue,
+      totalCost: metrics.totalCost,
+      totalMargin: metrics.totalMargin,
       contractorId: data.contractorId ? Number(data.contractorId) : null,
-      items: data.items.map((i: any) => ({
-        ...i,
-        quantity: Number(i.quantity),
-        price: Number(i.price),
-        discountPercent: Number(i.discountPercent),
-        total: Number(i.quantity) * Number(i.price) * (1 - Number(i.discountPercent) / 100)
-      }))
+      items: data.items.map((i: any) => {
+        const qty = Number(i.quantity);
+        const price = Number(i.price);
+        const discount = Number(i.discountPercent);
+        const unitCost = Number(i.unitCost);
+        return {
+          ...i,
+          quantity: qty,
+          price: price,
+          discountPercent: discount,
+          unitCost: unitCost,
+          executorId: i.executorId && i.executorType !== 'none' ? Number(i.executorId) : null,
+          total: qty * price * (1 - discount / 100),
+          totalCost: qty * unitCost,
+          totalMargin: (qty * price * (1 - discount / 100)) - (qty * unitCost)
+        };
+      })
     };
 
     if (isNew) {
@@ -92,10 +166,16 @@ export function QuoteFormPage() {
     actions: (
       <div className="flex gap-2">
         {!isNew && (
-          <Button variant="outline" className="gap-2" onClick={() => window.open(`/api/quotes/${quoteId}/pdf`, '_blank')}>
-            <Download className="w-4 h-4" />
-            <span className="hidden sm:inline">{t('quotes.download_pdf')}</span>
-          </Button>
+          <>
+            <Button variant="secondary" className="gap-2" onClick={handleConvertToContract}>
+              <FileText className="w-4 h-4" />
+              <span className="hidden sm:inline">{t('quotes.convert_to_contract')} {/* Создать договор */}</span>
+            </Button>
+            <Button variant="outline" className="gap-2" onClick={() => window.open(`/api/quotes/${quoteId}/pdf`, '_blank')}>
+              <Download className="w-4 h-4" />
+              <span className="hidden sm:inline">{t('quotes.download_pdf')}</span>
+            </Button>
+          </>
         )}
         <Button onClick={handleSubmit(onSubmit)}>{t('common.save')}</Button>
       </div>
@@ -105,12 +185,12 @@ export function QuoteFormPage() {
   if (isLoading && !isNew) return <div>{t('common.loading')}</div>;
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="space-y-6 max-w-full overflow-x-hidden">
       <Card>
         <CardHeader>
           <CardTitle>{t('quotes.general_info')} {/* Общая информация */}</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="space-y-2">
             <Label>{t('quotes.number')}</Label>
             <Input {...register('number')} />
@@ -142,10 +222,27 @@ export function QuoteFormPage() {
             />
           </div>
           <div className="space-y-2">
+            <Label>{t('quotes.client')} {/* Клиент */}</Label>
+            <Controller
+              control={control}
+              name="contractorId"
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger><SelectValue placeholder={t('quotes.select_client')} /></SelectTrigger>
+                  <SelectContent>
+                    {contractors.map(c => (
+                      <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+          <div className="space-y-2">
             <Label>{t('quotes.addressed_to')}</Label>
             <Input {...register('addressedTo')} />
           </div>
-          <div className="space-y-2 col-span-1 md:col-span-2">
+          <div className="space-y-2 col-span-1 md:col-span-3">
             <Label>{t('quotes.notes')}</Label>
             <Textarea {...register('notes')} />
           </div>
@@ -153,20 +250,54 @@ export function QuoteFormPage() {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>{t('quotes.items')}</CardTitle>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>{t('quotes.items')}</CardTitle>
+            <CardDescription>{t('quotes.items_description')} {/* Добавьте позиции и укажите исполнителей для расчета себестоимости и маржи. */}</CardDescription>
+          </div>
+          <div className="flex gap-4">
+            <div className="text-right">
+              <div className="text-sm text-muted-foreground">{t('quotes.total_revenue')} {/* Сумма КП */}</div>
+              <div className="text-xl font-bold text-primary">{metrics.totalRevenue.toLocaleString()} ₽</div>
+            </div>
+            {canSeeFinance && (
+              <>
+                <div className="text-right">
+                  <div className="text-sm text-muted-foreground">{t('quotes.total_cost')} {/* Себестоимость */}</div>
+                  <div className="text-xl font-bold text-destructive">{metrics.totalCost.toLocaleString()} ₽</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm text-muted-foreground">{t('quotes.total_margin')} {/* Маржинальность */}</div>
+                  <div className="text-xl font-bold text-emerald-600 flex items-center gap-1">
+                    {metrics.totalMargin.toLocaleString()} ₽
+                    <Badge variant={metrics.marginPercent > 30 ? 'default' : metrics.marginPercent > 0 ? 'secondary' : 'destructive'} className="ml-1 text-xs">
+                      {metrics.marginPercent.toFixed(1)}%
+                    </Badge>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-md border">
             <Table>
-              <TableHeader>
+              <TableHeader className="bg-muted/50">
                 <TableRow>
-                  <TableHead>{t('quotes.item_type')} {/* Тип */}</TableHead>
-                  <TableHead>{t('quotes.item_name')} {/* Наименование */}</TableHead>
-                  <TableHead className="w-[120px]">{t('quotes.quantity_short')} {/* Кол-во */}</TableHead>
-                  <TableHead className="w-[150px]">{t('quotes.price')} {/* Цена */}</TableHead>
-                  <TableHead className="w-[120px]">{t('quotes.discount_short')} {/* Скидка % */}</TableHead>
-                  <TableHead className="w-[150px]">{t('quotes.total')} {/* Сумма */}</TableHead>
+                  <TableHead className="w-[150px]">{t('quotes.item_type')}</TableHead>
+                  <TableHead className="min-w-[200px]">{t('quotes.item_name')}</TableHead>
+                  <TableHead className="w-[100px]">{t('quotes.quantity_short')}</TableHead>
+                  <TableHead className="w-[120px]">{t('quotes.price')}</TableHead>
+                  <TableHead className="w-[100px]">{t('quotes.discount_short')}</TableHead>
+                  <TableHead className="w-[120px] font-semibold text-primary">{t('quotes.total')}</TableHead>
+                  <TableHead className="w-[150px] bg-destructive/5">{t('quotes.executor_type')} {/* Исполнитель */}</TableHead>
+                  <TableHead className="w-[200px] bg-destructive/5">{t('quotes.executor')} {/* Кто выполняет */}</TableHead>
+                  {canSeeFinance && (
+                    <>
+                      <TableHead className="w-[120px] bg-destructive/5">{t('quotes.unit_cost')} {/* Себест. (ед) */}</TableHead>
+                      <TableHead className="w-[120px] font-semibold text-emerald-600">{t('quotes.margin')} {/* Маржа */}</TableHead>
+                    </>
+                  )}
                   <TableHead className="w-[60px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -175,19 +306,23 @@ export function QuoteFormPage() {
                   const qty = watch(`items.${index}.quantity`) || 0;
                   const price = watch(`items.${index}.price`) || 0;
                   const discount = watch(`items.${index}.discountPercent`) || 0;
-                  const total = (qty * price * (1 - discount / 100)).toFixed(2);
+                  const unitCost = watch(`items.${index}.unitCost`) || 0;
+                  const executorType = watch(`items.${index}.executorType`);
                   
-                  // Update total in form state if we wanted to, but we calculate on submit
+                  const total = (qty * price * (1 - discount / 100));
+                  const totalCost = qty * unitCost;
+                  const margin = total - totalCost;
+                  const marginPct = total > 0 ? (margin / total) * 100 : 0;
                   
                   return (
-                    <TableRow key={field.id}>
-                      <TableCell>
+                    <TableRow key={field.id} className="hover:bg-muted/20">
+                      <TableCell className="p-2">
                         <Controller
                           control={control}
                           name={`items.${index}.itemType`}
                           render={({ field: selectField }) => (
                             <Select value={selectField.value} onValueChange={selectField.onChange}>
-                              <SelectTrigger><SelectValue /></SelectTrigger>
+                              <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="custom">{t('quotes.types.custom')}</SelectItem>
                                 <SelectItem value="product">{t('quotes.types.product')}</SelectItem>
@@ -197,23 +332,98 @@ export function QuoteFormPage() {
                           )}
                         />
                       </TableCell>
-                      <TableCell>
-                        <Input {...register(`items.${index}.name`)} placeholder={t('quotes.item_name_placeholder')} />
+                      <TableCell className="p-2">
+                        <Input className="h-9" {...register(`items.${index}.name`)} placeholder={t('quotes.item_name_placeholder')} />
                       </TableCell>
-                      <TableCell>
-                        <Input type="number" min="1" step="0.01" {...register(`items.${index}.quantity`)} />
+                      <TableCell className="p-2">
+                        <Input className="h-9" type="number" min="1" step="0.01" {...register(`items.${index}.quantity`)} />
                       </TableCell>
-                      <TableCell>
-                        <Input type="number" step="0.01" {...register(`items.${index}.price`)} />
+                      <TableCell className="p-2">
+                        <Input className="h-9" type="number" step="0.01" {...register(`items.${index}.price`)} />
                       </TableCell>
-                      <TableCell>
-                        <Input type="number" min="0" max="100" step="1" {...register(`items.${index}.discountPercent`)} />
+                      <TableCell className="p-2">
+                        <Input className="h-9" type="number" min="0" max="100" step="1" {...register(`items.${index}.discountPercent`)} />
                       </TableCell>
-                      <TableCell>
-                        <div className="font-medium px-2 py-2">{total} ₽</div>
+                      <TableCell className="p-2 bg-primary/5">
+                        <div className="font-semibold">{total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
                       </TableCell>
-                      <TableCell>
-                        <Button variant="ghost" size="icon" onClick={() => remove(index)} className="text-destructive">
+                      
+                      {/* Executor & P&L Block */}
+                      <TableCell className="p-2 bg-destructive/5 border-l">
+                        <Controller
+                          control={control}
+                          name={`items.${index}.executorType`}
+                          render={({ field: selectField }) => (
+                            <Select 
+                              value={selectField.value} 
+                              onValueChange={(val) => {
+                                selectField.onChange(val);
+                                // Сбрасываем выбранного исполнителя при смене типа
+                                setValue(`items.${index}.executorId`, '');
+                              }}
+                            >
+                              <SelectTrigger className="h-9"><SelectValue placeholder={t('common.none')} /></SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="none">{t('quotes.executors.none')} {/* Нет */}</SelectItem>
+                                <SelectItem value="internal">{t('quotes.executors.internal')} {/* Внутренний */}</SelectItem>
+                                <SelectItem value="external">{t('quotes.executors.external')} {/* Внешний (Подрядчик) */}</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                      </TableCell>
+                      <TableCell className="p-2 bg-destructive/5">
+                        <Controller
+                          control={control}
+                          name={`items.${index}.executorId`}
+                          render={({ field: selectField }) => (
+                            <Select 
+                              value={selectField.value} 
+                              onValueChange={selectField.onChange}
+                              disabled={executorType === 'none'}
+                            >
+                              <SelectTrigger className="h-9">
+                                <SelectValue placeholder={
+                                  executorType === 'none' ? '-' : 
+                                  executorType === 'internal' ? t('quotes.select_user') /* Выберите сотрудника */ : 
+                                  t('quotes.select_contractor') /* Выберите подрядчика */
+                                } />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {executorType === 'internal' && users.map(u => (
+                                  <SelectItem key={u.id} value={String(u.id)}>{u.name}</SelectItem>
+                                ))}
+                                {executorType === 'external' && contractors.map(c => (
+                                  <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                      </TableCell>
+                      {canSeeFinance && (
+                        <>
+                          <TableCell className="p-2 bg-destructive/5">
+                            <Input 
+                              className="h-9 text-destructive" 
+                              type="number" 
+                              step="0.01" 
+                              disabled={executorType === 'none'}
+                              {...register(`items.${index}.unitCost`)} 
+                            />
+                          </TableCell>
+                          <TableCell className="p-2 bg-emerald-50 border-x">
+                            <div className="flex flex-col">
+                              <span className="font-semibold text-emerald-600">{margin.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                              <span className={`text-[10px] ${marginPct < 0 ? 'text-destructive' : 'text-muted-foreground'}`}>
+                                {marginPct.toFixed(1)}%
+                              </span>
+                            </div>
+                          </TableCell>
+                        </>
+                      )}
+                      <TableCell className="p-2 text-center">
+                        <Button variant="ghost" size="icon" onClick={() => remove(index)} className="text-destructive h-8 w-8 hover:bg-destructive/10">
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </TableCell>
@@ -224,14 +434,21 @@ export function QuoteFormPage() {
             </Table>
           </div>
           
-          <div className="flex justify-between items-center mt-4">
-            <Button variant="outline" className="gap-2" onClick={() => append({ itemType: 'custom', name: '', quantity: 1, price: 0, discountPercent: 0, total: 0 })}>
+          <div className="flex justify-start items-center mt-4">
+            <Button variant="outline" className="gap-2" onClick={() => append({ 
+              itemType: 'custom', 
+              name: '', 
+              quantity: 1, 
+              price: 0, 
+              discountPercent: 0, 
+              total: 0,
+              executorType: 'none',
+              executorId: '',
+              unitCost: 0
+            })}>
               <Plus className="w-4 h-4" />
               {t('quotes.add_item')}
             </Button>
-            <div className="text-xl font-bold">
-              {t('quotes.total_label')} {calculateTotal().toLocaleString()} ₽
-            </div>
           </div>
         </CardContent>
       </Card>

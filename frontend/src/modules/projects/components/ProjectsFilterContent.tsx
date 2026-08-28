@@ -29,6 +29,8 @@ interface ProjectsFilterContentProps {
   onHideArchivedChange: (v: boolean) => void;
   isTreeView: boolean;
   onTreeViewChange: (v: boolean) => void;
+  projectTypeFilter: string;
+  onProjectTypeChange: (v: string) => void;
 }
 
 export function ProjectsFilterContent({
@@ -43,6 +45,8 @@ export function ProjectsFilterContent({
   onHideArchivedChange,
   isTreeView,
   onTreeViewChange,
+  projectTypeFilter,
+  onProjectTypeChange,
 }: ProjectsFilterContentProps) {
   const { t } = useTranslation();
   const { getStatusesByModule, getPrioritiesByModule } = useSettings();
@@ -94,6 +98,19 @@ export function ProjectsFilterContent({
               {s.name}
             </SelectItem>
           ))}
+        </SelectContent>
+      </Select>
+
+      <DropdownMenuSeparator />
+      <DropdownMenuLabel>{t("projects.filters.type_label")}</DropdownMenuLabel>
+      <Select value={projectTypeFilter} onValueChange={onProjectTypeChange}>
+        <SelectTrigger className="h-8 mb-2 mx-2 w-auto">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">{t("projects.filters.all")}</SelectItem>
+          <SelectItem value="standard">{t("projects.type.standard")}</SelectItem>
+          <SelectItem value="sales_deal">{t("projects.type.sales_deal")}</SelectItem>
         </SelectContent>
       </Select>
 

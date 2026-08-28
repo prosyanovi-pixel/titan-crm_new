@@ -71,6 +71,7 @@ export function useProjectsPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
   const [managerFilter, setManagerFilter] = useState<string>("all");
+  const [projectTypeFilter, setProjectTypeFilter] = useState<string>("all");
   const [hideArchived, setHideArchived] = useState<boolean>(true);
   const [isTreeView, setIsTreeView] = useState<boolean>(true);
   const [activeTabState, setActiveTabState] = useState<string>('list');
@@ -134,6 +135,7 @@ export function useProjectsPage() {
     if (statusFilter !== "all") filtered = filtered.filter((p) => p.status === statusFilter);
     if (priorityFilter !== "all") filtered = filtered.filter((p) => p.priority === priorityFilter);
     if (managerFilter !== "all") filtered = filtered.filter((p) => p.manager === managerFilter);
+    if (projectTypeFilter !== "all") filtered = filtered.filter((p) => p.projectType === projectTypeFilter);
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       filtered = filtered.filter((p) => 
@@ -167,7 +169,7 @@ export function useProjectsPage() {
     };
 
     return buildTree(filtered);
-  }, [projects, statusFilter, priorityFilter, managerFilter, searchQuery, hideArchived, isTreeView]);
+  }, [projects, statusFilter, priorityFilter, managerFilter, projectTypeFilter, searchQuery, hideArchived, isTreeView]);
 
   const paginatedProjects = useMemo(() => {
     const perPage = parseInt(rowsPerPage) || 25;
@@ -297,6 +299,7 @@ export function useProjectsPage() {
     isTreeView, setIsTreeView,
     references, contractors, statusFilter, setStatusFilter,
     priorityFilter, setPriorityFilter, managerFilter, setManagerFilter,
+    projectTypeFilter, setProjectTypeFilter,
     hideArchived, setHideArchived,
     projectActions, table,
     sheetOpen: crud.sheetOpen, setSheetOpen: crud.setSheetOpen,
