@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const db = require('./db');
+const { compareMigrationFilenames } = require('./scripts/migrationOrdering');
 
 function extractSQLFromMarkdown(content) {
   // Извлекаем SQL из блоков ```sql ... ``` или просто ``` ... ```
@@ -204,7 +205,7 @@ async function migrate() {
   // Читаем оба типа файлов: .sql и .md
   const files = fs.readdirSync(migrationsDir)
     .filter(f => (f.endsWith('.sql') || f.endsWith('.md')) && f !== 'README.md' && !f.startsWith('MANUAL_'))
-    .sort();
+    .sort(compareMigrationFilenames);
 
   if (files.length === 0) {
     console.log('No migrations to apply.');
