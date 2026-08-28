@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS positions (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   description TEXT DEFAULT '',
+  role VARCHAR(50) DEFAULT 'user',
   displayorder INT DEFAULT 0,
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
