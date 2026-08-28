@@ -26,6 +26,8 @@ export interface Product {
   images: string[] | null;
   translations: Record<string, {name?: string, description?: string}> | null;
   isActive: boolean;
+  isComposite?: boolean;
+  components?: { id?: number; componentId: number; quantity: number; writeOffFromWarehouse: boolean; isIncludedInPrice: boolean }[];
   status?: string;
   tags?: string[];
   createdAt: string;
@@ -47,6 +49,8 @@ export interface CreateProductDto {
   images?: string[];
   translations?: Record<string, { name?: string; description?: string }>;
   isActive?: boolean;
+  isComposite?: boolean;
+  components?: { componentId: number; quantity: number; writeOffFromWarehouse: boolean; isIncludedInPrice: boolean }[];
   status?: string;
   type?: string;
   tags?: string[];

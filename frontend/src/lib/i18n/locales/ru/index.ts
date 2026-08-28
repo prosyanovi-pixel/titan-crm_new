@@ -25,6 +25,7 @@ export { reports } from '@/modules/reports/i18n/ru/index';
 export { marketing } from '@/modules/marketing/i18n/ru/marketing';
 export { templates } from '@/modules/templates/i18n/ru/index';
 export { warehouse } from '@/modules/warehouse/i18n/ru/index';
+export { quotes } from '@/modules/quotes/i18n/ru/index';
 
 // Прямые экспорты из модулей для соответствия коду (t("tasks.title"))
 export { tasks, task_sheet, confirm, validation, keywords } from '@/modules/tasks/i18n/ru/tasks';

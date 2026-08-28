@@ -14,7 +14,8 @@ import { ResizableSheet, SheetTabSettings } from '@/components/shared';
 import { useSheetTabs } from '@/hooks/useSheetTabs';
 import { TagInput, useStatuses } from '@/components/ui/status-system';
 import { useTranslation } from '@/lib/i18n';
-import { Info, Calculator, Globe, Languages } from 'lucide-react';
+import { Info, Calculator, Globe, Languages, DollarSign } from 'lucide-react';
+import { ServicePricesTab } from './ServicePricesTab';
 
 interface ServiceFormSheetProps {
   open: boolean;
@@ -92,6 +93,7 @@ export function ServiceFormSheet({ open, onOpenChange, service, categories, sele
   const { tabs, toggleTab, moveTab } = useSheetTabs([
     { id: "basic", label: "services.form.tabs.basic", visible: true, icon: Info },
     { id: "financial", label: "services.form.tabs.financial", visible: true, icon: Calculator },
+    { id: "prices", label: "price_lists.title", visible: !!service?.id, icon: DollarSign },
     { id: "cms", label: "services.form.tabs.cms", visible: true, icon: Globe },
     ...languages.filter(l => !l.isDefault).map(lang => ({
       id: `lang_${lang.code}`,
@@ -328,6 +330,10 @@ export function ServiceFormSheet({ open, onOpenChange, service, categories, sele
               </div>
             </div>
           )}
+
+        {tabs.find(t => t.id === "prices")?.visible && activeTab === "prices" && (
+          <ServicePricesTab serviceId={service?.id} />
+        )}
       </form>
     </ResizableSheet>
   );

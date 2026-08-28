@@ -20,6 +20,8 @@ interface ImportMetaEnv {
   readonly VITE_FEATURE_TEMPLATES?: string;
   readonly VITE_FEATURE_WAREHOUSE?: string;
   readonly VITE_FEATURE_SERVICES?: string;
+  readonly VITE_FEATURE_PRICE_LISTS?: string;
+  readonly VITE_FEATURE_QUOTES?: string;
   readonly VITE_FEATURE_TRASH?: string;
 }
 

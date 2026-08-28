@@ -18,6 +18,8 @@ export type FeatureFlagKey =
   | "templates"
   | "warehouse"
   | "services"
+  | "price_lists"
+  | "quotes"
   | "trash";
 
 const toBool = (value: string | undefined, defaultValue = true): boolean => {
@@ -48,6 +50,8 @@ export const featureFlags: Record<FeatureFlagKey, boolean> = {
   templates: toBool(import.meta.env.VITE_FEATURE_TEMPLATES, true),
   warehouse: toBool(import.meta.env.VITE_FEATURE_WAREHOUSE, true),
   services: toBool(import.meta.env.VITE_FEATURE_SERVICES, true),
+  price_lists: toBool(import.meta.env.VITE_FEATURE_PRICE_LISTS, true),
+  quotes: toBool(import.meta.env.VITE_FEATURE_QUOTES, true),
   trash: toBool(import.meta.env.VITE_FEATURE_TRASH, true),
 };
 

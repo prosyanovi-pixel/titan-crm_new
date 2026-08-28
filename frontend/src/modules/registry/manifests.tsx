@@ -40,7 +40,10 @@ const ProductsPage = lazy(() => import("@/modules/products/pages/ProductsPage").
 const TemplatesPage = lazy(() => import("@/modules/templates").then(m => ({ default: m.TemplatesPage })));
 const WarehousePage = lazy(() => import("@/modules/warehouse").then(m => ({ default: m.WarehousePage })));
 const ServicesPage = lazy(() => import("@/modules/services").then(m => ({ default: m.ServicesPage })));
-import { Briefcase } from "lucide-react";
+const PriceListsPage = lazy(() => import("@/modules/price_lists").then(m => ({ default: m.PriceListsPage })));
+const QuotesPage = lazy(() => import("@/modules/quotes/pages/QuotesPage").then(m => ({ default: m.QuotesPage })));
+const QuoteFormPage = lazy(() => import("@/modules/quotes/pages/QuoteFormPage").then(m => ({ default: m.QuoteFormPage })));
+import { Briefcase, FileSpreadsheet } from "lucide-react";
 
 export const moduleManifests: ModuleManifest[] = [
   {
@@ -369,6 +372,46 @@ export const moduleManifests: ModuleManifest[] = [
     settingsModuleId: "services",
     quickActionsModuleId: "services",
     reference: getModuleReferenceSeed("services"),
+  },
+  {
+    id: "price_lists",
+    route: {
+      path: "/price-lists",
+      titleKey: "price_lists.title",
+      featureFlag: "price_lists",
+      element: <PriceListsPage />,
+    },
+    navigation: {
+      href: "/price-lists",
+      labelKey: "price_lists.title",
+      icon: FileSpreadsheet,
+      order: 89,
+    },
+  },
+  {
+    id: "quotes",
+    route: {
+      path: "/quotes",
+      titleKey: "quotes.title",
+      featureFlag: "quotes",
+      element: <QuotesPage />,
+    },
+    navigation: {
+      href: "/quotes",
+      labelKey: "quotes.title",
+      icon: FileSpreadsheet,
+      order: 91,
+    },
+  },
+  {
+    id: "quote-form",
+    route: {
+      path: "/quotes/:id",
+      titleKey: "quotes.edit",
+      featureFlag: "quotes",
+      element: <QuoteFormPage />,
+    },
+    settingsModuleId: "quotes"
   },
   {
     id: "trash",

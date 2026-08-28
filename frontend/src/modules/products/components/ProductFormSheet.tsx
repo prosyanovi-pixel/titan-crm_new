@@ -17,6 +17,8 @@ import { ResizableSheet, SheetTabSettings } from "@/components/shared";
 import { TagInput, useStatuses } from "@/components/ui/status-system";
 import { useTranslation } from "@/lib/i18n";
 import { ProductBalancesTab } from "./ProductBalancesTab";
+import { ProductBundlesTab } from "./ProductBundlesTab";
+import { Layers } from "lucide-react";
 
 interface ProductFormSheetProps {
   open: boolean;
@@ -51,6 +53,10 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
   
   const [characteristics, setCharacteristics] = useState<Array<{ id: string, name: string, value: string, unit: string }>>([]);
   
+  // Bundles
+  const [isComposite, setIsComposite] = useState(false);
+  const [components, setComponents] = useState<Array<{ componentId: number; quantity: number; writeOffFromWarehouse: boolean; isIncludedInPrice: boolean }>>([]);
+  
   // CMS fields
   const [imageUrls, setImageUrls] = useState("");
   const { languages, defaultLanguage } = useContentLanguages();
@@ -68,6 +74,8 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
     setType("");
     setTags([]);
     setCharacteristics([]);
+    setIsComposite(false);
+    setComponents([]);
     setTranslations({});
     setImageUrls("");
   };
@@ -75,6 +83,7 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
   const { tabs, toggleTab, moveTab } = useSheetTabs([
     { id: "main", label: "products.form.tabs.main", visible: true, icon: Info },
     { id: "characteristics", label: "products.form.tabs.characteristics", visible: true, icon: ListChecks },
+    { id: "bundles", label: "products.bundles.title", visible: true, icon: Layers },
     { id: "balances", label: "warehouse.tabs.balances", visible: !!product?.id, icon: Package },
     { id: "cms", label: "products.form.tabs.cms", visible: true, icon: Globe },
     ...languages.filter(l => !l.isDefault).map(lang => ({
@@ -109,6 +118,13 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
         setStatus(product.status || "active");
         setType(product.type || "");
         setTags(product.tags || []);
+        setIsComposite(product.isComposite || false);
+        setComponents((product.components || []).map(c => ({
+          componentId: c.componentId,
+          quantity: c.quantity,
+          writeOffFromWarehouse: c.writeOffFromWarehouse,
+          isIncludedInPrice: c.isIncludedInPrice
+        })));
         setCharacteristics((product.characteristics || []).map(c => ({ id: crypto.randomUUID(), name: c.name, value: c.value, unit: c.unit })));
         setImageUrls((product.images || []).join('\n'));
         const rawTr = product.translations || {};
@@ -171,6 +187,8 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
       status: status || undefined,
       type: type || undefined,
       tags: tags.length > 0 ? tags : undefined,
+      isComposite,
+      components: isComposite && components.length > 0 ? components.filter(c => c.componentId > 0) : undefined,
       characteristics: characteristics.map(({ name, value, unit }) => ({ name, value, unit })),
       images: images.length > 0 ? images : undefined,
       translations: Object.keys(translations).length > 0 ? translations : undefined
@@ -357,6 +375,18 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
                 ))}
               </div>
             )}
+          </div>
+        )}
+
+        {tabs.find(t => t.id === "bundles")?.visible && activeTab === "bundles" && (
+          <div className="space-y-4 animate-in fade-in-50">
+            <ProductBundlesTab 
+              isComposite={isComposite} 
+              setIsComposite={setIsComposite} 
+              components={components} 
+              setComponents={setComponents}
+              currentProductId={product?.id}
+            />
           </div>
         )}
 

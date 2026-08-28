@@ -132,7 +132,19 @@ exports.getProducts = async (req, res) => {
                    COALESCE(
                        (SELECT json_agg(t.tag) FROM product_tags t WHERE t.product_id = p.id),
                        '[]'::json
-                   ) as tags
+                   ) as tags,
+                   COALESCE(
+                       (SELECT json_agg(
+                           json_build_object(
+                               'id', pc.id,
+                               'component_id', pc.component_id,
+                               'quantity', pc.quantity,
+                               'write_off_from_warehouse', pc.write_off_from_warehouse,
+                               'is_included_in_price', pc.is_included_in_price
+                           )
+                       ) FROM product_components pc WHERE pc.parent_id = p.id),
+                       '[]'::json
+                   ) as components
             FROM products p 
             LEFT JOIN product_categories c ON p.category_id = c.id
         `;
@@ -228,7 +240,7 @@ function validateString(value, fieldName, options = {}) {
  */
 exports.createProduct = async (req, res) => {
     try {
-        const { skuInternal, skuExternal, name, description, categoryId, unit, purchasePrice, currency, vatRate, dimensions, characteristics, images, translations, isActive, status, type, tags } = req.body;
+        const { skuInternal, skuExternal, name, description, categoryId, unit, purchasePrice, currency, vatRate, dimensions, characteristics, images, translations, isActive, status, type, tags, isComposite, components } = req.body;
         
         // Validation
         if (!name) return res.status(400).json({ message: 'Name is required' });
@@ -265,9 +277,9 @@ exports.createProduct = async (req, res) => {
         await db.query('BEGIN');
         const result = await db.query(
             `INSERT INTO products 
-            (sku_internal, sku_external, name, description, category_id, unit, purchase_price, currency, vat_rate, dimensions, characteristics, images, translations, is_active, status, type) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *`,
-            [validatedSkuInternal, validatedSkuExternal, name, description, categoryId !== undefined ? categoryId : null, finalUnit, finalPurchasePrice, finalCurrency, finalVatRate, dimensions, characteristics ? JSON.stringify(characteristics) : null, images ? JSON.stringify(images) : null, translations ? JSON.stringify(translations) : null, isActive !== undefined ? isActive : true, status, type]
+            (sku_internal, sku_external, name, description, category_id, unit, purchase_price, currency, vat_rate, dimensions, characteristics, images, translations, is_active, status, type, is_composite) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *`,
+            [validatedSkuInternal, validatedSkuExternal, name, description, categoryId !== undefined ? categoryId : null, finalUnit, finalPurchasePrice, finalCurrency, finalVatRate, dimensions, characteristics ? JSON.stringify(characteristics) : null, images ? JSON.stringify(images) : null, translations ? JSON.stringify(translations) : null, isActive !== undefined ? isActive : true, status, type, isComposite || false]
         );
         const productId = result.rows[0].id;
 
@@ -276,6 +288,16 @@ exports.createProduct = async (req, res) => {
                 await db.query('INSERT INTO product_tags (product_id, tag) VALUES ($1, $2)', [productId, tag]);
             }
         }
+        if (isComposite && Array.isArray(components) && components.length > 0) {
+            for (const comp of components) {
+                await db.query(
+                    `INSERT INTO product_components (parent_id, component_id, quantity, write_off_from_warehouse, is_included_in_price)
+                     VALUES ($1, $2, $3, $4, $5)`,
+                    [productId, comp.componentId, comp.quantity || 1, comp.writeOffFromWarehouse ?? true, comp.isIncludedInPrice ?? true]
+                );
+            }
+        }
+        
         await db.query('COMMIT');
         
         result.rows[0].tags = tags || [];
@@ -297,7 +319,7 @@ exports.createProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
-        const { skuInternal, skuExternal, name, description, categoryId, unit, purchasePrice, currency, vatRate, dimensions, characteristics, images, translations, isActive, status, type, tags } = req.body;
+        const { skuInternal, skuExternal, name, description, categoryId, unit, purchasePrice, currency, vatRate, dimensions, characteristics, images, translations, isActive, status, type, tags, isComposite, components } = req.body;
         
         // Validation
         if (!id) return res.status(400).json({ message: 'Product ID is required' });
@@ -353,9 +375,10 @@ exports.updateProduct = async (req, res) => {
                  is_active = COALESCE($14, is_active),
                  status = COALESCE($15, status),
                  type = COALESCE($16, type),
+                 is_composite = COALESCE($17, is_composite),
                  updated_at = CURRENT_TIMESTAMP 
-             WHERE id = $17 RETURNING *`,
-            [validatedSkuInternal, validatedSkuExternal, name, description, categoryId !== undefined ? categoryId : null, finalUnit, finalPurchasePrice, finalCurrency, finalVatRate, dimensions, characteristics ? JSON.stringify(characteristics) : null, images ? JSON.stringify(images) : null, translations ? JSON.stringify(translations) : null, isActive, status, type, id]
+             WHERE id = $18 RETURNING *`,
+            [validatedSkuInternal, validatedSkuExternal, name, description, categoryId !== undefined ? categoryId : null, finalUnit, finalPurchasePrice, finalCurrency, finalVatRate, dimensions, characteristics ? JSON.stringify(characteristics) : null, images ? JSON.stringify(images) : null, translations ? JSON.stringify(translations) : null, isActive, status, type, isComposite, id]
         );
         if (result.rows.length === 0) {
             await db.query('ROLLBACK');
@@ -366,6 +389,18 @@ exports.updateProduct = async (req, res) => {
             await db.query('DELETE FROM product_tags WHERE product_id = $1', [id]);
             for (const tag of tags) {
                 await db.query('INSERT INTO product_tags (product_id, tag) VALUES ($1, $2)', [id, tag]);
+            }
+        }
+        if (isComposite !== undefined) {
+            await db.query('DELETE FROM product_components WHERE parent_id = $1', [id]);
+            if (isComposite && Array.isArray(components)) {
+                for (const comp of components) {
+                    await db.query(
+                        `INSERT INTO product_components (parent_id, component_id, quantity, write_off_from_warehouse, is_included_in_price)
+                         VALUES ($1, $2, $3, $4, $5)`,
+                        [id, comp.componentId, comp.quantity || 1, comp.writeOffFromWarehouse ?? true, comp.isIncludedInPrice ?? true]
+                    );
+                }
             }
         }
         await db.query('COMMIT');

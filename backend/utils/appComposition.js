@@ -115,6 +115,8 @@ async function configureApplication(app) {
   app.use('/api/backup', backupModule(app));
   app.use(trashModule.prefix, trashModule.router);
   app.use('/api/comments', require('../modules/comments/routes'));
+  app.use('/api/price-lists', require('../modules/price_lists/routes/priceListsRoutes'));
+  app.use('/api/quotes', require('../modules/quotes/routes/quotesRoutes'));
 
   standardRoutes.forEach(([routePath, router]) => app.use(routePath, router));
   
