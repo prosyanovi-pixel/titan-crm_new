@@ -161,6 +161,9 @@ describe('Project Service', () => {
       };
 
       mockDb.query
+        .mockResolvedValueOnce({ // SELECT status (oldProject)
+          rows: [{ status: 'pending' }],
+        })
         .mockResolvedValueOnce({ // Update
           rows: [{ id: 1 }],
         })

@@ -82,7 +82,7 @@ describe('Users Routes Integration', () => {
       });
 
       const response = await request(app)
-        .get('/api/admin/users')
+        .get('/api/admin/users/paginated')
         .set('x-role', 'user'); // User can read
 
       expect(response.status).toBe(200);

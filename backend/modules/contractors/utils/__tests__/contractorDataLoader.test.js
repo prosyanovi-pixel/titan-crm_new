@@ -139,10 +139,12 @@ describe('contractorDataLoader', () => {
       const result = await loadReferences();
 
       expect(result.managers).toEqual({
-        1: 'Manager1',
-        '1': 'Manager1',
-        2: 'Manager2',
-        '2': 'Manager2',
+        1: { name: 'Manager1', avatar: undefined },
+        '1': { name: 'Manager1', avatar: undefined },
+        'Manager1': { name: 'Manager1', avatar: undefined },
+        2: { name: 'Manager2', avatar: undefined },
+        '2': { name: 'Manager2', avatar: undefined },
+        'Manager2': { name: 'Manager2', avatar: undefined },
       });
 
       expect(result.statuses).toEqual({
@@ -181,7 +183,7 @@ describe('contractorDataLoader', () => {
       const result = await loadReferences();
       expect(jest.mocked(db.query)).toHaveBeenCalledTimes(3); // No additional calls
 
-      expect(result.managers[1]).toBe('Manager1');
+      expect(result.managers[1]).toEqual({ name: 'Manager1', avatar: undefined });
     });
 
     it('should clear cache properly', async () => {
@@ -215,7 +217,7 @@ describe('contractorDataLoader', () => {
       ];
 
       const references = {
-        managers: { 1: 'John Doe', '1': 'John Doe', 2: 'Jane Smith', '2': 'Jane Smith' },
+        managers: { 1: { name: 'John Doe', avatar: 'avatar1.png' }, '1': { name: 'John Doe', avatar: 'avatar1.png' }, 2: { name: 'Jane Smith', avatar: undefined }, '2': { name: 'Jane Smith', avatar: undefined } },
         statuses: { 'active': 'Active', active: 'Active', 'pending': 'Pending', pending: 'Pending' },
         types: { 'client': 'Client', client: 'Client', 'partner': 'Partner', partner: 'Partner' },
       };
@@ -223,7 +225,9 @@ describe('contractorDataLoader', () => {
       const result = enrichContractorsWithReferences(contractors, references);
 
       expect(result[0].manager).toBe('John Doe');
+      expect(result[0].managerAvatar).toBe('avatar1.png');
       expect(result[1].manager).toBe('Jane Smith');
+      expect(result[1].managerAvatar).toBeNull();
     });
 
     it('should add status names', () => {
@@ -232,7 +236,7 @@ describe('contractorDataLoader', () => {
       ];
 
       const references = {
-        managers: { 1: 'John Doe', '1': 'John Doe' },
+        managers: { 1: { name: 'John Doe', avatar: undefined }, '1': { name: 'John Doe', avatar: undefined } },
         statuses: { 'active': 'Active', active: 'Active' },
         types: { 'client': 'Client', client: 'Client' },
       };
@@ -248,7 +252,7 @@ describe('contractorDataLoader', () => {
       ];
 
       const references = {
-        managers: { 1: 'John Doe', '1': 'John Doe' },
+        managers: { 1: { name: 'John Doe', avatar: undefined }, '1': { name: 'John Doe', avatar: undefined } },
         statuses: { 'active': 'Active', active: 'Active' },
         types: { 'client': 'Client', client: 'Client' },
       };
@@ -302,6 +306,7 @@ describe('contractorDataLoader', () => {
       expect(result).toHaveLength(1);
       expect(result[0].tags).toEqual(['tag1']);
       expect(result[0].manager).toBe('Manager1');
+      expect(result[0].managerAvatar).toBeNull();
       expect(result[0].statusName).toBe('Active');
       expect(result[0].typeName).toBe('Client');
     });
