@@ -88,7 +88,7 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
     { id: "cms", label: "products.form.tabs.cms", visible: true, icon: Globe },
     ...languages.filter(l => !l.isDefault).map(lang => ({
       id: `lang_${lang.code}`,
-      label: `products.form.tabs.translation (${lang.code.toUpperCase()})`,
+      label: `${t('products.form.tabs.translation')} (${lang.code.toUpperCase()})`,
       visible: true,
       icon: Languages
     }))

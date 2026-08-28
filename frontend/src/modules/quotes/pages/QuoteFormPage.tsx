@@ -108,7 +108,7 @@ export function QuoteFormPage() {
     <div className="space-y-6 max-w-6xl">
       <Card>
         <CardHeader>
-          <CardTitle>Общая информация</CardTitle>
+          <CardTitle>{t('quotes.general_info')} {/* Общая информация */}</CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
@@ -161,12 +161,12 @@ export function QuoteFormPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Тип</TableHead>
-                  <TableHead>Наименование</TableHead>
-                  <TableHead className="w-[120px]">Кол-во</TableHead>
-                  <TableHead className="w-[150px]">Цена</TableHead>
-                  <TableHead className="w-[120px]">Скидка %</TableHead>
-                  <TableHead className="w-[150px]">Сумма</TableHead>
+                  <TableHead>{t('quotes.item_type')} {/* Тип */}</TableHead>
+                  <TableHead>{t('quotes.item_name')} {/* Наименование */}</TableHead>
+                  <TableHead className="w-[120px]">{t('quotes.quantity_short')} {/* Кол-во */}</TableHead>
+                  <TableHead className="w-[150px]">{t('quotes.price')} {/* Цена */}</TableHead>
+                  <TableHead className="w-[120px]">{t('quotes.discount_short')} {/* Скидка % */}</TableHead>
+                  <TableHead className="w-[150px]">{t('quotes.total')} {/* Сумма */}</TableHead>
                   <TableHead className="w-[60px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -198,7 +198,7 @@ export function QuoteFormPage() {
                         />
                       </TableCell>
                       <TableCell>
-                        <Input {...register(`items.${index}.name`)} placeholder="Название..." />
+                        <Input {...register(`items.${index}.name`)} placeholder={t('quotes.item_name_placeholder')} />
                       </TableCell>
                       <TableCell>
                         <Input type="number" min="1" step="0.01" {...register(`items.${index}.quantity`)} />
@@ -230,7 +230,7 @@ export function QuoteFormPage() {
               {t('quotes.add_item')}
             </Button>
             <div className="text-xl font-bold">
-              Итого: {calculateTotal().toLocaleString()} ₽
+              {t('quotes.total_label')} {calculateTotal().toLocaleString()} ₽
             </div>
           </div>
         </CardContent>

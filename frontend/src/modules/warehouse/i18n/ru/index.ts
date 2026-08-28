@@ -5,7 +5,7 @@ export const warehouse = {
   tabs: {
     balances: "Остатки",
     warehouses: "Склады",
-    transactions: "Движения"
+    transactions: "Транзакции"
   },
   types: {
     main: "Основной",
@@ -34,6 +34,7 @@ export const warehouse = {
       type: "Тип",
       address: "Адрес",
       status: "Статус",
+      warehouse: "Склад",
     },
     transactions: {
       createdAt: "Дата",
@@ -61,8 +62,8 @@ export const warehouse = {
     adjustment: "Корректировка",
     reserve: "Резерв",
     unreserve: "Снятие резерва",
-    new: "Новое движение",
-    created: "Движение создано",
+    new: "Новая транзакция",
+    created: "Транзакция создана",
   },
   warehouse_new: "Новый склад",
   actions: {
@@ -79,15 +80,15 @@ export const warehouse = {
   lists: {
     empty_balances: "Нет остатков на складах",
     empty_warehouses: "Нет складов",
-    empty_transactions: "Нет движений",
+    empty_transactions: "Нет транзакций",
   },
   form: {
-    title_edit: "Редактировать движение",
-    title_add: "Новое движение",
-    description: "Заполните данные о движении товара",
+    title_edit: "Редактировать транзакцию",
+    title_add: "Новая транзакция",
+    description: "Заполните данные о транзакции",
     errors: {
-      transaction_created: "Движение создано",
-      transaction_created_error: "Не удалось создать движение",
+      transaction_created: "Транзакция создана",
+      transaction_created_error: "Не удалось создать транзакцию",
     },
     schema: {
       required_field: "Обязательное поле",

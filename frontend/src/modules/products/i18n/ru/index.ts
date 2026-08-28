@@ -86,4 +86,17 @@ export const products = {
     },
     without_category: '-- Без категории --',
   },
+  bundles: {
+    title: 'Комплекты',
+    is_composite: 'Составной товар (Комплект)',
+    components_title: 'Компоненты',
+    components_desc: 'Добавьте товары или услуги в этот комплект.',
+    add_component: 'Добавить компонент',
+    component: 'Компонент',
+    quantity: 'Количество',
+    write_off: 'Списывать со склада',
+    in_price: 'Включено в цену',
+    select_product: 'Выберите товар...',
+    no_components: 'Нет компонентов. Добавьте первый компонент.',
+  }
 };
