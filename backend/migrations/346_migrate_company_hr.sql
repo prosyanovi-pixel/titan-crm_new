@@ -66,12 +66,14 @@ CREATE TABLE IF NOT EXISTS positions (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO positions (name, displayorder) VALUES
+INSERT INTO positions (name, displayorder)
+  SELECT * FROM (VALUES
   ('Директор', 1),
   ('Бухгалтер', 2),
   ('Менеджер', 3),
   ('Разработчик', 4),
-  ('Юрист', 5);
+  ('Юрист', 5)
+  ) AS tmp(name, displayorder) WHERE NOT EXISTS (SELECT 1 FROM positions);
 
 -- 5. Отделы (иерархия через parent_id)
 CREATE TABLE IF NOT EXISTS departments (
@@ -84,12 +86,14 @@ CREATE TABLE IF NOT EXISTS departments (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO departments (name, displayorder) VALUES
+INSERT INTO departments (name, displayorder)
+  SELECT * FROM (VALUES
   ('Администрация', 1),
   ('Отдел продаж', 2),
   ('IT-отдел', 3),
   ('Бухгалтерия', 4),
-  ('Юридический отдел', 5);
+  ('Юридический отдел', 5)
+  ) AS tmp(name, displayorder) WHERE NOT EXISTS (SELECT 1 FROM departments);
 
 -- 6. Сотрудники
 CREATE TABLE IF NOT EXISTS employees (
