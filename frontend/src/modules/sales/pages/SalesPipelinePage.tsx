@@ -6,7 +6,7 @@ import { DealCard } from "../components/DealCard";
 import { SalesDeal, SalesStage } from "../types";
 import { Project } from "@/modules/projects/types";
 import { DealHubSheet } from "../components/DealHubSheet";
-import { ProjectSheet } from "@/modules/projects/components/ProjectSheet";
+import { CreateDealWizard } from "../components/CreateDealWizard";
 import { useProjectsPage } from "@/modules/projects/hooks/useProjectsPage";
 import { Button } from "@/components/ui/button";
 import { Plus, Loader2 } from "lucide-react";
@@ -195,14 +195,11 @@ export function SalesPipelinePage() {
       />
 
       {isCreateOpen && (
-        <ProjectSheet
-          project={null}
+        <CreateDealWizard
           open={isCreateOpen}
           onOpenChange={setIsCreateOpen}
-          onSave={handleSaveDeal}
+          onSuccess={refetch}
           contractors={contractors}
-          references={references}
-          defaultValues={{ project_type: 'sales_deal', stage: 'lead' }}
         />
       )}
     </div>

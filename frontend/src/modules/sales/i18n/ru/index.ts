@@ -18,6 +18,7 @@ export default {
     quotes: "КП",
     contracts: "Договоры",
     claims: "Рекламации",
+    revenue: "Сумма КП",
     margin: "Ожидаемая маржа"
   },
   hub: {

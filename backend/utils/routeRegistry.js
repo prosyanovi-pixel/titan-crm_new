@@ -38,6 +38,7 @@ const standardRoutes = [
   ['/api/notifications', require('../modules/notifications')],
   ['/api/case-outcomes', require('../modules/legal_cases/controllers/caseOutcomes')],
   ['/api/warehouse', require('../modules/warehouse')],
+  ['/api/sales', require('../modules/sales')],
 ];
 
 module.exports = {
