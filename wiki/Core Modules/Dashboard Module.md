@@ -1,5 +1,7 @@
 # Dashboard Module
 
+> 📄 **Синхронизировано** с [docs/modules/dashboard.md](../../docs/modules/dashboard.md) — актуальная компактная спецификация модуля (рус.). Ниже — подробный англоязычный разбор с исходниками и диаграммами.
+
 <cite>
 **Referenced Files in This Document**
 - [backend/modules/dashboard/index.js](file://backend/modules/dashboard/index.js)

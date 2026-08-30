@@ -523,3 +523,39 @@ Titan CRM’s modules are organized around clear boundaries with shared services
   - Finance: Create an invoice via POST /api/finance/invoices; recalculate status via POST /api/finance/invoices/:id/recalculate-status.
   - Contractors: Change tax system via PATCH /api/contractors/:id/tax-system; calculate taxes via GET /api/contractors/:id/taxes/calculate.
   - Workflow: Trigger manually via POST /api/workflows/:id/run; expose webhook via POST /api/workflows/:id/webhook.
+
+## Module Pages Index (Синхронизация с docs/modules)
+
+Компактные русскоязычные спецификации всех модулей: [docs/modules](../docs/modules/README.md). Страницы модулей в wiki:
+
+| Модуль | Страница wiki | Спецификация docs |
+|---|---|---|
+| Administration | [Administration Module](Administration%20Module/Administration%20Module.md) | [administration.md](../../docs/modules/administration.md) |
+| Auth | [Auth Module](Auth%20Module.md) | [auth.md](../../docs/modules/auth.md) |
+| Calendar | [Calendar Module](Calendar%20Module.md) | [calendar.md](../../docs/modules/calendar.md) |
+| Contractors | [Contractors Module](Contractors%20Module/Contractors%20Module.md) | [contractors.md](../../docs/modules/contractors.md) |
+| Contracts | [Contracts Module](Contracts%20Module.md) | [contracts.md](../../docs/modules/contracts.md) |
+| Dashboard | [Dashboard Module](Dashboard%20Module.md) | [dashboard.md](../../docs/modules/dashboard.md) |
+| Documents | [Documents Module](Documents%20Module.md) | [documents.md](../../docs/modules/documents.md) |
+| Errors | [Errors Module](Errors%20Module.md) | [errors.md](../../docs/modules/errors.md) |
+| Finance | [Finance Module](Finance%20Module/Finance%20Module.md) | [finance.md](../../docs/modules/finance.md) |
+| Lawyers | [Lawyers Module](Lawyers%20Module/Lawyers%20Module.md) | [lawyers.md](../../docs/modules/lawyers.md) |
+| Legal Cases | [Legal Cases Module](Legal%20Cases%20Module/Legal%20Cases%20Module.md) | [legal_cases.md](../../docs/modules/legal_cases.md) |
+| Mail | [Mail Module](Mail%20Module/Mail%20Module.md) | [mail.md](../../docs/modules/mail.md) |
+| Marketing | [Marketing Module](Marketing%20Module.md) | [marketing.md](../../docs/modules/marketing.md) |
+| Notifications | [Notifications Module](Notifications%20Module.md) | [notifications.md](../../docs/modules/notifications.md) |
+| Price Lists | [Price Lists Module](Price%20Lists%20Module.md) | [price_lists.md](../../docs/modules/price_lists.md) |
+| Products | [Products Module](Products%20Module.md) | [products.md](../../docs/modules/products.md) |
+| Profile | [Profile Module](Profile%20Module.md) | [profile.md](../../docs/modules/profile.md) |
+| Projects | [Projects & Tasks Module](Projects%20%26%20Tasks%20Module/Projects%20%26%20Tasks%20Module.md) | [projects.md](../../docs/modules/projects.md) |
+| Quotes | [Quotes Module](Quotes%20Module.md) | [quotes.md](../../docs/modules/quotes.md) |
+| Registry | [Registry Module](Registry%20Module.md) | [registry.md](../../docs/modules/registry.md) |
+| Reports | [Reports Module](Reports%20Module.md) | [reports.md](../../docs/modules/reports.md) |
+| Sales | [Sales Module](Sales%20Module.md) | [sales.md](../../docs/modules/sales.md) |
+| Services | [Services Module](Services%20Module.md) | [services.md](../../docs/modules/services.md) |
+| Settings | [Settings Module](Settings%20Module.md) | [settings.md](../../docs/modules/settings.md) |
+| Tasks | [Projects & Tasks Module](Projects%20%26%20Tasks%20Module/Projects%20%26%20Tasks%20Module.md) | [tasks.md](../../docs/modules/tasks.md) |
+| Templates | [Templates Module](Templates%20Module.md) | [templates.md](../../docs/modules/templates.md) |
+| Trash | [Trash Module](Trash%20Module.md) | [trash.md](../../docs/modules/trash.md) |
+| Warehouse | [Warehouse Module](Warehouse%20Module.md) | [warehouse.md](../../docs/modules/warehouse.md) |
+| Workflow | [Workflow Module](Workflow%20Module.md) | [workflow.md](../../docs/modules/workflow.md) |

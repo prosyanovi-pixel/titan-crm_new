@@ -1,5 +1,7 @@
 # Calendar Module
 
+> 📄 **Синхронизировано** с [docs/modules/calendar.md](../../docs/modules/calendar.md) — актуальная компактная спецификация модуля (рус.). Ниже — подробный англоязычный разбор с исходниками и диаграммами.
+
 <cite>
 **Referenced Files in This Document**
 - [backend/modules/calendar/index.js](file://backend/modules/calendar/index.js)

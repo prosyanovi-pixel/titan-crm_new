@@ -1,5 +1,7 @@
 # Lawyers Module
 
+> 📄 **Синхронизировано** с [docs/modules/lawyers.md](../../../docs/modules/lawyers.md) — актуальная компактная спецификация модуля (рус.). Ниже — подробный англоязычный разбор с исходниками и диаграммами.
+
 <cite>
 **Referenced Files in This Document**
 - [backend/modules/lawyers/index.js](file://backend/modules/lawyers/index.js)

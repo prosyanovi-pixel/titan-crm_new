@@ -1,5 +1,7 @@
 # Documents Module
 
+> 📄 **Синхронизировано** с [docs/modules/documents.md](../../docs/modules/documents.md) — актуальная компактная спецификация модуля (рус.). Ниже — подробный англоязычный разбор с исходниками и диаграммами.
+
 <cite>
 **Referenced Files in This Document**
 - [backend/modules/documents/index.js](file://backend/modules/documents/index.js)

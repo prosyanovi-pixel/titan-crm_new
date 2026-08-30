@@ -1,5 +1,7 @@
 # Finance Module
 
+> 📄 **Синхронизировано** с [docs/modules/finance.md](../../../docs/modules/finance.md) — актуальная компактная спецификация модуля (рус.). Ниже — подробный англоязычный разбор с исходниками и диаграммами.
+
 <cite>
 **Referenced Files in This Document**
 - [index.js](file://backend/modules/finance/index.js)

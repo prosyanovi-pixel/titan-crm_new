@@ -1,5 +1,7 @@
 # Contractors Module
 
+> 📄 **Синхронизировано** с [docs/modules/contractors.md](../../../docs/modules/contractors.md) — актуальная компактная спецификация модуля (рус.). Ниже — подробный англоязычный разбор с исходниками и диаграммами.
+
 <cite>
 **Referenced Files in This Document**
 - [index.js](file://backend/modules/contractors/index.js)

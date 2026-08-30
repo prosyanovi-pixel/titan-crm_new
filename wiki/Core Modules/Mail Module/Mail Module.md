@@ -1,5 +1,7 @@
 # Mail Module
 
+> 📄 **Синхронизировано** с [docs/modules/mail.md](../../../docs/modules/mail.md) — актуальная компактная спецификация модуля (рус.). Ниже — подробный англоязычный разбор с исходниками и диаграммами.
+
 <cite>
 **Referenced Files in This Document**
 - [index.js](file://backend/modules/mail/index.js)

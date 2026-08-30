@@ -1,5 +1,7 @@
 # Projects & Tasks Module
 
+> 📄 **Синхронизировано** с [docs/modules/projects.md](../../../docs/modules/projects.md) и [docs/modules/tasks.md](../../../docs/modules/tasks.md) — актуальные компактные спецификации модулей (рус.). Ниже — подробный англоязычный разбор с исходниками и диаграммами.
+
 <cite>
 **Referenced Files in This Document**
 - [backend/modules/projects/index.js](file://backend/modules/projects/index.js)

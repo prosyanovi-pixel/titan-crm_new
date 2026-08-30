@@ -1,5 +1,7 @@
 # Settings Module
 
+> 📄 **Синхронизировано** с [docs/modules/settings.md](../../docs/modules/settings.md) — актуальная компактная спецификация модуля (рус.). Ниже — подробный англоязычный разбор с исходниками и диаграммами.
+
 <cite>
 **Referenced Files in This Document**
 - [index.js](file://backend/modules/settings/index.js)

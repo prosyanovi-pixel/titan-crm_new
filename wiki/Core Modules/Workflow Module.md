@@ -1,5 +1,7 @@
 # Workflow Module
 
+> 📄 **Синхронизировано** с [docs/modules/workflow.md](../../docs/modules/workflow.md) — актуальная компактная спецификация модуля (рус.). Ниже — подробный англоязычный разбор с исходниками и диаграммами.
+
 <cite>
 **Referenced Files in This Document**
 - [index.js](file://backend/modules/workflow/index.js)

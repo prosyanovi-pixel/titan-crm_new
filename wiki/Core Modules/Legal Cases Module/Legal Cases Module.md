@@ -1,5 +1,7 @@
 # Legal Cases Module
 
+> 📄 **Синхронизировано** с [docs/modules/legal_cases.md](../../../docs/modules/legal_cases.md) — актуальная компактная спецификация модуля (рус.). Ниже — подробный англоязычный разбор с исходниками и диаграммами.
+
 <cite>
 **Referenced Files in This Document**
 - [index.js](file://backend/modules/legal_cases/index.js)

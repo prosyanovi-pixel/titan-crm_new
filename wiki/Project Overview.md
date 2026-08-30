@@ -1,5 +1,7 @@
 # Project Overview
 
+> 📄 Актуальные компактные спецификации всех модулей: [docs/modules](../docs/modules/README.md) (рус.). Оглавление документации: [docs/README.md](../docs/README.md).
+
 <cite>
 **Referenced Files in This Document**
 - [backend/package.json](file://backend/package.json)
