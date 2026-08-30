@@ -15,6 +15,7 @@ const {
   updateProject,
   deleteProject,
   bulkUpdateProjects,
+  getSalesPipeline,
 } = require('../services/projectService');
 
 const {
@@ -115,6 +116,41 @@ describe('Project Service', () => {
         completedTasks: 0,
         completionRate: 0,
       });
+    });
+  });
+
+  describe('getSalesPipeline', () => {
+    it('should return sales deals with pipeline statistics and margin', async () => {
+      // Clear any default mocks to prevent leakage
+      mockDb.query.mockReset();
+
+      mockDb.query.mockResolvedValue({ rows: [] }); // Default for all subsequent queries (tags, finance)
+
+      // The first query is getSalesPipeline main query
+      mockDb.query
+        .mockResolvedValueOnce({
+          rows: [{
+            id: 1,
+            name: 'Sales Deal 1',
+            project_type: 'sales_deal',
+            quotes_count: '2',
+            quotes_sum: '150000.00',
+            contracts_count: '1',
+            active_claims_count: '0'
+          }],
+        });
+
+      const result = await getSalesPipeline();
+      
+      expect(result).toHaveLength(1);
+      expect(result[0].quotesCount).toBe(2);
+      expect(result[0].quotesSum).toBe(150000);
+      expect(result[0].contractsCount).toBe(1);
+      expect(result[0].activeClaimsCount).toBe(0);
+      // Finance info defaults if no rows found
+      expect(result[0].totalPaid).toBe(0);
+      expect(result[0].totalExpenses).toBe(0);
+      expect(result[0].totalMargin).toBe(0);
     });
   });
 

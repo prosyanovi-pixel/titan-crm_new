@@ -1,12 +1,20 @@
-- [ ] **Standard Sales Workflows**
-  - [ ] Check `backend/scripts/seed-workflows.js` and add a "B2B Sales Standard" workflow if it doesn't exist.
-  - [ ] Add translation keys for the workflow and wizard to `sales` i18n module.
-- [ ] **CreateDealWizard (Frontend)**
-  - [ ] Create `frontend/src/modules/sales/components/CreateDealWizard.tsx`.
-  - [ ] Implement multi-step form logic (Client -> Deal Details -> Quote -> Task).
-  - [ ] Handle API submissions to create all required entities in sequence.
-- [ ] **Integration**
-  - [ ] Replace `ProjectSheet` with `CreateDealWizard` in `SalesPipelinePage.tsx` for creating new deals.
-- [ ] **Testing**
-  - [ ] Verify deal creation works and distributes data to projects, quotes, and tasks correctly.
-  - [ ] Ensure the created deal shows up in the Kanban pipeline.
+- [x] **Backend: Database & Migrations**
+  - [x] Создать миграцию для таблиц `sales_stages` и `sales_workflows`.
+  - [x] Написать скрипт сидирования (seed) для добавления базовых этапов воронки и дефолтных воркфлоу продаж.
+- [x] **Backend: Services & API**
+  - [x] Обновить `projectService.js`: добавить агрегацию статистики (`quotes_count`, `contracts_count`, `total_margin`) для проектов типа Sales.
+  - [x] Создать `salesWorkflowService.js` для обработки логики автоматизации (например, создание задач при смене этапа воронки).
+  - [x] Обновить/добавить тесты (`projectService.test.js`, `salesWorkflowService.test.js`).
+- [ ] **Frontend: Scaffold & Base Components**
+  - [ ] Зарегистрировать независимый модуль `/sales` в боковом меню приложения (в `manifest.tsx` или аналогичном реестре).
+  - [ ] Создать главную страницу `SalesPipelinePage.tsx` с Kanban-доской для воронки продаж.
+  - [ ] Создать компонент `DealCard.tsx` с бейджами-индикаторами.
+  - [ ] Создать `DealHubSheet.tsx` (слайд-панель) с обзором сделки в 360 градусов и историей прогресса.
+- [ ] **Frontend: Create Deal Wizard**
+  - [ ] Создать `CreateDealWizard.tsx` с многошаговой логикой (Лид/Компания -> Детали сделки -> Первичное КП -> Задача).
+  - [ ] Интегрировать отправку данных на API с созданием всех необходимых связанных сущностей.
+  - [ ] Добавить i18n ключи (переводы) для модуля продаж.
+- [ ] **Testing & Integration**
+  - [ ] Убедиться, что создание сделки распределяет данные корректно (создаются задачи, драфты КП и т.д.).
+  - [ ] Убедиться, что Kanban-доска быстро грузится и корректно отображает новые колонки-статусы.
+  - [ ] Проверить срабатывание триггеров воркфлоу (задача автоматически ставится при перемещении карточки).

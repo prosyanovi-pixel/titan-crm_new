@@ -84,11 +84,17 @@ export function DealHubSheet({
       <div className="flex-1 overflow-y-auto p-6">
         {activeTab === "overview" && deal && (
           <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <div className="p-4 bg-muted/30 rounded-lg border">
-                <div className="text-sm text-muted-foreground mb-1">{t('sales.metrics.margin')}</div>
+                <div className="text-sm text-muted-foreground mb-1">{t('sales.metrics.revenue')}</div>
                 <div className="text-2xl font-semibold text-emerald-600">
                   {new Intl.NumberFormat('ru-RU').format(deal.quotesSum)} ₽
+                </div>
+              </div>
+              <div className="p-4 bg-muted/30 rounded-lg border">
+                <div className="text-sm text-muted-foreground mb-1">{t('sales.metrics.margin')}</div>
+                <div className="text-2xl font-semibold text-blue-600 dark:text-blue-400">
+                  {new Intl.NumberFormat('ru-RU').format(deal.totalMargin)} ₽
                 </div>
               </div>
               <div className="p-4 bg-muted/30 rounded-lg border">

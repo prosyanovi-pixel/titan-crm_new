@@ -5,7 +5,7 @@ export interface SalesDeal extends Project {
   quotesSum: number;
   contractsCount: number;
   activeClaimsCount: number;
-  margin?: number;
+  totalMargin: number;
 }
 
 export type SalesStage = 'lead' | 'negotiation' | 'quote' | 'contract' | 'won' | 'lost';

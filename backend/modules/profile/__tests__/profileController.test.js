@@ -6,13 +6,13 @@ const {
   getById,
   update
 } = require('../controllers');
-const db = require('../../db');
+const db = require('../../../db');
 const bcrypt = require('bcrypt');
-const { sendSuccess, sendNotFound, sendValidationError } = require('../../utils/responseHelpers');
+const { sendSuccess, sendNotFound, sendValidationError } = require('../../../utils/responseHelpers');
 
-jest.mock('../../db', () => ({ query: jest.fn() }));
+jest.mock('../../../db', () => ({ query: jest.fn() }));
 jest.mock('bcrypt', () => ({ compare: jest.fn(), hash: jest.fn() }));
-jest.mock('../../utils/responseHelpers', () => ({
+jest.mock('../../../utils/responseHelpers', () => ({
   sendSuccess: jest.fn(),
   sendNotFound: jest.fn(),
   sendValidationError: jest.fn(),

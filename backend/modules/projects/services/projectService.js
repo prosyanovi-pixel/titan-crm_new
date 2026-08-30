@@ -141,7 +141,8 @@ async function getSalesPipeline() {
       quotesCount: parseInt(project.quotes_count) || 0,
       quotesSum: parseFloat(project.quotes_sum) || 0,
       contractsCount: parseInt(project.contracts_count) || 0,
-      activeClaimsCount: parseInt(project.active_claims_count) || 0
+      activeClaimsCount: parseInt(project.active_claims_count) || 0,
+      totalMargin: (financeInfo.totalPaid || 0) - (financeInfo.totalExpenses || 0)
     };
   });
 }

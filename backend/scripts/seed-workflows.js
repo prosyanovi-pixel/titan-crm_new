@@ -13,6 +13,7 @@ const WF_IDS = {
   legal:   'a1b2c3d4-0002-4000-8000-000000000002',
   webhook: 'a1b2c3d4-0003-4000-8000-000000000003',
   arbitr_v2: '07c5a907-6119-4292-8663-40c4e5e5f170',
+  sales:   'a1b2c3d4-0005-4000-8000-000000000005',
 };
 
 const workflows = [
@@ -222,6 +223,30 @@ const workflows = [
           message: 'Если has_more = true, повторите workflow'
         },
         on_fail: 'stop'
+      }
+    ]
+  },
+
+  // 5. B2B Sales Standard Workflow
+  {
+    id: WF_IDS.sales,
+    name: 'B2B Sales Standard',
+    description: 'Автоматически ставит задачу менеджеру при переходе сделки на этап "Подготовка КП".',
+    trigger_type: 'event',
+    trigger_config: { eventName: 'sales_stage_changed', stageTo: 'quote_prep' },
+    status: 'active',
+    steps: [
+      { 
+        step_order: 1, 
+        module: 'tasks', 
+        action: 'create_task', 
+        action_config: { 
+          title: 'Подготовить первичное коммерческое предложение', 
+          priority: 'high', 
+          status: 'To Do',
+          description: 'Автоматически создано при переходе на этап "Подготовка КП".'
+        }, 
+        on_fail: 'skip' 
       }
     ]
   }

@@ -3,7 +3,7 @@ import { SalesDeal } from "../types";
 import { useTranslation } from "@/lib/i18n";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FileText, FileSignature, AlertCircle, DollarSign, Calendar } from "lucide-react";
+import { FileText, FileSignature, AlertCircle, DollarSign, Calendar, TrendingUp } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -66,11 +66,21 @@ export function DealCard({ deal, onClick, isOverlay }: DealCardProps) {
         </div>
 
         <div className="grid grid-cols-2 gap-2 mb-3">
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 p-1.5 rounded-md">
-            <DollarSign className="w-3.5 h-3.5 text-emerald-500" />
-            <span className="font-medium text-foreground">
-              {new Intl.NumberFormat('ru-RU').format(deal.quotesSum)} ₽
-            </span>
+          <div className="flex flex-col gap-1 text-xs text-muted-foreground bg-muted/50 p-1.5 rounded-md">
+            <div className="flex items-center gap-1.5">
+              <DollarSign className="w-3.5 h-3.5 text-emerald-500" />
+              <span className="font-medium text-foreground">
+                {new Intl.NumberFormat('ru-RU').format(deal.quotesSum)} ₽
+              </span>
+            </div>
+            {deal.totalMargin !== undefined && deal.totalMargin !== 0 && (
+              <div className="flex items-center gap-1.5">
+                <TrendingUp className="w-3.5 h-3.5 text-blue-500" />
+                <span className="font-medium text-blue-600 dark:text-blue-400">
+                  {new Intl.NumberFormat('ru-RU').format(deal.totalMargin)} ₽
+                </span>
+              </div>
+            )}
           </div>
           {deal.deadline && (
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted/50 p-1.5 rounded-md">
