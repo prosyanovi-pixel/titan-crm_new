@@ -54,5 +54,19 @@ export const quotes = {
     sent: 'Отправлено',
     accepted: 'Принято',
     rejected: 'Отклонено'
-  }
+  },
+  search_placeholder: 'Поиск по номеру, клиенту, проекту...',
+  tabs: {
+    all: 'Все',
+    draft: 'Черновики',
+    sent: 'Отправленные',
+    accepted: 'Принятые',
+    rejected: 'Отклонённые'
+  },
+  bulk: {
+    change_status: 'Изменить статус',
+    status_title: 'Новый статус для выбранных КП',
+    delete_confirm: 'Удалить выбранные КП?',
+    delete_confirm_description: 'Действие необратимо: будут удалены сами КП и их позиции.'
+  },
 };

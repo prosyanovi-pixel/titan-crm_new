@@ -6,6 +6,12 @@ const checkPermission = require('../../../middleware/checkPermission');
 // GET /api/price-lists
 router.get('/', checkPermission('settings.read'), priceListsController.getPriceLists);
 
+// POST /api/price-lists/bulk-update — массовое изменение is_active / is_default
+router.post('/bulk-update', checkPermission('settings.write'), priceListsController.bulkUpdatePriceLists);
+
+// POST /api/price-lists/bulk-delete — массовое удаление
+router.post('/bulk-delete', checkPermission('settings.delete'), priceListsController.bulkDeletePriceLists);
+
 // GET /api/price-lists/:id
 router.get('/:id', checkPermission('settings.read'), priceListsController.getPriceList);
 

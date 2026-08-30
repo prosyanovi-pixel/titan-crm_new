@@ -1,18 +1,35 @@
-import React from 'react';
 import { useTranslation } from '@/lib/i18n';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { usePageSettings } from '@/context/LayoutContext';
-import { useQuotes } from '../hooks';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
+import { SortableTabsList } from '@/components/shared';
+import { DataTable } from '@/components/ui/data-table';
+import { usePageSettings } from '@/context/LayoutContext';
+import { useConfirm } from '@/components/ui/confirm-dialog';
+import { useQuotesPage } from '../hooks/useQuotesPage';
+import { QuoteTableRow, QuoteBulkStatusMenu } from '../components';
 
+/**
+ * Страница списка КП.
+ * Табы по статусам, поиск, сортировка, массовые операции, настройка колонок.
+ */
 export function QuotesPage() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { data: quotes, isLoading } = useQuotes();
+  const { confirm } = useConfirm();
+  const {
+    quotes,
+    totalCount,
+    isLoading,
+    table,
+    activeTab,
+    setActiveTab,
+    tabCounts,
+    columnLabels,
+    handleRowQuickAction,
+    handleBulkStatus,
+    handleBulkDelete,
+    navigate,
+  } = useQuotesPage();
 
   usePageSettings({
     title: t('quotes.title'),
@@ -22,63 +39,67 @@ export function QuotesPage() {
         <Plus className="w-4 h-4" />
         <span className="hidden sm:inline">{t('quotes.create')}</span>
       </Button>
-    )
+    ),
   });
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'accepted': return <Badge className="bg-green-500">{t('quotes.statuses.accepted')}</Badge>;
-      case 'rejected': return <Badge variant="destructive">{t('quotes.statuses.rejected')}</Badge>;
-      case 'sent': return <Badge variant="secondary" className="bg-blue-100 text-blue-800">{t('quotes.statuses.sent')}</Badge>;
-      default: return <Badge variant="outline">{t('quotes.statuses.draft')}</Badge>;
+  /** Подтверждение массового удаления перед выполнением. */
+  const confirmBulkDelete = async () => {
+    if (await confirm({
+      title: t('quotes.bulk.delete_confirm'),
+      description: t('quotes.bulk.delete_confirm_description'),
+    })) {
+      await handleBulkDelete();
     }
   };
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('quotes.title')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('quotes.number')}</TableHead>
-                <TableHead>{t('quotes.date')}</TableHead>
-                <TableHead>{t('quotes.contractor')}</TableHead>
-                <TableHead>{t('quotes.status')}</TableHead>
-                <TableHead className="text-right">{t('quotes.total')}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                    {t('common.loading')}
-                  </TableCell>
-                </TableRow>
-              ) : quotes?.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                    {t('common.no_data')}
-                  </TableCell>
-                </TableRow>
-              ) : (
-                quotes?.map((quote) => (
-                  <TableRow key={quote.id} className="cursor-pointer hover:bg-muted/50" onClick={() => navigate(`/quotes/${quote.id}`)}>
-                    <TableCell className="font-medium">{quote.number}</TableCell>
-                    <TableCell>{new Date(quote.date).toLocaleDateString()}</TableCell>
-                    <TableCell>{quote.contractorName || '-'}</TableCell>
-                    <TableCell>{getStatusBadge(quote.status)}</TableCell>
-                    <TableCell className="text-right">{Number(quote.totalAmount).toLocaleString()} ₽</TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </div>
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col min-h-0">
+      <div className="flex flex-nowrap justify-between items-center gap-4 overflow-x-auto overflow-y-hidden w-full mb-4 pb-1">
+        <SortableTabsList
+          tabsConfig={table.tabsConfig}
+          onReorder={table.reorderTab}
+          t={t}
+          className="h-10 sm:h-11 gap-1 p-1 bg-muted/50 rounded-xl flex-shrink-0 flex-nowrap w-max"
+          triggerClassName="flex-none gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg font-medium px-3 sm:px-4 whitespace-nowrap"
+          renderBadge={(tabId) => {
+            const count = tabCounts[tabId];
+            if (count === undefined) return null;
+            return (
+              <span className="ml-1 text-[10px] font-semibold rounded-full bg-primary/10 data-[state=active]:bg-primary-foreground/20 px-1.5 py-0.5">
+                {count}
+              </span>
+            );
+          }}
+        />
+      </div>
+
+      <TabsContent value={activeTab} className="mt-0 flex-1 min-h-0">
+        <DataTable
+          table={table}
+          data={quotes}
+          columnLabels={columnLabels}
+          totalCount={totalCount}
+          virtualized
+          searchPlaceholder={t('quotes.search_placeholder')}
+          isLoading={isLoading}
+          bulkActions={
+            <QuoteBulkStatusMenu onSelectStatus={handleBulkStatus} />
+          }
+          onBulkDelete={confirmBulkDelete}
+          renderRow={(quote) => (
+            <QuoteTableRow
+              key={quote.id}
+              quote={quote}
+              selectedIds={table.selectedIds}
+              visibleColumns={table.visibleColumns}
+              columnOrder={table.columnOrder}
+              onToggleSelection={table.toggleSelection}
+              onRowClick={(q) => navigate(`/quotes/${q.id}`)}
+              onQuickAction={handleRowQuickAction}
+            />
+          )}
+        />
+      </TabsContent>
+    </Tabs>
   );
 }

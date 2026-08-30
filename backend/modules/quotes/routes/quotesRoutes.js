@@ -6,6 +6,12 @@ const checkPermission = require('../../../middleware/checkPermission');
 // GET /api/quotes
 router.get('/', checkPermission('quotes.view'), quotesController.getQuotes);
 
+// POST /api/quotes/bulk-update — массовое изменение статуса
+router.post('/bulk-update', checkPermission('quotes.edit'), quotesController.bulkUpdateQuotes);
+
+// POST /api/quotes/bulk-delete — массовое удаление
+router.post('/bulk-delete', checkPermission('quotes.delete'), quotesController.bulkDeleteQuotes);
+
 // GET /api/quotes/:id
 router.get('/:id', checkPermission('quotes.view'), quotesController.getQuoteById);
 

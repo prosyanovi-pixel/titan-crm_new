@@ -257,3 +257,50 @@ exports.generatePdf = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Массовое обновление КП (смена статуса).
+ * @param {import('express').Request} req - запрос с телом { ids: number[], patch: { status } }
+ */
+exports.bulkUpdateQuotes = async (req, res, next) => {
+  try {
+    const { ids, patch } = req.body || {};
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'ids are required' });
+    }
+    const status = patch?.status;
+    if (!status) {
+      return res.status(400).json({ error: 'status is required' });
+    }
+
+    const { rows } = await db.query(
+      `UPDATE quotes SET status = $1, updated_at = CURRENT_TIMESTAMP
+       WHERE id = ANY($2) RETURNING id`,
+      [status, ids]
+    );
+    res.json({ updated: rows.length });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Массовое удаление КП (вместе с позициями quote_items).
+ */
+exports.bulkDeleteQuotes = async (req, res, next) => {
+  try {
+    const { ids } = req.body || {};
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'ids are required' });
+    }
+
+    await db.query(`DELETE FROM quote_items WHERE quote_id = ANY($1)`, [ids]);
+    const { rows } = await db.query(
+      `DELETE FROM quotes WHERE id = ANY($1) RETURNING id`,
+      [ids]
+    );
+    res.json({ deleted: rows.length });
+  } catch (error) {
+    next(error);
+  }
+};

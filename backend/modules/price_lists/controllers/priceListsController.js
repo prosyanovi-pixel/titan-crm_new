@@ -134,3 +134,60 @@ exports.getPriceListItems = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Массовое обновление прайс-листов (is_active / is_default).
+ * @param {import('express').Request} req - запрос с телом { ids: number[], patch: { isActive?, isDefault? } }
+ */
+exports.bulkUpdatePriceLists = async (req, res, next) => {
+  try {
+    const { ids, patch } = req.body || {};
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'ids are required' });
+    }
+
+    const hasChanges = Object.keys(patch || {}).some((k) =>
+      ['isActive', 'isDefault'].includes(k)
+    );
+    if (!hasChanges) {
+      return res.status(400).json({ error: 'isActive or isDefault is required' });
+    }
+
+    if (patch?.isDefault) {
+      await db.query(`UPDATE price_lists SET is_default = false WHERE id != ANY($1)`, [ids]);
+    }
+
+    const { rows } = await db.query(
+      `UPDATE price_lists SET
+         is_active = COALESCE($1, is_active),
+         is_default = COALESCE($2, is_default),
+         updated_at = CURRENT_TIMESTAMP
+       WHERE id = ANY($3) RETURNING id`,
+      [patch?.isActive, patch?.isDefault, ids]
+    );
+    res.json({ updated: rows.length });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Массовое удаление прайс-листов (вместе с позициями price_list_items).
+ */
+exports.bulkDeletePriceLists = async (req, res, next) => {
+  try {
+    const { ids } = req.body || {};
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'ids are required' });
+    }
+
+    await db.query(`DELETE FROM price_list_items WHERE price_list_id = ANY($1)`, [ids]);
+    const { rows } = await db.query(
+      `DELETE FROM price_lists WHERE id = ANY($1) RETURNING id`,
+      [ids]
+    );
+    res.json({ deleted: rows.length });
+  } catch (error) {
+    next(error);
+  }
+};
