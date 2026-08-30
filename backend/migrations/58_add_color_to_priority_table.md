@@ -16,10 +16,8 @@ UPDATE priority SET color = '#F59E0B' WHERE id = 'Medium';
 UPDATE priority SET color = '#3B82F6' WHERE id = 'Low';
 ```
 
-### Rollback (if needed)
-```sql
-ALTER TABLE priority DROP COLUMN color;
-```
+<!-- Rollback-секция удалена: extractSQLFromMarkdown выполняет ВСЕ SQL-блоки,
+     поэтому DROP COLUMN здесь удалял добавленную колонку. -->
 
 ## Notes
 - The color column stores hex color values (e.g., '#EF4444' for red)

@@ -16,9 +16,11 @@ ALTER TABLE legal_forms ADD COLUMN IF NOT EXISTS keywords text;
 COMMENT ON COLUMN legal_forms.keywords IS 'Ключевые слова для автоподбора через запятую (напр. "общество с ограниченной ответственностью, ооо")';
 
 -- Заполняем базовые значения для существующих форм
-UPDATE legal_forms SET keywords = 'общество с ограниченной ответственностью, ооо' WHERE code = 'ooo';
-UPDATE legal_forms SET keywords = 'индивидуальный предприниматель, ип' WHERE code = 'ip';
-UPDATE legal_forms SET keywords = 'публичное акционерное общество, пао' WHERE code = 'pao';
-UPDATE legal_forms SET keywords = 'акционерное общество, ао' WHERE code = 'ao';
-UPDATE legal_forms SET keywords = 'самозанятый, самозанятая' WHERE code = 'self';
-UPDATE legal_forms SET keywords = 'автономная некоммерческая организация, ано' WHERE code = 'ano';
+-- ВАЖНО: идентификатор форм в таблице называется id (см. миграцию 09), 
+-- а не code — иначе UPDATE падает на свежей БД
+UPDATE legal_forms SET keywords = 'общество с ограниченной ответственностью, ооо' WHERE id = 'ooo';
+UPDATE legal_forms SET keywords = 'индивидуальный предприниматель, ип' WHERE id = 'ip';
+UPDATE legal_forms SET keywords = 'публичное акционерное общество, пао' WHERE id = 'pao';
+UPDATE legal_forms SET keywords = 'акционерное общество, ао' WHERE id = 'ao';
+UPDATE legal_forms SET keywords = 'самозанятый, самозанятая' WHERE id = 'self';
+UPDATE legal_forms SET keywords = 'автономная некоммерческая организация, ано' WHERE id = 'ano';

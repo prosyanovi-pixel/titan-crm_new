@@ -3,9 +3,14 @@
 -- ============================================
 
 -- 1. Добавляем поля из DaData справочника судов
-ALTER TABLE courts ADD COLUMN IF NOT EXISTS dadata_code   VARCHAR(20);   -- Уникальный код суда в DaData
-ALTER TABLE courts ADD COLUMN IF NOT EXISTS court_type    VARCHAR(5);    -- AS, RS, MS, OS и т.д.
-ALTER TABLE courts ADD COLUMN IF NOT EXISTS court_type_name VARCHAR(200); -- "Арбитражный суд области"
+-- ВАЖНО: хвостовые комментарии вынесены на отдельные строки — иначе парсер
+-- migrate.js не видит конец команды (';') и миграция молча пропускается
+ALTER TABLE courts ADD COLUMN IF NOT EXISTS dadata_code   VARCHAR(20);
+-- Уникальный код суда в DaData
+ALTER TABLE courts ADD COLUMN IF NOT EXISTS court_type    VARCHAR(5);
+-- AS, RS, MS, OS и т.д.
+ALTER TABLE courts ADD COLUMN IF NOT EXISTS court_type_name VARCHAR(200);
+-- "Арбитражный суд области"
 ALTER TABLE courts ADD COLUMN IF NOT EXISTS inn           VARCHAR(12);
 ALTER TABLE courts ADD COLUMN IF NOT EXISTS website       VARCHAR(500);
 ALTER TABLE courts ADD COLUMN IF NOT EXISTS legal_address TEXT;

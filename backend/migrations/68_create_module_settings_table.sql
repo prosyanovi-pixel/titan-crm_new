@@ -24,6 +24,13 @@ COMMENT ON COLUMN module_settings.setting_key IS 'Ключ настройки (b
 COMMENT ON COLUMN module_settings.value IS 'Значение настройки в формате JSON';
 
 -- Insert default bulk edit settings for contractors
+-- ВАЖНО: гарантируем наличие модулей calendar/finance (seed'атся позже, в 106),
+-- иначе INSERT в module_settings упадёт по внешнему ключу на свежей БД.
+INSERT INTO modules (id, name, icon, folder, displayorder) VALUES
+('calendar', 'Календарь', 'Calendar', 'calendar', 90),
+('finance', 'Финансы', 'Wallet', 'finance', 80)
+ON CONFLICT (id) DO NOTHING;
+
 INSERT INTO module_settings (module_id, setting_key, value) VALUES
 ('contractors', 'bulk_edit_fields', '{
     "fields": [

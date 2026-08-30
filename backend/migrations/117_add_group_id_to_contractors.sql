@@ -15,7 +15,9 @@ BEGIN
 END $$;
 
 -- Проставляем начальные значения на основе текущих правовых форм
+-- ВАЖНО: на свежей БД правовая форма хранится в колонке id (см. миграцию 09),
+-- а не code — иначе UPDATE падает на свежей БД
 UPDATE contractors c
 SET group_id = lf.group_id
 FROM legal_forms lf
-WHERE c.legal_form = lf.code AND c.group_id IS NULL;
+WHERE c.legal_form = lf.id AND c.group_id IS NULL;

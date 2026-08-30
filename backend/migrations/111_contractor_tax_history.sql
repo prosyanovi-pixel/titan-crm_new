@@ -82,8 +82,8 @@ INSERT INTO contractor_tax_history (contractor_id, tax_regime_id, change_date, e
 SELECT 
   c.id,
   c.tax_regime_id,
-  COALESCE(c.updated_at, c.created_at, CURRENT_DATE),
-  COALESCE(c.updated_at, c.created_at, CURRENT_DATE),
+  CURRENT_DATE,
+  CURRENT_DATE,
   'system',
   'Первоначальное назначение налогового режима'
 FROM contractors c

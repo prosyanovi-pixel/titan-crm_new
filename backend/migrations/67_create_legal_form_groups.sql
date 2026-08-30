@@ -36,6 +36,17 @@ DO $$ BEGIN
     END IF;
 END $$;
 
+-- Add color to legal_form (if not exists)
+-- Необходимо для миграции 67b (вставка организационно-правовых форм с цветами)
+DO $$ BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'legal_form' AND column_name = 'color'
+    ) THEN
+        ALTER TABLE legal_form ADD COLUMN color VARCHAR(20);
+    END IF;
+END $$;
+
 -- Insert default groups
 INSERT INTO legal_form_groups (id, name, name_ru, display_order, show_as_tab) VALUES
     ('legal', 'Юридические лица', 'contractors.tabs.legal', 1, TRUE),

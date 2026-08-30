@@ -107,3 +107,7 @@ yarn.lock
 .idea/
 *.sublime-*
 
+# Служебные файлы установки (содержат пароли/доступы)
+/INSTALL-INFO.txt
+/install-*.log
+

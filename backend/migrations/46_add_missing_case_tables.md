@@ -30,8 +30,5 @@ CREATE TABLE IF NOT EXISTS case_events (
 );
 ```
 
-## Rollback
-```sql
-DROP TABLE IF EXISTS case_third_parties;
-DROP TABLE IF EXISTS case_events;
-```
+<!-- ВАЖНО: секция Rollback удалена — extractSQLFromMarkdown выполняет ВСЕ SQL-блоки,
+     и DROP TABLE из rollback уничтожал только что созданные таблицы. -->

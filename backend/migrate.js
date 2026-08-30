@@ -204,7 +204,21 @@ async function migrate() {
   // Читаем оба типа файлов: .sql и .md
   const files = fs.readdirSync(migrationsDir)
     .filter(f => (f.endsWith('.sql') || f.endsWith('.md')) && f !== 'README.md' && !f.startsWith('MANUAL_'))
-    .sort();
+    // Сортировка по числовому префиксу имени файла:
+    // лексикографически "100_*.sql" < "69_*.sql", но численно 100 > 69,
+    // поэтому без этой сортировки на свежей БД нарушается порядок зависимостей.
+    // Для имён с одинаковым числовым префиксом сохраняется лексикографический порядок.
+    .sort((a, b) => {
+      const numA = parseInt(a, 10);
+      const numB = parseInt(b, 10);
+      const hasNumA = !Number.isNaN(numA);
+      const hasNumB = !Number.isNaN(numB);
+      if (hasNumA && hasNumB) {
+        if (numA !== numB) return numA - numB;
+        return a.localeCompare(b);
+      }
+      return a.localeCompare(b);
+    });
 
   if (files.length === 0) {
     console.log('No migrations to apply.');

@@ -8,7 +8,7 @@ FRONTEND_URL=http://localhost:3000
 
 # Настройки Базы Данных (PostgreSQL)
 DB_HOST=localhost
-DB_PORT=5432  
+DB_PORT=5432
 DB_NAME=titancrm1
 DB_USER=myuser
 DB_PASSWORD=mysecretpassword
@@ -28,8 +28,8 @@ DB_PASSWORD=mysecretpassword
 
 
 # Безопасность
-JWT_SECRET=change_this_secret_key_to_something_secure
-ENCRYPTION_KEY=mail-encryption-key-2024-change-this
+JWT_SECRET=e8d1189d6d09f7defcb36e609bff752243cd11128fd1074c34b2fb4135e8f9be
+ENCRYPTION_KEY=c4ab4c7819799fd9bd7149772e581882
 DISABLE_AUTH=false
 
 # Логирование (info, debug, error)
