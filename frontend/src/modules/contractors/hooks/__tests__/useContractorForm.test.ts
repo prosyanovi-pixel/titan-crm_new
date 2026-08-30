@@ -15,6 +15,8 @@ const createWrapper = () => {
     },
   });
 
+  queryClient.setQueryData(["moduleSettings", "contractors"], { defaults: {} });
+
   return ({ children }: { children: React.ReactNode }) =>
     React.createElement(
       QueryClientProvider,
@@ -24,6 +26,19 @@ const createWrapper = () => {
 };
 
 describe('useContractorForm', () => {
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+  
+  beforeAll(() => {
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation((msg, ...args) => {
+      if (typeof msg === 'string' && msg.includes('Query data cannot be undefined')) return;
+      // You could also just use an empty mock if you want to suppress everything
+    });
+  });
+
+  afterAll(() => {
+    consoleErrorSpy.mockRestore();
+  });
+
   it('should initialize with default values for a new contractor', () => {
     const wrapper = createWrapper();
     const { result } = renderHook(() => useContractorForm({}), { wrapper });

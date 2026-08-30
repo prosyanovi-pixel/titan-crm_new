@@ -131,6 +131,13 @@ This document describes the specialized agents available to assist with TITAN CR
 - Example finding
 - Dependency analysis
 
+## Critical Rules for All Agents
+
+1.  **Tool Usage Priority**: You are a LOCAL agent. For ANY task related to this codebase, you MUST use LOCAL tools FIRST:
+    *   To explore files: Use `glob`, `grep`, `bash`, or `read`. **DO NOT use `webfetch`** for analyzing the local project.
+    *   The API endpoint `https://api.github.com/repos/titan-crm/titan-crm/contents` does NOT exist and will return a 404 error. NEVER attempt to use it.
+    *   All code reading, writing, and editing must be done using local file system tools.
+2.  **Task Execution**: Execute tasks directly using the appropriate local tools. Do not use `webfetch` or `task` to delegate the exploration of the local project structure.
 ---
 
 ## Engineering Guidelines for All Agents

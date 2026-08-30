@@ -282,6 +282,7 @@ describe('Finance Service', () => {
     });
 
     it('should handle errors gracefully', async () => {
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
       mockDb.query.mockRejectedValue(new Error('DB error'));
 
       const result = await loadFinanceInfo(1);
@@ -290,6 +291,7 @@ describe('Finance Service', () => {
         hasOverdueInvoice: false,
         financeStatus: null,
       });
+      consoleSpy.mockRestore();
     });
   });
 

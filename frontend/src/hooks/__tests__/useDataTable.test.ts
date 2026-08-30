@@ -552,6 +552,7 @@ describe('useDataTable', () => {
     });
 
     it('should handle API errors gracefully', async () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       (api.get as Mock).mockRejectedValue(new Error('API Error'));
 
       const { result } = renderHook(() =>
@@ -565,6 +566,7 @@ describe('useDataTable', () => {
       await waitFor(() => {
         expect(result.current.visibleColumns).toEqual(mockColumns);
       });
+      consoleSpy.mockRestore();
     });
   });
 });
