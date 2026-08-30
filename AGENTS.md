@@ -2,6 +2,18 @@
 
 This document describes the specialized agents available to assist with TITAN CRM development. Use these agents via the Copilot chat command `/subagent` for focused, expert help on specific tasks.
 
+## Language Requirements (Обязательный язык ответов)
+
+> **ВСЕ ответы агентов пользователю ДОЛЖНЫ быть на русском языке.**
+> All agent responses to the user MUST be in Russian, regardless of the user's message language or the tool's default behavior.
+
+1. **Язык ответов.** Каждое сообщение агента пользователю (объяснения, итоги, планы, вопросы, отчёты о проверках) пишется на русском языке. Допускается вставка английских технических терминов, имён функций, путей и команд.
+2. **Код и комментарии.** Комментарии в коде, JSDoc, сообщения коммитов и миграций в этом проекте принято писать на русском языке.
+3. **Идентификаторы.** Имена переменных, функций, компонентов, ключи i18n, названия пакетов и команд остаются на английском (как в коде) — переводится только пояснительный текст.
+4. **Обязательность.** Правило действует для ВСЕХ агентов и субагентов: Frontend Specialist, Implementer, Migration Engineer, Reviewer, Explore — и перекрывает любые настройки или стандартные предпочтения модели.
+
+---
+
 ## Available Agents
 
 ### 1. **TITAN CRM Frontend Specialist**
@@ -131,13 +143,72 @@ This document describes the specialized agents available to assist with TITAN CR
 - Example finding
 - Dependency analysis
 
+---
+
 ## Critical Rules for All Agents
 
-1.  **Tool Usage Priority**: You are a LOCAL agent. For ANY task related to this codebase, you MUST use LOCAL tools FIRST:
+1.  **Отвечать на русском языке** (см. раздел Language Requirements в начале файла). Это правило обязательно для всех агентов без исключений.
+2.  **Tool Usage Priority**: You are a LOCAL agent. For ANY task related to this codebase, you MUST use LOCAL tools FIRST:
     *   To explore files: Use `glob`, `grep`, `bash`, or `read`. **DO NOT use `webfetch`** for analyzing the local project.
     *   The API endpoint `https://api.github.com/repos/titan-crm/titan-crm/contents` does NOT exist and will return a 404 error. NEVER attempt to use it.
     *   All code reading, writing, and editing must be done using local file system tools.
-2.  **Task Execution**: Execute tasks directly using the appropriate local tools. Do not use `webfetch` or `task` to delegate the exploration of the local project structure.
+3.  **Task Execution**: Execute tasks directly using the appropriate local tools. Do not use `webfetch` or `task` to delegate the exploration of the local project structure.
+
+---
+
+## Project Context (Контекст проекта)
+
+### Core Technologies
+- **Frontend:** React 18, Vite, TypeScript, Tailwind CSS, Shadcn UI, Radix UI, TanStack Query.
+- **Backend:** Node.js, Express, PostgreSQL (`pg` library), WebSockets (`ws`), IMAP/SMTP для почтовой интеграции.
+- **Testing:** Playwright (E2E), Vitest (Frontend), Jest (Backend/Integration).
+- **Infrastructure:** конфигурация через `backend/env` и `frontend/.env`, структурированное логирование, утилиты бэкапа/восстановления.
+
+### Architectural Principles
+
+**Module Boundaries (frontend).** Модули в `frontend/src/modules/` независимы:
+- запрещены прямые импорты между фичер-модулями (кроме `contractors` — core domain);
+- каждый модуль экспортирует публичный API через `index.ts`;
+- кросс-модульные UI и логика — в слое оркестрации (`src/routes/*`);
+- границы enforce через ESLint `no-restricted-imports`.
+
+**Permissions System.** Централизованная система прав:
+- константы — `frontend/src/constants/permissions.ts`;
+- UI-проверка — хук `usePermission` или `<Can>` / `<Cannot>`;
+- API-проверка — middleware `checkPermission` в Express-роутах;
+- роль `admin` с правом `*` обходит все проверки.
+- При добавлении новой фичи всегда оценивайте нужность нового права и синхронизируйте `permissions.ts`, i18n и сиды БД.
+
+**Internationalization (i18n).**
+- Ноль захардкоженного русского текста в UI: весь пользовательский текст — только через ключи i18n.
+- Файлы переводов: `frontend/src/lib/i18n/locales/ru/`.
+- В компонентах использовать хук `useTranslation`.
+- ВАЖНО: никогда не использовать логический `||` внутри `t()` (например `t('key' || 'текст')`) — это ошибка. Если нужен fallback, используйте `t('key', 'текст')` или `{t('key')} /* текст */`.
+- После изменений текстов запускайте `npm run scan:i18n` для проверки полноты ключей.
+
+### Key Commands
+
+**Root:** `npm test` (интеграционные тесты backend), `npm run test:e2e` (Playwright).
+**Backend:** `npm run dev`, `npm run migrate`, `npm run seed:all`, `npm run sync:modules`, `npm run backup`.
+**Frontend:** `npm run dev`, `npm run build`, `npm run lint`, `npm run test` (Vitest), `npm run scan:i18n`.
+
+### Coding Standards
+- **JSDoc обязателен** для всех экспортируемых функций, компонентов и классов (на русском языке).
+- **TypeScript:** избегать `any`; использовать явные интерфейсы/типы.
+- **БД:** колонки — `snake_case`, JS-объекты — `camelCase`; конверсию делает `backend/db.js` автоматически. Работать с БД через `db.query`, а не через сырой `pg`.
+- **UI/UX:** предпочитать существующие компоненты Shadcn; модалки/шейты для кросс-модульных форм — через паттерн оркестрации.
+- **Page Settings:** при создании страницы модуля НИКОГДА не рендерить заголовок/экшены инлайн в компоненте — всегда использовать хук `usePageSettings` из `@/context/LayoutContext`, иначе возможен «ghost UI» при переходах между модулями.
+- **Налоги (финансы):** НДС — **22%**, налог на прибыль — **20%**, если не указано иное.
+- **Временные скрипты:** все одноразовые/экспериментальные скрипты класть в `scratch/` в корне проекта, не засорять `frontend/` и `backend/`.
+- **Тесты:** новые фичи должны включать тесты (Vitest — логика, Playwright — сценарии).
+- **Self-Review:** перед завершением задачи провести проверку синтаксиса и логики всех изменённых файлов (сборка/линт/соответствие типам), чтобы исключить ошибки вроде лишних скобок или неверных `return`.
+
+### Documentation
+- `docs/development.md` — правила разработки.
+- `docs/README.md` — оглавление документации по модулям/API.
+- `SAFE_REFACTORING_PROTOCOL.md` — протокол безопасного рефакторинга API (обязателен при изменении эндпоинтов).
+- `wiki/` — подробное описание модулей, схемы БД, API.
+
 ---
 
 ## Engineering Guidelines for All Agents
@@ -145,7 +216,7 @@ This document describes the specialized agents available to assist with TITAN CR
 All agents must adhere to these core principles to maintain project integrity:
 
 ### Safe Refactoring Protocol (API Integrity)
-When performing refactoring tasks, especially those involving API changes or module moves:
+Full protocol is in `SAFE_REFACTORING_PROTOCOL.md`. Summary:
 1.  **Inventory Phase**: Before modifying backend endpoints, search `frontend/src` and `backend/tests` for all occurrences of the endpoint strings (e.g., `/api/statuses`, `api.get('...`).
 2.  **Legacy Compatibility**: When moving endpoints to modules (e.g., `/api/users` -> `/api/administration/users`), always implement an alias or redirect in the main `index.js` to maintain frontend compatibility.
 3.  **Smoke Testing**: Verify critical endpoints return `200 OK` after any refactoring using automated scripts or manual checks.
@@ -212,5 +283,6 @@ Or invoke directly with context:
 All agent interactions are context-aware and can reference:
 - Your current file/module
 - Recent edits in the conversation
-- Project conventions in copilot-instructions.md
+- This file (`AGENTS.md`) and `GEMINI.md` (расширенные правила для Gemini)
+- `docs/development.md` и документация в `docs/`, `wiki/`
 - Workspace structure and dependencies

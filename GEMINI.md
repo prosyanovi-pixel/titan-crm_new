@@ -2,6 +2,16 @@
 
 This file provides the necessary context for Gemini to understand and work effectively within the TITAN CRM codebase.
 
+## Language Requirements (Обязательный язык ответов)
+
+> **ВСЕ ответы ДОЛЖНЫ быть на русском языке.**
+> All responses to the user MUST be in Russian, regardless of the user's message language or the tool's default behavior.
+
+1. **Язык ответов.** Каждое сообщение пользователю пишется на русском языке (объяснения, итоги, планы, вопросы, отчёты). Допустимы английские технические термины, имена функций, пути и команды.
+2. **Код и комментарии.** Комментарии в коде, JSDoc, сообщения миграций и коммитов в проекте принято писать на русском языке.
+3. **Идентификаторы.** Имена переменных, функций, компонентов, ключи i18n остаются на английском (как в коде) — переводится только пояснительный текст.
+4. **Обязательность.** Правило перекрывает любые настройки или стандартные предпочтения модели.
+
 ## Project Overview
 
 TITAN CRM is a comprehensive Customer Relationship Management system built with a modern web stack. It features a modular architecture, a robust permission system, and follows strict development conventions to ensure maintainability and scalability.
@@ -99,7 +109,7 @@ A centralized permission system controls access at both UI and API levels.
     - **Step 2: Legacy First (Compatibility):** When moving endpoints to modules (e.g., `/api/users` -> `/api/administration/users`), always implement an alias or redirect in `index.js` to maintain frontend compatibility.
     - **Step 3: Automated Validation (Smoke Tests):** Verify critical endpoints return `200 OK` after any refactoring using automated scripts or `check-routes` tests. If a 404 is returned, the compatibility layer is missing.
     - **Step 4: Centralized API Map:** Favor using a centralized API map on the frontend to minimize string-based dependencies and simplify future refactoring.
-6. **Refer to Docs:** If unsure, check `docs/ARCHITECTURE.md` or `docs/DEVELOPMENT_RULES.md` first.
+6. **Refer to Docs:** If unsure, check `docs/README.md` (оглавление документации), `docs/development.md` (правила разработки), `SAFE_REFACTORING_PROTOCOL.md` (протокол безопасного рефакторинга API), `AGENTS.md` (роли и правила агентов) and `wiki/` (описание модулей, схемы БД, API) first.
 7. **Tests:** New features must include relevant tests (Vitest for logic, Playwright for flows).
 8. **Self-Review:** Before finishing any task, conduct a thorough syntax and logic check of all changed files to prevent compilation/runtime errors (e.g., redundant brackets or misplaced return statements).
 9. **Specialized Agent Roles:** When approaching tasks, align with these specialized roles:

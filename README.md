@@ -8,25 +8,38 @@ This repository contains backend and frontend code, migrations, and documentatio
 
 ### Quick Start (All Platforms)
 
-**Windows (PowerShell):**
-```powershell
-.\init.ps1
-```
+The repository includes an **installation & setup wizard** that checks the
+environment, configures `backend/env` and `frontend/.env`, creates the
+PostgreSQL database, installs dependencies, applies migrations, and creates an
+administrator account — all in one interactive flow.
 
-**Windows (CMD):**
-```cmd
-init.bat
-```
-
-**Linux / macOS:**
+**macOS / Linux / WSL:**
 ```bash
-./init.sh
+./install.sh
 ```
 
-These scripts will:
-- Check for Node.js and npm
-- Install dependencies in root, backend, and frontend directories
-- Provide helpful error messages if something fails
+**Windows (PowerShell 5.1+):**
+```powershell
+.\install.ps1
+```
+
+Automated install (no questions):
+```bash
+./install.sh --yes
+```
+
+Useful flags (`./install.sh --help`):
+
+| Flag | Meaning |
+|------|---------|
+| `--yes` | No questions, use defaults |
+| `--skip-deps` | Do not run `npm install` |
+| `--skip-db` | Do not create the database |
+| `--skip-users` | Do not create the admin account |
+| `--skip-migrate` | Do not apply migrations |
+| `--backend-port N` | Backend port (default `5001`) |
+| `--db-host/--db-port/--db-name/--db-user/--db-pass` | PostgreSQL settings |
+| `--admin-email/--admin-pass` | Create an admin account non-interactively |
 
 ### Manual Installation
 
@@ -68,7 +81,7 @@ Notes:
 - The migration runner attempts to create `pgcrypto` automatically. If that fails, it tries `uuid-ossp` and will create a wrapper function `gen_random_uuid()` so existing migrations still work.
 - If neither extension can be enabled automatically (permission or provider restrictions), `npm run migrate` will exit with instructions and non-zero exit code.
 
-## Quick start (backend)
+## Quick start (backend, manual alternative)
 
 ```bash
 cd backend
@@ -77,6 +90,9 @@ npm install
 npm run migrate
 npm run dev
 ```
+
+> The `install.sh` / `install.ps1` wizard does all of the above automatically,
+> including database creation and the administrator account.
 
 If `npm run migrate` fails with a permission error when creating an extension, run the `CREATE EXTENSION` command (shown above) as a superuser or ask your DBA to enable it.
 

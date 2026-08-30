@@ -1,82 +1,67 @@
 # TITAN CRM - Быстрый старт
 
-## 🚀 Установка и запуск
+## 🚀 Установка и запуск (мастер)
 
-### 1. Установка зависимостей
+Начните с **мастера установки** — он проверит окружение, настроит конфигурацию, создаст базу данных, установит зависимости, применит миграции и спросит про администратора (имя, e-mail, пароль).
 
-**Windows PowerShell:**
+**macOS / Linux / WSL:**
+```bash
+./install.sh
+```
+
+**Windows (PowerShell):**
 ```powershell
-.\init.ps1
+.\install.ps1
 ```
 
-**Windows CMD:**
-```cmd
-init.bat
-```
-
-**Linux/macOS:**
+Без вопросов (значения по умолчанию):
 ```bash
-./init.sh
+./install.sh --yes
 ```
 
-### 2. Настройка базы данных
+После успешной установки запустите:
 
-Создайте файл `backend/env` на основе `backend/env.example`:
-```bash
-cd backend
-cp env.example env
-```
-
-Отредактируйте `backend/env` и укажите параметры подключения к PostgreSQL.
-
-### 3. Миграция базы данных
-```bash
-cd backend
-npm run migrate
-```
-
-### 4. Запуск проекта
-
-**Backend (порт 3001):**
+**Backend (порт 5001):**
 ```bash
 cd backend
 npm run dev
 ```
 
-**Frontend (порт 5173):**
+**Frontend (порт 3001):**
 ```bash
 cd frontend
 npm run dev
 ```
 
+Войдите в систему по адресу http://localhost:3001 под созданной учётной записью администратора.
+
 ## 📋 Требования
 
 - **Node.js** >= 18.x (рекомендуется v20+)
-- **PostgreSQL** >= 13
+- **PostgreSQL** >= 13 (запущенный сервер)
 - **npm** >= 8.x (поставляется с Node.js)
 
 ## 🔧 Решение проблем
 
 ### Ошибка установки зависимостей
-```powershell
-# Очистить и переустановить
-Remove-Item -Recurse -Force node_modules, frontend\node_modules, backend\node_modules, package-lock.json
+```bash
+rm -rf node_modules frontend/node_modules backend/node_modules package-lock.json
 npm install
 ```
 
 ### Ошибка политики выполнения PowerShell
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-.\init.ps1
+.\install.ps1
 ```
 
 ### Ошибка миграции БД
-Убедитесь, что PostgreSQL запущен и параметры в `backend/env` верны.
+Убедитесь, что PostgreSQL запущен и параметры в `backend/env` верны (их можно перегенерировать: `./install.sh --skip-deps`).
 
 ## 📚 Документация
 
-- **Установка зависимостей** - `INSTALL.md`
-- **Скрипты инициализации** - `docs/INIT-SCRIPTS.md`
+- **Установка и настройка** - `INSTALL.md`
+- **Обзор проекта** - `README.md`
 - **Backend документация** - `docs/backend/README.md`
 - **Миграции** - `backend/migrations/README.md`
 
@@ -87,17 +72,17 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 npm test                    # Все тесты
 npm run test:frontend       # Frontend тесты
 npm run test:backend        # Backend тесты
-npm run test:e2e           # E2E тесты
+npm run test:e2e            # E2E тесты
 
 # Backend
 cd backend
-npm run dev                # Запуск в режиме разработки
+npm run dev                # Запуск в режиме разработки (порт 5001)
 npm run migrate            # Применить миграции
-npm run reset              # Сбросить БД
+npm run reset              # Сбросить БД (внимание: полная очистка!)
 
 # Frontend
 cd frontend
-npm run dev                # Запуск в режиме разработки
+npm run dev                # Запуск в режиме разработки (порт 3001)
 npm run build              # Сборка production версии
 npm run lint               # Проверка линтером
 ```
@@ -105,6 +90,6 @@ npm run lint               # Проверка линтером
 ## 📞 Поддержка
 
 Возникли проблемы? Проверьте:
-1. Файл `INSTALL.md` - решение распространённых проблем
-2. Файл `docs/INIT-SCRIPTS.md` - информация о скриптах установки
-3. Логи ошибок в консоли
+1. Файл `INSTALL.md` — полная инструкция и решение распространённых проблем
+2. Логи ошибок в консоли
+3. `./install.sh --help` — справка по параметрам мастера
