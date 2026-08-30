@@ -167,6 +167,18 @@ export const moduleReferenceSeeds = [
     ],
   },
   {
+    id: "price_lists",
+    name: "Прайс-листы",
+    icon: "FileSpreadsheet",
+    displayOrder: 119,
+  },
+  {
+    id: "quotes",
+    name: "КП",
+    icon: "FileSpreadsheet",
+    displayOrder: 121,
+  },
+  {
     id: "settings",
     name: "Настройки",
     icon: "Settings",
