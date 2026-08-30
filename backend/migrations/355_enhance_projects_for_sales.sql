@@ -15,8 +15,8 @@ DECLARE
   v_workflow_id UUID;
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM workflows WHERE name = 'Стандартная продажа') THEN
-    INSERT INTO workflows (name, description, trigger_type, status)
-    VALUES ('Стандартная продажа', 'Воронка для прямых продаж оборудования', 'event', 'active')
+    INSERT INTO workflows (name, description, trigger_type, trigger_config, status)
+    VALUES ('Стандартная продажа', 'Воронка для прямых продаж оборудования', 'event', '{"eventName": "projects.stage_changed"}', 'active')
     RETURNING id INTO v_workflow_id;
     
     -- Insert default steps for visualization/stages

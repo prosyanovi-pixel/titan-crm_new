@@ -21,11 +21,15 @@ class EventTrigger {
         return;
       }
 
+      let subscribed = 0;
       for (const wf of workflows) {
-        this.subscribeWorkflow(wf.id, wf.trigger_config);
+        // db.query возвращает ключи в camelCase (toCamelCase в db.js), поэтому читаем оба варианта
+        if (this.subscribeWorkflow(wf.id, wf.trigger_config ?? wf.triggerConfig)) {
+          subscribed++;
+        }
       }
       
-      console.log(`[EventTrigger] Successfully subscribed ${workflows.length} workflows.`);
+      console.log(`[EventTrigger] Successfully subscribed ${subscribed}/${workflows.length} workflows.`);
     } catch (err) {
       logger.error('[EventTrigger] Failed to initialize:', err);
     }
@@ -35,8 +39,8 @@ class EventTrigger {
     this.unsubscribeWorkflow(workflowId);
 
     if (!triggerConfig || !triggerConfig.eventName) {
-      console.warn(`[EventTrigger] Cannot subscribe workflow ${workflowId}: missing eventName.`);
-      return;
+      console.warn(`[EventTrigger] Cannot subscribe workflow ${workflowId}: missing eventName. trigger_config=${JSON.stringify(triggerConfig ?? null)}`);
+      return false;
     }
 
     const eventName = triggerConfig.eventName;
@@ -58,6 +62,7 @@ class EventTrigger {
     // Keep track so we can remove it later if workflow is paused/deleted
     this.subscribedEvents.set(workflowId, { eventName, handler });
     console.log(`[EventTrigger] Subscribed workflow ${workflowId} to event '${eventName}'`);
+    return true;
   }
 
   unsubscribeWorkflow(workflowId) {

@@ -17,6 +17,7 @@ tmp
 .qoderignore
 .antigravitycli/
 .codeassistantmodes
+.serena/
 .vscode/
 test-results
 screenshots

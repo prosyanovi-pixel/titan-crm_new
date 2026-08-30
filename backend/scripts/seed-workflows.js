@@ -24,7 +24,7 @@ const workflows = [
     description: 'Каждый час проверяем входящую почту. Если есть письма от бухгалтерии, извлекаем данные и создаём счёт.',
     trigger_type: 'schedule',
     trigger_config: { cron: '0 * * * *' },
-    status: 'draft',
+    status: 'active',
     steps: [
       { step_order: 1, module: 'mail', action: 'search_by_sender', action_config: { sender_email: '@buh', folder: 'INBOX', limit: 5 }, condition: null, on_fail: 'stop' },
       { step_order: 2, module: 'mail', action: 'extract_urls', action_config: { email_body: '{{step1.emails.0.body_text}}', filter_ext: '.pdf' }, condition: { field: 'step1.found', operator: 'equals', value: 'true' }, on_fail: 'skip' },
@@ -40,7 +40,7 @@ const workflows = [
     description: 'Проверяет письма от судов. Ищет номер дела, скачивает документы.',
     trigger_type: 'schedule',
     trigger_config: { cron: '0 9 * * 1-5' },
-    status: 'draft',
+    status: 'active',
     steps: [
       { step_order: 1, module: 'mail', action: 'search_by_sender', action_config: { sender_email: 'court', folder: 'INBOX', limit: 10, unread_only: true }, condition: null, on_fail: 'stop' },
       { step_order: 2, module: 'mail', action: 'extract_case_number', action_config: { email_body: '{{step1.emails.0.body_text}}' }, condition: { field: 'step1.found', operator: 'equals', value: 'true' }, on_fail: 'skip' },
@@ -233,7 +233,7 @@ const workflows = [
     name: 'B2B Sales Standard',
     description: 'Автоматически ставит задачу менеджеру при переходе сделки на этап "Подготовка КП".',
     trigger_type: 'event',
-    trigger_config: { eventName: 'sales_stage_changed', stageTo: 'quote_prep' },
+    trigger_config: { eventName: 'projects.stage_changed', stageTo: 'quote_prep' },
     status: 'active',
     steps: [
       { 

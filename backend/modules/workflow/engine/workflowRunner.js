@@ -342,7 +342,7 @@ class WorkflowRunner {
         continue;
       }
       
-      const configStr = JSON.stringify(step.action_config || {});
+      const configStr = JSON.stringify((step.action_config ?? step.actionConfig) || {});
       const placeholders = configStr.match(/\{\{([^}]+)\}\}/g) || [];
       placeholders.forEach(p => {
         const path = p.replace(/[{}]/g, '').trim();
@@ -351,7 +351,7 @@ class WorkflowRunner {
           if (match) {
             const stepNum = parseInt(match[1]);
             const propertyPath = match[2];
-            const targetStep = steps.find(s => s.step_order === stepNum);
+            const targetStep = steps.find(s => (s.step_order ?? s.stepOrder) === stepNum);
             
             if (stepNum >= step.stepOrder) {
               errors.push(`Step ${step.stepOrder}: Refers to future step "${path}"`);

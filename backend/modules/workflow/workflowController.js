@@ -364,7 +364,8 @@ class WorkflowController {
       
       const wf = rows[0];
       if (wf.status !== 'active') return res.status(400).json({ error: 'Workflow is not active' });
-      if (wf.trigger_type !== 'webhook') return res.status(400).json({ error: 'Workflow does not accept webhooks' });
+      // db.query отдаёт ключи в camelCase (toCamelCase в db.js), читаем оба варианта
+      if ((wf.trigger_type ?? wf.triggerType) !== 'webhook') return res.status(400).json({ error: 'Workflow does not accept webhooks' });
 
       // Run execution asynchronously without waiting for it to finish
       const workflowRunner = new runner();

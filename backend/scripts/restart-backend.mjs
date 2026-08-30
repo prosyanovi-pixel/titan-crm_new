@@ -139,11 +139,13 @@ function startDevServer() {
     }
 
     console.log('🚀 Запуск dev сервера (nodemon)...');
-    // Используем spawn для запуска в фоне с наследованием stdio
-    const child = spawn('npm', ['run', 'dev'], {
+    // Используем spawn без shell: true (избегаем DEP0190 DeprecationWarning).
+    // На Windows npm — это npm.cmd, без shell его не найти напрямую.
+    const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+    const child = spawn(npmCommand, ['run', 'dev'], {
         cwd: backendDir,
         stdio: 'inherit',
-        shell: true,
+        shell: false,
         detached: false,
     });
 

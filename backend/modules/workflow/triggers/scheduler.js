@@ -21,11 +21,15 @@ class WorkflowScheduler {
         return;
       }
 
+      let scheduled = 0;
       for (const wf of workflows) {
-        this.scheduleWorkflow(wf.id, wf.trigger_config);
+        // db.query возвращает ключи в camelCase (toCamelCase в db.js), поэтому читаем оба варианта
+        if (this.scheduleWorkflow(wf.id, wf.trigger_config ?? wf.triggerConfig)) {
+          scheduled++;
+        }
       }
       
-      console.log(`[WorkflowScheduler] Successfully scheduled ${workflows.length} workflows.`);
+      console.log(`[WorkflowScheduler] Successfully scheduled ${scheduled}/${workflows.length} workflows.`);
     } catch (err) {
       logger.error('[WorkflowScheduler] Failed to initialize:', err);
     }
@@ -57,14 +61,14 @@ class WorkflowScheduler {
 
     if (!triggerConfig || !triggerConfig.cron) {
       console.warn(`[WorkflowScheduler] Cannot schedule workflow ${workflowId}: missing cron expression.`);
-      return;
+      return false;
     }
 
     const cronExpression = triggerConfig.cron;
     
     if (!cron.validate(cronExpression)) {
       logger.error(`[WorkflowScheduler] Invalid cron expression for workflow ${workflowId}: ${cronExpression}`);
-      return;
+      return false;
     }
 
     // 2. Create the cron task
@@ -81,6 +85,7 @@ class WorkflowScheduler {
     // 3. Keep track
     this.scheduledTasks.set(workflowId, task);
     console.log(`[WorkflowScheduler] Scheduled workflow ${workflowId} -> ${cronExpression}`);
+    return true;
   }
 
   unscheduleWorkflow(workflowId) {
