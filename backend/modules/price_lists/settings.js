@@ -5,13 +5,27 @@ module.exports = {
   display: {
     itemsPerPage: 20,
     defaultSort: 'name',
+    showInactive: false,
+    defaultCurrency: 'RUB',
+    showItemImages: true,
   },
   features: {
-    enableStatuses: false,
-    enableTags: false,
-    enableCategories: false,
-    enableQuickActions: false,
+    enableStatuses: true,
+    enableTags: true,
+    enableCategories: true,
+    enableQuickActions: true,
+    enableDiscountRules: true,
+    enableTaxCalculation: true,
+    enableBulkUpdates: true,
   },
-  types: [],
-  tabs: []
+  defaults: {
+    status: 'active',
+    currency: 'RUB',
+  },
+  pricing: {
+    allowNegativePrices: false,
+    requireApprovalForDiscounts: false,
+    maxDiscountPercent: 10,
+    roundingRule: 'none',
+  },
 };

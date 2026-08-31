@@ -18,7 +18,10 @@ export const price_lists = {
     all: 'Все',
     active: 'Активные',
     inactive: 'Неактивные',
+    products: 'Товары',
+    services: 'Услуги',
   },
+  price: 'Цена',
   bulk: {
     activate: 'Активировать',
     deactivate: 'Деактивировать',

@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { useTranslation } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
@@ -11,6 +13,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { SortableTabsList } from '@/components/shared';
 import { DataTable } from '@/components/ui/data-table';
@@ -18,8 +35,17 @@ import { usePageSettings } from '@/context/LayoutContext';
 import { useConfirm } from '@/components/ui/confirm-dialog';
 import { useCreatePriceList } from '../hooks';
 import { usePriceListsPage } from '../hooks/usePriceListsPage';
-import { PriceListTableRow, PriceListBulkMenu } from '../components';
+import { PriceListTableRow, PriceListBulkMenu, PriceListSheet } from '../components';
+import { useCurrencies } from '@/hooks/useCurrencies';
 import { Plus, Loader2 } from 'lucide-react';
+import { PriceList } from '../types';
+
+const formSchema = z.object({
+  name: z.string().min(1, { message: 'Обязательное поле' }),
+  currency: z.string().min(1, { message: 'Обязательное поле' }),
+});
+
+type FormValues = z.infer<typeof formSchema>;
 
 /**
  * Страница прайс-листов.
@@ -29,6 +55,8 @@ export function PriceListsPage() {
   const { t } = useTranslation();
   const { confirm } = useConfirm();
   const createPriceList = useCreatePriceList();
+  const { data: currencies = [] } = useCurrencies();
+  
   const {
     priceLists,
     totalCount,
@@ -46,21 +74,26 @@ export function PriceListsPage() {
   } = usePriceListsPage();
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [currency, setCurrency] = useState('RUB');
+  const [selectedPriceList, setSelectedPriceList] = useState<PriceList | null>(null);
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      currency: 'RUB',
+    },
+  });
 
   /** Создание прайс-листа из диалога. */
-  const handleCreate = async () => {
-    if (!name.trim()) return;
+  const onSubmit = async (values: FormValues) => {
     try {
       await createPriceList.mutateAsync({
-        name: name.trim(),
-        currency: currency.trim().toUpperCase() || 'RUB',
+        name: values.name.trim(),
+        currency: values.currency,
         isActive: true,
         isDefault: false,
       });
-      setName('');
-      setCurrency('RUB');
+      form.reset();
       setDialogOpen(false);
     } catch {
       // Ошибка уже показана тостом в хуке useCreatePriceList
@@ -135,18 +168,25 @@ export function PriceListsPage() {
                 visibleColumns={table.visibleColumns}
                 columnOrder={table.columnOrder}
                 onToggleSelection={table.toggleSelection}
-                onRowClick={(item) => {
-                  // Просмотр прайс-листа пока не реализован; при желании добавить роут.
-                  void item;
+                onRowClick={(item) => setSelectedPriceList(item as PriceList)}
+                onQuickAction={async (action, id) => {
+                  if (action === 'view' || action === 'edit') {
+                    const pl = priceLists.find(p => p.id === id);
+                    if (pl) setSelectedPriceList(pl);
+                  } else {
+                    await handleRowQuickAction(action, id);
+                  }
                 }}
-                onQuickAction={handleRowQuickAction}
               />
             )}
           />
         </TabsContent>
       </Tabs>
 
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <Dialog open={dialogOpen} onOpenChange={(open) => {
+        setDialogOpen(open);
+        if (!open) form.reset();
+      }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t('price_lists.create_title') /* Новый прайс-лист */}</DialogTitle>
@@ -154,39 +194,70 @@ export function PriceListsPage() {
               {t('price_lists.create_description') /* Заполните основные параметры прайс-листа */}
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-2">
-            <div className="grid gap-2">
-              <Label htmlFor="pl-name">{t('common.name') /* Название */}</Label>
-              <Input
-                id="pl-name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder={t('price_lists.name_placeholder') /* Название прайс-листа... */}
-                autoFocus
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-2">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('common.name') /* Название */}</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={t('price_lists.name_placeholder') /* Название прайс-листа... */}
+                        autoFocus
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="pl-currency">{t('common.currency') /* Валюта */}</Label>
-              <Input
-                id="pl-currency"
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value)}
-                placeholder={t('price_lists.currency_placeholder') /* RUB */}
-                defaultValue="RUB"
+              <FormField
+                control={form.control}
+                name="currency"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('common.currency') /* Валюта */}</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder={t('price_lists.currency_placeholder') /* RUB */} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {currencies.map((c) => (
+                          <SelectItem key={c.id} value={c.id}>
+                            {c.id} ({c.name})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>
-              {t('common.cancel') /* Отмена */}
-            </Button>
-            <Button onClick={handleCreate} disabled={!name.trim() || createPriceList.isPending}>
-              {createPriceList.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-              {t('common.create') /* Создать */}
-            </Button>
-          </DialogFooter>
+              <DialogFooter className="mt-4">
+                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+                  {t('common.cancel') /* Отмена */}
+                </Button>
+                <Button type="submit" disabled={createPriceList.isPending}>
+                  {createPriceList.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+                  {t('common.create') /* Создать */}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
+
+      <PriceListSheet
+        priceList={selectedPriceList}
+        open={!!selectedPriceList}
+        onOpenChange={(open) => {
+          if (!open) setSelectedPriceList(null);
+        }}
+      />
     </>
   );
 }

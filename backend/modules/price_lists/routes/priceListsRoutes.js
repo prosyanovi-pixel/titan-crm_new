@@ -27,6 +27,9 @@ router.delete('/:id', checkPermission('settings.delete'), priceListsController.d
 // POST /api/price-lists/:id/items
 router.post('/:id/items', checkPermission('settings.write'), priceListsController.setPriceListItem);
 
+// POST /api/price-lists/:id/bulk-items
+router.post('/:id/bulk-items', checkPermission('settings.write'), priceListsController.bulkSetPriceListItems);
+
 // GET /api/price-lists/:id/items
 router.get('/:id/items', checkPermission('settings.read'), priceListsController.getPriceListItems);
 

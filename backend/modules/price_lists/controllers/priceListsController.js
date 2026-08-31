@@ -101,6 +101,14 @@ exports.setPriceListItem = async (req, res, next) => {
     const { id } = req.params;
     const { itemType, itemId, price, currency = 'RUB' } = req.body;
     
+    if (price === null) {
+      const { rows } = await db.query(
+        `DELETE FROM price_list_items WHERE price_list_id = $1 AND item_type = $2 AND item_id = $3 RETURNING *`,
+        [id, itemType, itemId]
+      );
+      return res.json({ deleted: true });
+    }
+
     const { rows } = await db.query(
       `INSERT INTO price_list_items (price_list_id, item_type, item_id, price, currency)
        VALUES ($1, $2, $3, $4, $5)
@@ -112,6 +120,53 @@ exports.setPriceListItem = async (req, res, next) => {
     res.json(rows[0]);
   } catch (error) {
     next(error);
+  }
+};
+
+exports.bulkSetPriceListItems = async (req, res, next) => {
+  const client = await db.pool.connect();
+  try {
+    const { id } = req.params;
+    const { items } = req.body; // Array of { itemType, itemId, price, currency }
+    
+    if (!Array.isArray(items)) {
+      return res.status(400).json({ error: 'Items must be an array' });
+    }
+
+    await client.query('BEGIN');
+
+    // First delete any items where price is null
+    const itemsToDelete = items.filter(item => item.price === null);
+    if (itemsToDelete.length > 0) {
+      for (const item of itemsToDelete) {
+        await client.query(
+          `DELETE FROM price_list_items WHERE price_list_id = $1 AND item_type = $2 AND item_id = $3`,
+          [id, item.itemType, item.itemId]
+        );
+      }
+    }
+
+    // Upsert items where price is not null
+    const itemsToUpsert = items.filter(item => item.price !== null);
+    if (itemsToUpsert.length > 0) {
+      for (const item of itemsToUpsert) {
+        await client.query(
+          `INSERT INTO price_list_items (price_list_id, item_type, item_id, price, currency)
+           VALUES ($1, $2, $3, $4, $5)
+           ON CONFLICT (price_list_id, item_type, item_id)
+           DO UPDATE SET price = EXCLUDED.price, currency = EXCLUDED.currency, updated_at = CURRENT_TIMESTAMP`,
+          [id, item.itemType, item.itemId, item.price, item.currency || 'RUB']
+        );
+      }
+    }
+
+    await client.query('COMMIT');
+    res.json({ success: true });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    next(error);
+  } finally {
+    client.release();
   }
 };
 

@@ -407,6 +407,8 @@ export const moduleManifests: ModuleManifest[] = [
       icon: FileSpreadsheet,
       order: 89,
     },
+    settingsModuleId: "price_lists",
+    quickActionsModuleId: "price_lists",
   },
   {
     id: "quotes",

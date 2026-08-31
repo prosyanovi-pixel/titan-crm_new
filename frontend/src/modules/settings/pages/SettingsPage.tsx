@@ -111,6 +111,7 @@ const MODULE_TABS_CONFIG: Record<string, ModuleTabId[]> = {
   warehouse:   ['statuses', 'tags', 'actions', 'params', 'bulk_edit'],
   products:    ['types', 'tabs', 'statuses', 'tags', 'actions', 'params', 'bulk_edit'],
   services:    ['types', 'tabs', 'statuses', 'tags', 'actions', 'params', 'bulk_edit'],
+  price_lists: ['statuses', 'tags', 'actions', 'params', 'bulk_edit'],
 };
 
 const DEFAULT_MODULE_TABS: ModuleTabId[] = ['statuses', 'tags', 'actions', 'params', 'bulk_edit'];

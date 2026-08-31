@@ -40,6 +40,7 @@ const OPTIONS_MAP: Record<string, string[]> = {
   type:             ['meeting', 'call', 'task', 'event', 'individual', 'company', 'incoming', 'outgoing'],
   invoice_type:     ['incoming', 'outgoing'],
   method:           ['cash', 'card', 'bank_transfer', 'sbp', 'e_money'],
+  roundingRule:     ['none', 'nearest', 'up', 'down'],
 };
 
 // Специфичные для модулей переопределения списков

@@ -6,6 +6,7 @@ import { parseRowsPerPage } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import { useDataTable } from '@/hooks/useDataTable';
 import { usePriceLists } from './index';
+import { useModuleSettings } from '@/modules/settings/hooks/useModuleSettings';
 import { PriceList } from '../types';
 import { LayoutList, CheckCircle2, Circle } from 'lucide-react';
 
@@ -37,13 +38,14 @@ export function usePriceListsPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { data: priceLists = [], isLoading } = usePriceLists();
+  const { settings } = useModuleSettings("price_lists");
 
   const table = useDataTable<PriceList>({
     initialData: [],
     initialColumns: PRICE_LIST_COLUMNS,
     initialTabs: PRICE_LIST_TABS,
     storageKey: 'price_lists',
-    defaultRowsPerPage: '25',
+    defaultRowsPerPage: String(settings?.display?.itemsPerPage || '25'),
   });
 
   const [activeTab, setActiveTab] = useState('all');

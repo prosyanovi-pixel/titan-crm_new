@@ -171,6 +171,9 @@ export const moduleReferenceSeeds = [
     name: "Прайс-листы",
     icon: "FileSpreadsheet",
     displayOrder: 119,
+    quickActions: [
+      { id: "price_lists_create", name: "Создать прайс-лист", icon: "Plus", action: "create_price_list", displayOrder: 1 },
+    ],
   },
   {
     id: "quotes",

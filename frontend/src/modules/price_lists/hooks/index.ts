@@ -90,3 +90,17 @@ export const useSetPriceListItem = () => {
     },
   });
 };
+
+export const useBulkSetPriceListItems = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ priceListId, items }: { priceListId: number; items: Partial<PriceListItem>[] }) => {
+      const response = await api.post(`/price-lists/${priceListId}/bulk-items`, { items });
+      return response;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['price_list_items', variables.priceListId] });
+    },
+  });
+};
