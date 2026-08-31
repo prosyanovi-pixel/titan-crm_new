@@ -1,8 +1,10 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { QuickActionsMenu } from "@/components/ui/QuickActionsMenu";
+import { QuickActionsMenu, QuickActionMenuOption } from "@/components/ui/QuickActionsMenu";
 import { useTranslation } from "@/lib/i18n";
+import { useSettings } from "@/hooks/use-settings";
+import { useModuleActions } from "@/modules/registry/hooks/useModuleActions";
 import { PriceList } from "../types";
 
 interface PriceListTableRowProps {
@@ -26,7 +28,33 @@ export function PriceListTableRow({
   onQuickAction,
 }: PriceListTableRowProps) {
   const { t } = useTranslation();
+  const { getQuickActionsByModule } = useSettings();
   const isSelected = selectedIds.has(priceList.id);
+  const rawActions: QuickActionMenuOption[] = [
+    ...getQuickActionsByModule('price_lists').map((a: any) => ({
+      label: a.name,
+      action: a.action,
+      icon: a.icon,
+      isQuickAction: true,
+    })),
+    ...useModuleActions("price_lists")
+      .filter((a: any) => {
+        if (a.id === 'activate' && priceList.isActive) return false;
+        if (a.id === 'deactivate' && !priceList.isActive) return false;
+        if (a.id === 'make_default' && priceList.isDefault) return false;
+        return true;
+      })
+      .map((a: any) => ({
+        label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+        action: a.id,
+        icon: a.icon as any,
+        isQuickAction: a.defaultOrder < 50,
+        variant: a.id === 'delete' ? 'destructive' : undefined,
+      }))
+  ];
+
+  // Deduplicate by action to avoid React key warnings
+  const allActions = Array.from(new Map(rawActions.map(a => [a.action, a])).values());
 
   return (
     <TableRow
@@ -77,11 +105,7 @@ export function PriceListTableRow({
         <QuickActionsMenu
           itemId={priceList.id}
           itemName={priceList.name}
-          options={[
-            { label: t('common.view'), action: 'view', icon: 'Eye', isQuickAction: false },
-            { label: t('common.edit'), action: 'edit', icon: 'Pencil', isQuickAction: false },
-            { label: t('common.delete'), action: 'delete', icon: 'Trash2', isQuickAction: false, variant: 'destructive' as const },
-          ]}
+          options={allActions}
           onAction={async (actionType, itemId) => await onQuickAction(actionType, itemId)}
         />
       </TableCell>

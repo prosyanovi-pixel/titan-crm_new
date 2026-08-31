@@ -109,8 +109,22 @@ export function usePriceListsPage() {
         toast.success(t('common.deleted_successfully'));
         clearSelection();
       }
+    } else if (action === 'activate') {
+      await api.patch(`/price-lists/${id}`, { isActive: true });
+      queryClient.invalidateQueries({ queryKey: ['price_lists'] });
+      toast.success(t('common.saved_successfully'));
+    } else if (action === 'deactivate') {
+      await api.patch(`/price-lists/${id}`, { isActive: false });
+      queryClient.invalidateQueries({ queryKey: ['price_lists'] });
+      toast.success(t('common.saved_successfully'));
+    } else if (action === 'make_default') {
+      await api.patch(`/price-lists/${id}`, { isDefault: true });
+      queryClient.invalidateQueries({ queryKey: ['price_lists'] });
+      toast.success(t('common.saved_successfully'));
+    } else {
+      // Это может быть динамическое действие, обрабатывается хуком (пока просто тост)
+      toast.info(t('general.toast.info.action_completed').replace('{0}', action));
     }
-    // view / edit пока недоступны (нет страницы прайс-листа) — позже можно добавить
   };
 
   /** Применить массовое изменение к выбранным прайс-листам. */

@@ -15,6 +15,7 @@ import { TableSkeleton, CardSkeleton } from "@/components/shared/skeletons";
 import { TabConfig } from "@/hooks/useDataTable";
 import { TaskStatsGroup } from "../components/TaskStatsGroup";
 import { useModuleSettings } from "@/modules/settings/hooks/useModuleSettings";
+import { useBulkActions } from "@/modules/registry/hooks/useBulkActions";
 
 export default function TasksPage() {
   const {
@@ -128,6 +129,10 @@ export default function TasksPage() {
   const { settings, isLoading: isSettingsLoading } = useModuleSettings("tasks");
   const showStats = settings.features?.enableStatistics !== false;
 
+  const bulkActionsList = useBulkActions("tasks");
+  const hasBulkDelete = bulkActionsList.some(a => a.id === "bulk_delete");
+  const hasBulkEdit = bulkActionsList.some(a => a.id === "bulk_edit");
+
   return (
     <>
       {!isSettingsLoading && showStats && <TaskStatsGroup tasks={tasks} />}
@@ -147,7 +152,7 @@ export default function TasksPage() {
             onSearchChange={setSearchQuery}
             selectedCount={selectedIds.size}
             onCancelSelection={clearSelection}
-            onBulkDelete={handleBulkDelete}
+            onBulkDelete={hasBulkDelete ? handleBulkDelete : undefined}
             tabsConfig={tabsConfig}
             onMoveTab={moveTab}
             onToggleTab={toggleTabVisibility}
@@ -171,10 +176,12 @@ export default function TasksPage() {
             }
             className="w-max flex-nowrap bg-transparent border-0 shadow-none p-0 flex-shrink-0"
             bulkActions={
-              <BulkActionButton onClick={() => setBulkEditOpen(true)}>
-                <PenSquare className="w-4 h-4" />
-                <span className="hidden sm:inline">{t('common.bulk_edit.button')}</span>
-              </BulkActionButton>
+              hasBulkEdit ? (
+                <BulkActionButton onClick={() => setBulkEditOpen(true)}>
+                  <PenSquare className="w-4 h-4" />
+                  <span className="hidden sm:inline">{t('common.bulk_edit.button')}</span>
+                </BulkActionButton>
+              ) : null
             }
           />
         </div>
@@ -190,7 +197,6 @@ export default function TasksPage() {
               columnOrder={columnOrder}
               onEdit={handleEditTask}
               onAction={handleQuickAction}
-              quickActions={taskActions}
               table={tableState}
               totalCount={filteredTasks.length}
             />

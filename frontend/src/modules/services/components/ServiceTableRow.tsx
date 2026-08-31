@@ -5,9 +5,10 @@ import { Service } from "../types";
 import { StatusBadge } from "@/components/ui/status-system";
 import { useTranslation } from "@/lib/i18n";
 import { Tag } from "@/components/ui/status-system/Tag";
-import { QuickActionsMenu } from "@/components/ui/QuickActionsMenu";
-import { Edit2, Trash2 } from "lucide-react";
+import { QuickActionsMenu, QuickActionMenuOption } from "@/components/ui/QuickActionsMenu";
 import { useModuleSettings } from "@/modules/settings/hooks/useModuleSettings";
+import { useSettings } from "@/hooks/use-settings";
+import { useModuleActions } from "@/modules/registry/hooks/useModuleActions";
 
 interface ServiceTableRowProps {
   service: Service;
@@ -30,12 +31,28 @@ export function ServiceTableRow({
 }: ServiceTableRowProps) {
   const { t } = useTranslation();
   const { settings } = useModuleSettings('services');
+  const { getQuickActionsByModule } = useSettings();
+  const serviceActions = useModuleActions("services");
   const types = (settings?.types || []) as {id: string, name: string}[];
 
-  const allActions = [
-    { action: 'edit', label: t('common.edit'), icon: Edit2 },
-    { action: 'delete', label: t('common.delete'), icon: Trash2, destructive: true },
-  ];
+  // Системные действия через ActionRegistry
+  const systemActions: QuickActionMenuOption[] = serviceActions.map((a: any) => ({
+    label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+    action: a.id,
+    icon: a.icon as any,
+    isQuickAction: a.defaultOrder < 50,
+    variant: a.id === 'delete' ? 'destructive' : undefined,
+  }));
+
+  // Кастомные быстрые действия
+  const customQuickActions: QuickActionMenuOption[] = getQuickActionsByModule('services').map((a: any) => ({
+    label: a.name,
+    action: a.action,
+    icon: a.icon,
+    isQuickAction: true,
+  }));
+
+  const allActions = [...customQuickActions, ...systemActions];
 
   return (
     <TableRow

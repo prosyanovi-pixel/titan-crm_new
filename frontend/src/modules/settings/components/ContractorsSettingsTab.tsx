@@ -1,19 +1,20 @@
 import React from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  StatusEditor, 
-  RelationshipTypeEditor, 
-  PositionEditor, 
+import {
+  StatusEditor,
+  RelationshipTypeEditor,
+  PositionEditor,
   LegalFormEditor,
-  TagEditor
+  TagEditor,
+  QuickActionEditor
 } from '../components';
 import { useSettings } from '@/hooks/use-settings';
-import { 
-  Users, 
-  UserCheck, 
-  Briefcase, 
-  Scale, 
+import {
+  Users,
+  UserCheck,
+  Briefcase,
+  Scale,
   Tag,
   Settings2,
   Users2
@@ -23,14 +24,17 @@ import { BulkEditSettingsEditor } from '@/components/settings/BulkEditSettingsEd
 
 export function ContractorsSettingsTab() {
   const { t } = useTranslation();
-  const { 
-    relationshipTypes, 
-    legalForms, 
+  const {
+    relationshipTypes,
+    legalForms,
     modules,
-    addItem, 
-    updateItem, 
+    addItem,
+    updateItem,
     deleteItem,
-    refresh
+    refresh,
+    quickActions,
+    allQuickActions,
+    saveQuickActions
   } = useSettings() as any;
 
   return (
@@ -59,6 +63,10 @@ export function ContractorsSettingsTab() {
         <TabsTrigger value="params" className="gap-2">
           <Settings2 className="w-4 h-4" />
           {t('settings.tabs.params')}
+        </TabsTrigger>
+        <TabsTrigger value="actions" className="gap-2">
+          <Settings2 className="w-4 h-4" />
+          {t('settings.tabs.actions')}
         </TabsTrigger>
         <TabsTrigger value="bulk_edit" className="gap-2">
           <Users2 className="w-4 h-4" />
@@ -97,16 +105,30 @@ export function ContractorsSettingsTab() {
       </TabsContent>
 
       <TabsContent value="params" className="mt-0">
-        <ModuleSettingsEditor 
-          moduleId="contractors" 
-          moduleName={t('sidebar.contractors')} 
+        <ModuleSettingsEditor
+          moduleId="contractors"
+          moduleName={t('sidebar.contractors')}
+        />
+      </TabsContent>
+
+      <TabsContent value="actions" className="mt-0 space-y-6">
+        <ModuleSettingsEditor
+          moduleId="contractors"
+          moduleName={t('sidebar.contractors')}
+          showActionsOnly={true}
+        />
+        <QuickActionEditor
+          quickActions={allQuickActions}
+          onSave={saveQuickActions}
+          selectedModule="contractors"
+          modules={modules}
         />
       </TabsContent>
 
       <TabsContent value="bulk_edit" className="mt-0">
-        <BulkEditSettingsEditor 
-          moduleId="contractors" 
-          moduleName={t('sidebar.contractors')} 
+        <BulkEditSettingsEditor
+          moduleId="contractors"
+          moduleName={t('sidebar.contractors')}
         />
       </TabsContent>
     </Tabs>

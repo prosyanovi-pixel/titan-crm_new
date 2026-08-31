@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCurrencies } from "@/hooks/useCurrencies";
+import { ModuleActionsSettings } from "./ModuleActionsSettings";
 
 // Маппинг полей, для которых нужны выпадающие списки, и их возможных значений
 const OPTIONS_MAP: Record<string, string[]> = {
@@ -60,9 +61,10 @@ const MODULE_OPTIONS_MAP: Record<string, Record<string, string[]>> = {
 interface ModuleSettingsEditorProps {
   moduleId: string;
   moduleName: string;
+  showActionsOnly?: boolean;
 }
 
-export function ModuleSettingsEditor({ moduleId, moduleName }: ModuleSettingsEditorProps) {
+export function ModuleSettingsEditor({ moduleId, moduleName, showActionsOnly }: ModuleSettingsEditorProps) {
   const { t } = useTranslation();
   const { settings, isLoading, error } = useModuleSettings(moduleId);
   const updateModuleSettings = useUpdateModuleSettings();
@@ -76,7 +78,7 @@ export function ModuleSettingsEditor({ moduleId, moduleName }: ModuleSettingsEdi
     setIsDirty(false);
   }
 
-  const handleNestedChange = (parentKey: string, childKey: string, value: unknown) => {
+  const handleNestedChange = async (parentKey: string, childKey: string, value: unknown) => {
     setEditedSettings((prev) => {
       const parentValue = prev[parentKey];
       
@@ -105,7 +107,25 @@ export function ModuleSettingsEditor({ moduleId, moduleName }: ModuleSettingsEdi
         },
       };
     });
-    setIsDirty(true);
+
+    if (showActionsOnly) {
+      try {
+        const parentValue = settings[parentKey];
+        const changes = {
+          [parentKey]: {
+            ...(typeof parentValue === "object" ? parentValue : {}),
+            [childKey]: value,
+          }
+        };
+        await updateModuleSettings.mutateAsync({ moduleId, settings: changes });
+        toast.success(t('settings.module_params.success_save'));
+      } catch (err) {
+        console.error("Error saving action settings:", err);
+        toast.error(t('settings.module_params.errors.save'));
+      }
+    } else {
+      setIsDirty(true);
+    }
   };
 
   const handleSave = async () => {
@@ -152,8 +172,18 @@ export function ModuleSettingsEditor({ moduleId, moduleName }: ModuleSettingsEdi
 
   return (
     <div className="space-y-6">
-      {Object.entries(editedSettings).map(([groupKey, groupValue]) => {
+      {showActionsOnly && (
+        <ModuleActionsSettings 
+          moduleId={moduleId}
+          editedSettings={editedSettings}
+          onChange={handleNestedChange}
+        />
+      )}
+
+      {!showActionsOnly && Object.entries(editedSettings).map(([groupKey, groupValue]) => {
         if (typeof groupValue !== "object" || groupValue === null || Array.isArray(groupValue)) return null;
+        if (groupKey === "rowActions" || groupKey === "bulkActions") return null;
+
         const groupLabel = t(`settings.module_params.groups.${groupKey}`);
         
         // Плоский список полей для группы
@@ -204,22 +234,24 @@ export function ModuleSettingsEditor({ moduleId, moduleName }: ModuleSettingsEdi
         );
       })}
 
-      <div className="flex gap-2">
-        <Button onClick={handleSave} disabled={!isDirty || updateModuleSettings.isPending}>
-          {updateModuleSettings.isPending ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{t('common.saving')}</>
-          ) : (
-            <><Save className="mr-2 h-4 w-4" />{t('common.save')}</>
-          )}
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => { setEditedSettings(settings); setIsDirty(false); }}
-          disabled={!isDirty}
-        >
-          {t('common.cancel')}
-        </Button>
-      </div>
+      {!showActionsOnly && (
+        <div className="flex gap-2">
+          <Button onClick={handleSave} disabled={!isDirty || updateModuleSettings.isPending}>
+            {updateModuleSettings.isPending ? (
+              <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{t('common.saving')}</>
+            ) : (
+              <><Save className="mr-2 h-4 w-4" />{t('common.save')}</>
+            )}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => { setEditedSettings(settings); setIsDirty(false); }}
+            disabled={!isDirty}
+          >
+            {t('common.cancel')}
+          </Button>
+        </div>
+      )}
 
       {updateModuleSettings.isError && (
         <Alert variant="destructive">

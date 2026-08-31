@@ -12,6 +12,7 @@ import { useSettings } from "@/hooks/use-settings";
 import { useTranslation } from "@/lib/i18n";
 import { useModuleSettings } from "@/modules/settings/hooks/useModuleSettings";
 import { Contractor } from "../types/contractor.types";
+import { useModuleActions } from "@/modules/registry/hooks/useModuleActions";
 
 interface ContractorTableRowProps {
   contractor: Contractor;
@@ -34,26 +35,34 @@ export function ContractorTableRow({
   onQuickAction,
   relationshipTypes = [],
 }: ContractorTableRowProps) {
-  const { getQuickActionsByModule, getTagsByModule } = useSettings();
+  const { getTagsByModule, getQuickActionsByModule } = useSettings();
   const { t } = useTranslation();
   const { settings } = useModuleSettings("contractors");
-  const contractorActions = getQuickActionsByModule('contractors');
   const availableTags = getTagsByModule('contractors');
+  const customQuickActions = getQuickActionsByModule('contractors');
+  
+  // Получаем системные действия через новый хук (с учетом настроек)
+  const contractorActions = useModuleActions("contractors");
 
   const showQuickActions = settings.features?.enableQuickActions !== false;
   const showTags = settings.features?.enableTags !== false;
 
-  const allActions: QuickActionMenuOption[] = [
-    ...contractorActions.map(a => ({
-      label: a.name,
-      action: a.action,
-      icon: a.icon,
-      isQuickAction: true,
-    })),
-    { label: t('common.view'), action: 'view', icon: 'Eye', isQuickAction: false },
-    { label: t('common.edit'), action: 'edit', icon: 'Pencil', isQuickAction: false },
-    { label: t('common.delete'), action: 'delete', icon: 'Trash2', isQuickAction: false, variant: 'destructive' as const },
-  ];
+  const systemActions: QuickActionMenuOption[] = contractorActions.map((a: any) => ({
+    label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+    action: a.id,
+    icon: a.icon as any,
+    isQuickAction: a.defaultOrder < 50,
+    variant: a.id === 'delete' ? 'destructive' : undefined,
+  }));
+
+  const customActionsMapped: QuickActionMenuOption[] = customQuickActions.map((a: any) => ({
+    label: a.name,
+    action: a.action,
+    icon: a.icon,
+    isQuickAction: true,
+  }));
+
+  const allActions = [...customActionsMapped, ...systemActions];
 
   const isSelected = selectedIds.has(contractor.id);
 

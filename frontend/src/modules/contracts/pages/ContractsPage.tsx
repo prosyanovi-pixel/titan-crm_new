@@ -4,8 +4,10 @@
  * Creating contracts/templates opens a Sheet drawer (not a separate page).
  */
 
+import { TableSkeleton, CardSkeleton } from '@/components/shared/skeletons';
 import React from 'react';
 import { useTranslation } from '@/lib/i18n';
+import { useBulkActions } from "@/modules/registry/hooks/useBulkActions";
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Plus, PenSquare, LayoutList, LayoutGrid } from 'lucide-react';
@@ -228,6 +230,10 @@ function ContractListView() {
     </div>
   );
 
+  const bulkActionsList = useBulkActions("contracts");
+  const hasBulkDelete = bulkActionsList.some(a => a.id === "bulk_delete");
+  const hasBulkEdit = bulkActionsList.some(a => a.id === "bulk_edit");
+
   return (
     <>
       <div className="space-y-4">
@@ -261,12 +267,14 @@ function ContractListView() {
                   searchQuery={contractTable.searchQuery}
                   onSearchChange={contractTable.setSearchQuery}
                   selectedCount={contractTable.selectedIds.size}
-                  onBulkDelete={handleBulkDelete}
+                  onBulkDelete={hasBulkDelete ? handleBulkDelete : undefined}
                   bulkActions={
+                    hasBulkEdit ? (
                       <Button variant="outline" size="sm" className="h-8 gap-2" onClick={() => setIsBulkEditOpen(true)}>
                         <PenSquare className="w-4 h-4" />
                         <span className="hidden sm:inline">{t('contracts.bulk_actions.edit')}</span>
                       </Button>
+                    ) : null
                   }
                   onCancelSelection={contractTable.clearSelection}
                   visibleColumns={contractTable.visibleColumns}

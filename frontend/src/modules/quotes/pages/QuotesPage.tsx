@@ -6,6 +6,7 @@ import { SortableTabsList } from '@/components/shared';
 import { DataTable } from '@/components/ui/data-table';
 import { usePageSettings } from '@/context/LayoutContext';
 import { useConfirm } from '@/components/ui/confirm-dialog';
+import { useBulkActions } from "@/modules/registry/hooks/useBulkActions";
 import { useQuotesPage } from '../hooks/useQuotesPage';
 import { QuoteTableRow, QuoteBulkStatusMenu } from '../components';
 
@@ -30,6 +31,10 @@ export function QuotesPage() {
     handleBulkDelete,
     navigate,
   } = useQuotesPage();
+
+  const bulkActionsList = useBulkActions("quotes");
+  const hasBulkDelete = bulkActionsList.some(a => a.id === "bulk_delete");
+  const hasBulkEdit = bulkActionsList.some(a => a.id === "bulk_edit");
 
   usePageSettings({
     title: t('quotes.title'),
@@ -83,9 +88,9 @@ export function QuotesPage() {
           searchPlaceholder={t('quotes.search_placeholder')}
           isLoading={isLoading}
           bulkActions={
-            <QuoteBulkStatusMenu onSelectStatus={handleBulkStatus} />
+            hasBulkEdit ? <QuoteBulkStatusMenu onSelectStatus={handleBulkStatus} /> : null
           }
-          onBulkDelete={confirmBulkDelete}
+          onBulkDelete={hasBulkDelete ? confirmBulkDelete : undefined}
           renderRow={(quote) => (
             <QuoteTableRow
               key={quote.id}

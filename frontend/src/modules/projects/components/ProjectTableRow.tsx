@@ -8,10 +8,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { StatusBadge, PriorityBadge, Tag, Badge, BadgeVariant } from "@/components/ui/status-system";
 import { Button } from "@/components/ui/button";
-import { QuickActionsMenu } from "@/components/ui/QuickActionsMenu";
+import { QuickActionsMenu, QuickActionMenuOption } from "@/components/ui/QuickActionsMenu";
 import { ChevronRight, ChevronDown } from "lucide-react";
-import { QuickAction } from "@/lib/settings-data";
 import { useSettings } from "@/hooks/use-settings";
+import { useModuleActions } from "@/modules/registry/hooks/useModuleActions";
 
 interface ProjectTableRowProps {
   project: Project;
@@ -24,7 +24,6 @@ interface ProjectTableRowProps {
   onEdit: (project: Project) => void;
   onAction: (action: string, project: Project) => void;
   onExpandChange: (id: number, expanded: boolean) => void;
-  quickActions: QuickAction[];
 }
 
 export function ProjectTableRow({
@@ -38,10 +37,10 @@ export function ProjectTableRow({
   onEdit,
   onAction,
   onExpandChange,
-  quickActions,
 }: ProjectTableRowProps) {
   const { t } = useTranslation();
-  const { getTagsByModule, getProjectStages } = useSettings();
+  const { getTagsByModule, getQuickActionsByModule, getProjectStages } = useSettings();
+  const projectActions = useModuleActions("projects");
   const hasSubProjects = project.subProjects && project.subProjects.length > 0;
   
   // Получаем конфигурацию стадии из справочника
@@ -61,15 +60,24 @@ export function ProjectTableRow({
     e.stopPropagation();
   }, []);
 
-  const allActions = [
-    ...quickActions.map(a => ({
-      label: a.name,
-      action: a.action,
-      icon: a.icon,
-    })),
-    { label: t('common.edit'), action: 'edit', icon: 'Pencil' },
-    { label: t('common.delete'), action: 'delete', icon: 'Trash2', variant: 'destructive' as const },
-  ];
+  // Системные действия через ActionRegistry (с учётом настроек модуля)
+  const systemActions: QuickActionMenuOption[] = projectActions.map((a: any) => ({
+    label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+    action: a.id,
+    icon: a.icon as any,
+    isQuickAction: a.defaultOrder < 50,
+    variant: a.id === 'delete' ? 'destructive' : undefined,
+  }));
+
+  // Кастомные быстрые действия из настроек
+  const customQuickActions: QuickActionMenuOption[] = getQuickActionsByModule('projects').map((a: any) => ({
+    label: a.name,
+    action: a.action,
+    icon: a.icon,
+    isQuickAction: true,
+  }));
+
+  const allActions = [...customQuickActions, ...systemActions];
 
   return (
     <TableRow

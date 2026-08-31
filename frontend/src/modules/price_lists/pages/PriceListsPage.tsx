@@ -33,6 +33,7 @@ import { SortableTabsList } from '@/components/shared';
 import { DataTable } from '@/components/ui/data-table';
 import { usePageSettings } from '@/context/LayoutContext';
 import { useConfirm } from '@/components/ui/confirm-dialog';
+import { useBulkActions } from "@/modules/registry/hooks/useBulkActions";
 import { useCreatePriceList } from '../hooks';
 import { usePriceListsPage } from '../hooks/usePriceListsPage';
 import { PriceListTableRow, PriceListBulkMenu, PriceListSheet } from '../components';
@@ -121,6 +122,9 @@ export function PriceListsPage() {
     }
   };
 
+  const bulkActionsList = useBulkActions("price_lists");
+  const hasBulkDelete = bulkActionsList.some(a => a.id === "bulk_delete");
+
   return (
     <>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col min-h-0">
@@ -159,7 +163,7 @@ export function PriceListsPage() {
                 onMakeDefault={handleBulkMakeDefault}
               />
             }
-            onBulkDelete={confirmBulkDelete}
+            onBulkDelete={hasBulkDelete ? confirmBulkDelete : undefined}
             renderRow={(pl) => (
               <PriceListTableRow
                 key={pl.id}
@@ -173,6 +177,8 @@ export function PriceListsPage() {
                   if (action === 'view' || action === 'edit') {
                     const pl = priceLists.find(p => p.id === id);
                     if (pl) setSelectedPriceList(pl);
+                  } else if (action === 'download_pdf') {
+                    window.open(`/api/price-lists/${id}/pdf`, '_blank');
                   } else {
                     await handleRowQuickAction(action, id);
                   }

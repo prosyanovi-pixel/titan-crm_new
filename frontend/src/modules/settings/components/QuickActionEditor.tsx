@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { QuickAction, ModuleItem } from "../types";
 import { api } from '@/lib/api';
 import { toast } from 'sonner';
@@ -117,6 +118,16 @@ export function QuickActionEditor({ quickActions, onSave, selectedModule, module
     { value: 'search_documents', label: t('settings.action_types.search_documents') },
     { value: 'export_documents', label: t('settings.action_types.export_documents') },
     { value: 'delete', label: t('settings.action_types.delete') },
+    { value: 'archive', label: t('settings.action_types.archive') },
+    { value: 'create_report', label: t('settings.action_types.create_report') },
+    { value: 'create_campaign', label: t('settings.action_types.create_campaign') },
+    { value: 'transfer', label: t('settings.action_types.transfer') },
+    { value: 'create_service', label: t('settings.action_types.create_service') },
+    { value: 'create_price_list', label: t('settings.action_types.create_price_list') },
+    { value: 'create_group', label: t('settings.action_types.create_group') },
+    { value: 'create_product', label: t('settings.action_types.create_product') },
+    { value: 'receive', label: t('settings.action_types.receive') },
+    { value: 'send_for_approval', label: t('settings.action_types.send_for_approval') },
   ];
 
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -140,6 +151,15 @@ export function QuickActionEditor({ quickActions, onSave, selectedModule, module
   const handleSaveEdit = async () => {
     if (!editName.trim() || !editingId) return;
     
+    // Проверка на дубликаты
+    const isDuplicate = filteredActions.some(
+      a => a.id !== editingId && a.action === editAction
+    );
+    if (isDuplicate) {
+      toast.error(t('settings.errors.duplicate_action', { defaultValue: 'Такое действие уже существует' }));
+      return;
+    }
+
     try {
       const actionToUpdate = quickActions.find(a => a.id === editingId);
       if (!actionToUpdate) return;
@@ -180,6 +200,15 @@ export function QuickActionEditor({ quickActions, onSave, selectedModule, module
 
   const handleAdd = async () => {
     if (!newName.trim()) return;
+
+    // Проверка на дубликаты
+    const isDuplicate = filteredActions.some(
+      a => a.action === newAction
+    );
+    if (isDuplicate) {
+      toast.error(t('settings.errors.duplicate_action', { defaultValue: 'Такое действие уже существует' }));
+      return;
+    }
 
     try {
       const newQuickActionData = {
@@ -349,6 +378,24 @@ export function QuickActionEditor({ quickActions, onSave, selectedModule, module
                       >
                           <ArrowDown className="w-4 h-4" />
                       </Button>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={action.isActive !== false}
+                        onCheckedChange={async (checked) => {
+                          try {
+                            const updatedAction = { ...action, isActive: checked };
+                            await api.put(`/quick-actions/${action.id}`, updatedAction);
+                            const updated = quickActions.map(a => a.id === action.id ? updatedAction : a);
+                            onSave(updated);
+                            toast.success(t('toast.success.quick_action_updated'));
+                          } catch (error) {
+                            console.error('Error toggling quick action:', error);
+                            toast.error(t('toast.error.quick_action_save'));
+                          }
+                        }}
+                      />
                     </div>
 
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(action)}>

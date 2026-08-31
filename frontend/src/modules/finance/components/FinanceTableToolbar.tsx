@@ -3,6 +3,7 @@ import { SortableTabsList, DataTableToolbar, BulkActionButton } from "@/componen
 import { PeriodFilterBar } from "./PeriodFilterBar";
 import { Users } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
+import { useBulkActions } from "@/modules/registry/hooks/useBulkActions";
 
 interface FinanceTableToolbarProps {
   activeTabsConfig: any[];
@@ -51,6 +52,10 @@ export function FinanceTableToolbar({
 }: FinanceTableToolbarProps) {
   const { t } = useTranslation();
 
+  const bulkActionsList = useBulkActions("finance");
+  const hasBulkDelete = bulkActionsList.some(a => a.id === "bulk_delete");
+  const hasBulkEdit = bulkActionsList.some(a => a.id === "bulk_edit");
+
   return (
     <div className="flex flex-nowrap justify-between items-center gap-4 overflow-x-auto overflow-y-hidden w-full mb-4 pb-1">
       <SortableTabsList
@@ -66,12 +71,14 @@ export function FinanceTableToolbar({
         onSearchChange={handleToolbarSearchChange}
         selectedCount={activeToolbarState.selectedIds.size}
         onCancelSelection={activeToolbarState.clearSelection}
-        onBulkDelete={activeTab === 'payments' ? handleBulkDeletePayments : () => handleBulkDeleteInvoices(activeInvoiceTable)}
+        onBulkDelete={hasBulkDelete ? (activeTab === 'payments' ? handleBulkDeletePayments : () => handleBulkDeleteInvoices(activeInvoiceTable)) : undefined}
         bulkActions={
-          <BulkActionButton onClick={() => setBulkEditOpen(true)}>
-            <Users className="w-4 h-4" />
-            <span className="hidden sm:inline">{t('common.bulk_edit.button')}</span>
-          </BulkActionButton>
+          hasBulkEdit ? (
+            <BulkActionButton onClick={() => setBulkEditOpen(true)}>
+              <Users className="w-4 h-4" />
+              <span className="hidden sm:inline">{t('common.bulk_edit.button')}</span>
+            </BulkActionButton>
+          ) : null
         }
         tabsConfig={financeTabsTable.tabsConfig}
         onMoveTab={financeTabsTable.moveTab}

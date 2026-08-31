@@ -3,7 +3,6 @@ import React from "react";
 import { LegalCase } from "../types";
 import { CaseTableRow } from "./CaseTableRow";
 import { DataTable, DataTableState } from "@/components/ui/data-table";
-import { QuickAction } from "@/lib/settings-data";
 
 interface CasesListProps {
   cases: LegalCase[];
@@ -12,7 +11,6 @@ interface CasesListProps {
   visibleColumns?: Record<string, boolean>;
   columnOrder?: string[];
   onEdit: (legalCase: LegalCase) => void;
-  quickActions: QuickAction[];
   onAction: (action: string, itemId: string | number) => void;
   table: any;
   totalCount: number;
@@ -25,7 +23,6 @@ export function CasesList({
   visibleColumns: visibleColumnsProp,
   columnOrder: columnOrderProp,
   onEdit,
-  quickActions,
   onAction,
   table,
   totalCount,
@@ -70,7 +67,6 @@ export function CasesList({
           columnOrder={columnOrder}
           onToggleSelection={toggleSelection}
           onEdit={onEdit}
-          quickActions={quickActions}
           onAction={onAction}
         />
       )}

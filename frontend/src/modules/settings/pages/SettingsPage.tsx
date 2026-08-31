@@ -52,6 +52,7 @@ import { useTranslation } from '@/lib/i18n';
 import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { ModulesMarketplace } from '../components/ModulesMarketplace';
+import * as LucideIcons from 'lucide-react';
 import {
   Users,
   FolderKanban,
@@ -116,22 +117,8 @@ const MODULE_TABS_CONFIG: Record<string, ModuleTabId[]> = {
 
 const DEFAULT_MODULE_TABS: ModuleTabId[] = ['statuses', 'tags', 'actions', 'params', 'bulk_edit'];
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Users,
-  FolderKanban,
-  CheckSquare,
-  FileText,
-  FileSignature,
-  Mail,
-  Scale,
-  Gavel,
-  Calendar,
-  Folder: FolderKanban, 
-  CheckCircle: CheckSquare,
-  Briefcase: Scale,
-  Warehouse,
-  Package,
-  Wrench,
+const getDynamicIcon = (iconName: string, FallbackIcon: React.ElementType = Layout) => {
+  return (LucideIcons as any)[iconName] || FallbackIcon;
 };
 
 type SettingSection = 'users' | 'roles' | 'permissions' | 'integrations' | string;
@@ -189,6 +176,7 @@ export default function Settings() {
     updateItem,
     deleteItem,
     quickActions,
+    allQuickActions,
     saveQuickActions,
   } = useSettings() as Record<string, unknown> & ReturnType<typeof useSettings>;
   const queryClient = useQueryClient();
@@ -247,7 +235,7 @@ export default function Settings() {
         items: modules.map(m => ({
           id: m.id,
           label: t(`settings.modules.${m.id}`),
-          icon: iconMap[m.icon] || Layout
+          icon: getDynamicIcon(m.icon, Layout)
         }))
       }
     ];
@@ -417,7 +405,12 @@ export default function Settings() {
           )}
 
           {tabs.includes('actions') && (
-            <TabsContent value="actions" className="mt-0">
+            <TabsContent value="actions" className="mt-0 space-y-6">
+              <ModuleSettingsEditor
+                moduleId={activeSection}
+                moduleName={activeModule?.name ?? activeSection}
+                showActionsOnly={true}
+              />
               <QuickActionEditor
                 quickActions={quickActions}
                 onSave={saveQuickActions}
@@ -529,7 +522,7 @@ export default function Settings() {
     if (activeSection === 'system') return { title: t('settings.system.title'), desc: t('settings.system.description'), icon: ServerCog };
     
     if (activeModule) {
-      const Icon = iconMap[activeModule.icon] || Layout;
+      const Icon = getDynamicIcon(activeModule.icon, Layout);
       return { 
         title: t(`settings.modules.${activeModule.id}`), 
         desc: t('settings.select_module.description'),

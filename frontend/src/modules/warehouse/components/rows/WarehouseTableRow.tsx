@@ -7,6 +7,7 @@ import { Tag } from '@/components/ui/status-system/Tag';
 import { useTranslation } from '@/lib/i18n';
 import { QuickActionsMenu, QuickActionMenuOption } from '@/components/ui/QuickActionsMenu';
 import { useSettings } from '@/hooks/use-settings';
+import { useModuleActions } from '@/modules/registry/hooks/useModuleActions';
 
 interface WarehouseTableRowProps {
   warehouse: Warehouse;
@@ -31,20 +32,28 @@ export function WarehouseTableRow({
 }: WarehouseTableRowProps) {
   const { t } = useTranslation();
   const { getQuickActionsByModule, getTagsByModule } = useSettings();
+  const warehouseActions = useModuleActions("warehouse");
 
-  const actions = getQuickActionsByModule('warehouse');
   const availableTags = getTagsByModule('warehouse');
 
-  const allOptions: QuickActionMenuOption[] = [
-    ...actions.map(a => ({
-      label: a.name,
-      action: a.action,
-      icon: a.icon,
-      isQuickAction: true,
-    })),
-    { label: t('common.edit'), action: 'edit', icon: 'Pencil', isQuickAction: false },
-    { label: t('common.delete'), action: 'delete', icon: 'Trash2', isQuickAction: false, variant: 'destructive' as const },
-  ];
+  // Системные действия через ActionRegistry
+  const systemActions: QuickActionMenuOption[] = warehouseActions.map((a: any) => ({
+    label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+    action: a.id,
+    icon: a.icon as any,
+    isQuickAction: a.defaultOrder < 50,
+    variant: a.id === 'delete' ? 'destructive' : undefined,
+  }));
+
+  // Кастомные быстрые действия
+  const customQuickActions: QuickActionMenuOption[] = getQuickActionsByModule('warehouse').map((a: any) => ({
+    label: a.name,
+    action: a.action,
+    icon: a.icon,
+    isQuickAction: true,
+  }));
+
+  const allOptions = [...customQuickActions, ...systemActions];
 
   return (
     <TableRow data-state={isSelected ? 'selected' : undefined}>

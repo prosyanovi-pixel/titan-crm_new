@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { QuickActionsMenu, QuickActionMenuOption } from "@/components/ui/QuickActionsMenu";
 import { useTranslation } from "@/lib/i18n";
 import { Quote } from "../types";
+import { useSettings } from "@/hooks/use-settings";
+import { useModuleActions } from "@/modules/registry/hooks/useModuleActions";
 
 interface QuoteTableRowProps {
   quote: Quote;
@@ -36,12 +38,27 @@ export function QuoteTableRow({
   onQuickAction,
 }: QuoteTableRowProps) {
   const { t } = useTranslation();
+  const { getQuickActionsByModule } = useSettings();
+  const quoteActions = useModuleActions("quotes");
 
-  const allActions: QuickActionMenuOption[] = [
-    { label: t('common.view'), action: 'view', icon: 'Eye', isQuickAction: false },
-    { label: t('common.edit'), action: 'edit', icon: 'Pencil', isQuickAction: false },
-    { label: t('common.delete'), action: 'delete', icon: 'Trash2', isQuickAction: false, variant: 'destructive' as const },
-  ];
+  // Системные действия через ActionRegistry
+  const systemActions: QuickActionMenuOption[] = quoteActions.map((a: any) => ({
+    label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+    action: a.id,
+    icon: a.icon as any,
+    isQuickAction: a.defaultOrder < 50,
+    variant: a.id === 'delete' ? 'destructive' : undefined,
+  }));
+
+  // Кастомные быстрые действия
+  const customQuickActions: QuickActionMenuOption[] = getQuickActionsByModule('quotes').map((a: any) => ({
+    label: a.name,
+    action: a.action,
+    icon: a.icon,
+    isQuickAction: true,
+  }));
+
+  const allActions = [...customQuickActions, ...systemActions];
 
   const isSelected = selectedIds.has(quote.id);
 

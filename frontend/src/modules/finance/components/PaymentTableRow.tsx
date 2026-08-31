@@ -10,10 +10,12 @@ import { toast } from "sonner";
 import { InlineEditCell } from "@/components/shared/InlineEditCell";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
-import { QuickActionsMenu } from "@/components/ui/QuickActionsMenu";
+import { QuickActionsMenu, QuickActionMenuOption } from "@/components/ui/QuickActionsMenu";
 import { Badge } from "@/components/ui/badge";
 import { Download, Upload } from 'lucide-react';
 import React from 'react';
+import { useSettings } from "@/hooks/use-settings";
+import { useModuleActions } from "@/modules/registry/hooks/useModuleActions";
 
 
 interface PaymentTableRowProps {
@@ -73,11 +75,27 @@ export function PaymentTableRow({
     updatePaymentMutation.mutate({ id: payment.id, data: updatedPayment });
   };
   
-  const allActions = [
-    { label: t('generated.prosmotret'), action: 'view', icon: 'Eye' },
-    { label: t('generated.redaktirovat'), action: 'edit', icon: 'Pencil' },
-    { label: t('generated.udalit'), action: 'delete', icon: 'Trash2', variant: 'destructive' as const },
-  ];
+  const financeActions = useModuleActions("finance");
+  const { getQuickActionsByModule } = useSettings();
+
+  const allActions = (() => {
+    const systemActions: QuickActionMenuOption[] = financeActions.map((a: any) => ({
+      label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+      action: a.id,
+      icon: a.icon as any,
+      isQuickAction: a.defaultOrder < 50,
+      variant: a.id === 'delete' ? 'destructive' : undefined,
+    }));
+
+    const customQuickActions: QuickActionMenuOption[] = getQuickActionsByModule('finance').map((a: any) => ({
+      label: a.name,
+      action: a.action,
+      icon: a.icon,
+      isQuickAction: true,
+    }));
+
+    return [...customQuickActions, ...systemActions];
+  })();
 
   return (
     <TableRow data-state={isSelected ? "selected" : undefined}>

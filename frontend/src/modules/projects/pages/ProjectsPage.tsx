@@ -19,6 +19,7 @@ import { TaskSheet } from "@/modules/tasks/components/TaskSheet";
 import { useProjectsPage } from "../hooks/useProjectsPage";
 import { useTranslation } from "@/lib/i18n";
 import { useModuleSettings } from "@/modules/settings/hooks/useModuleSettings";
+import { useBulkActions } from "@/modules/registry/hooks/useBulkActions";
 
 export default function Projects() {
   const { t } = useTranslation();
@@ -121,6 +122,10 @@ export default function Projects() {
   const { settings, isLoading: isSettingsLoading } = useModuleSettings("projects");
   const showStats = settings.features?.enableStatistics !== false;
 
+  const bulkActionsList = useBulkActions("projects");
+  const hasBulkDelete = bulkActionsList.some(a => a.id === "bulk_delete");
+  const hasBulkEdit = bulkActionsList.some(a => a.id === "bulk_edit");
+
   return (
     <>
       {!isSettingsLoading && showStats && <ProjectStatsGroup projects={projects} totalBudget={totalBudget} />}
@@ -140,12 +145,14 @@ export default function Projects() {
             onSearchChange={table.setSearchQuery}
             selectedCount={table.selectedIds.size}
             onCancelSelection={table.clearSelection}
-            onBulkDelete={handleBulkDelete}
+            onBulkDelete={hasBulkDelete ? handleBulkDelete : undefined}
             bulkActions={
-              <BulkActionButton onClick={() => setBulkEditOpen(true)}>
-                <PenSquare className="w-4 h-4" />
-                <span className="hidden sm:inline">{t("projects.bulk_edit.button")}</span>
-              </BulkActionButton>
+              hasBulkEdit ? (
+                <BulkActionButton onClick={() => setBulkEditOpen(true)}>
+                  <PenSquare className="w-4 h-4" />
+                  <span className="hidden sm:inline">{t("projects.bulk_edit.button")}</span>
+                </BulkActionButton>
+              ) : null
             }
             tabsConfig={table.tabsConfig}
             onMoveTab={table.moveTab}
@@ -191,7 +198,6 @@ export default function Projects() {
               onDelete={handleDeleteProject}
               onSort={(column: string) => table.handleSort(column as keyof Project)}
               sortConfig={table.sortConfig}
-              quickActions={projectActions}
               onAction={handleQuickAction}
               columnWidths={table.columnWidths}
               onResizeColumn={table.setColumnWidth}

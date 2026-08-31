@@ -7,6 +7,7 @@ import { useTranslation } from '@/lib/i18n';
 import { toast } from 'sonner';
 import { fetchWorkflows, deleteWorkflow, Workflow, runWorkflow } from '../api/workflowAPI';
 import { useModuleSettings } from '@/modules/settings/hooks/useModuleSettings';
+import { useBulkActions } from "@/modules/registry/hooks/useBulkActions";
 import {
   WorkflowCanvas, 
   ExecutionHistorySheet, 
@@ -135,6 +136,9 @@ export const WorkflowsPage: React.FC = () => {
     </Button>
   );
 
+  const bulkActionsList = useBulkActions("workflows");
+  const hasBulkDelete = bulkActionsList.some(a => a.id === "bulk_delete");
+
   usePageSettings({
     title: t('workflows.title'),
     subtitle: t('workflows.subtitle'),
@@ -162,7 +166,7 @@ export const WorkflowsPage: React.FC = () => {
           columnLabels={columnLabels}
           totalCount={filteredWorkflows.length}
           searchPlaceholder={t('workflows.search_placeholder')}
-          onBulkDelete={handleBulkDelete}
+          onBulkDelete={hasBulkDelete ? handleBulkDelete : undefined}
           isLoading={isLoading}
           renderRow={(wf) => (
             <WorkflowTableRow

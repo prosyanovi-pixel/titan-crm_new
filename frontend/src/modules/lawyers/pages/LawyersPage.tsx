@@ -20,6 +20,9 @@ import { CourtsJudgesTab } from "../components/CourtsJudgesTab";
 import { BulkEditDialog, DataTableToolbar } from "@/components/shared";
  
 import { QuickActionSheet } from "@/modules/contractors/components/QuickActionSheet";
+import { useTranslation } from "@/lib/i18n";
+import { useModuleSettings } from "@/modules/settings/hooks/useModuleSettings";
+import { useBulkActions } from "@/modules/registry/hooks/useBulkActions";
 import { useLawyersPage } from "../hooks/useLawyersPage";
 import type { LawyerTabType } from "../types";
 
@@ -187,8 +190,11 @@ export default function Lawyers() {
     moveTab: hook.moveTab,
     toggleTabVisibility: hook.toggleTabVisibility,
   });
-
   const showStats = settings?.features?.enableStatistics !== false;
+
+  const bulkActionsList = useBulkActions(activeTab === "specialists" ? "lawyers" : "cases");
+  const hasBulkDelete = bulkActionsList.some(a => a.id === "bulk_delete");
+  const hasBulkEdit = bulkActionsList.some(a => a.id === "bulk_edit");
 
   return (
     <>
@@ -258,12 +264,14 @@ export default function Lawyers() {
                   />
                 }
                 bulkActions={
-                  <Button variant="outline" size="sm" className="h-8 gap-2" onClick={() => setIsBulkEditDialogOpen(true)}>
-                    <PenSquare className="w-4 h-4" />
-                    <span className="hidden sm:inline">{t("common.bulk_edit.button")}</span>
-                  </Button>
+                  hasBulkEdit ? (
+                    <Button variant="outline" size="sm" className="h-8 gap-2" onClick={() => setIsBulkEditDialogOpen(true)}>
+                      <PenSquare className="w-4 h-4" />
+                      <span className="hidden sm:inline">{t("common.bulk_edit.button")}</span>
+                    </Button>
+                  ) : null
                 }
-                onBulkDelete={handleBulkDelete}
+                onBulkDelete={hasBulkDelete ? handleBulkDelete : undefined}
                 tabsConfig={activeTab === "specialists" ? lawyersTable.tabsConfig : casesTable.tabsConfig}
                 onMoveTab={activeTab === "specialists" ? lawyersTable.moveTab : casesTable.moveTab}
                 onToggleTab={activeTab === "specialists" ? lawyersTable.toggleTabVisibility : casesTable.toggleTabVisibility}
@@ -279,7 +287,6 @@ export default function Lawyers() {
               <LawyersList
                 lawyers={paginatedLawyers}
                 onEdit={handleEditLawyer}
-                quickActions={lawyerQuickActions}
                 onAction={handleQuickAction}
                 table={mapTableState(lawyersTable)}
                 totalCount={filteredLawyers.length}
@@ -290,7 +297,6 @@ export default function Lawyers() {
               <CasesList
                 cases={paginatedCases}
                 onEdit={handleEditCase}
-                quickActions={caseQuickActions}
                 onAction={handleQuickAction}
                 table={mapTableState(casesTable)}
                 totalCount={displayedCases.length}
@@ -301,7 +307,6 @@ export default function Lawyers() {
               <CasesList
                 cases={paginatedCases}
                 onEdit={handleEditCase}
-                quickActions={caseQuickActions}
                 onAction={handleQuickAction}
                 table={mapTableState(casesTable)}
                 totalCount={displayedCases.length}

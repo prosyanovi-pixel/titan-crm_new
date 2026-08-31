@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { useTranslation } from "@/lib/i18n";
 import { TabConfig } from "@/hooks/useDataTable";
 import { Users, Plus } from "lucide-react";
+import { useBulkActions } from "@/modules/registry/hooks/useBulkActions";
+import { BulkActionButton } from "@/components/shared";
 
 interface ContractorToolbarProps {
   searchQuery: string;
@@ -75,6 +77,10 @@ export function ContractorToolbar({
     manager: t('contractor_sheet.field.manager'),
   };
 
+  const bulkActionsList = useBulkActions("contractors");
+  const hasBulkDelete = bulkActionsList.some(a => a.id === "bulk_delete");
+  const otherBulkActions = bulkActionsList.filter(a => a.id !== "bulk_delete");
+
   const FilterContent = (
     <div className="p-2 space-y-4">
       <div className="flex items-center space-x-2 px-2 py-1">
@@ -112,7 +118,7 @@ export function ContractorToolbar({
       onSearchChange={onSearchChange}
       selectedCount={selectedCount}
       onCancelSelection={onCancelSelection}
-      onBulkDelete={onBulkDelete}
+      onBulkDelete={hasBulkDelete ? onBulkDelete : undefined}
       tabsConfig={tabsConfig}
       onMoveTab={onMoveTab}
       onToggleTab={onToggleTab}
@@ -124,17 +130,21 @@ export function ContractorToolbar({
       filters={FilterContent}
       bulkActions={
         <div className="flex items-center gap-2">
-          {onBulkEditClick && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onBulkEditClick}
-              disabled={selectedCount === 0}
-            >
-              <Users className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">{t('contractors.bulk_actions.title')}</span>
-            </Button>
-          )}
+          {otherBulkActions.map(action => {
+            if (action.id === 'bulk_edit' && onBulkEditClick) {
+              return (
+                <BulkActionButton
+                  key={action.id}
+                  onClick={onBulkEditClick}
+                  disabled={selectedCount === 0}
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  <span className="hidden sm:inline">{t(action.labelKey)}</span>
+                </BulkActionButton>
+              );
+            }
+            return null;
+          })}
           {onAddContractor && (
             <Button
               variant="default"

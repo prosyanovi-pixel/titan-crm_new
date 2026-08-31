@@ -4,7 +4,14 @@ import { useTranslation } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { TableRow, TableCell } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ResizableSheet, DiscardChangesDialog, DataTableToolbar, BulkEditDialog, BulkActionButton } from "@/components/shared";
+import { 
+  ResizableSheet, 
+  DiscardChangesDialog, 
+  DataTableToolbar, 
+  BulkEditDialog, 
+  BulkActionButton
+} from "@/components/shared";
+import { useBulkActions } from "@/modules/registry/hooks/useBulkActions";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useConfirm } from "@/components/ui/confirm-dialog";
@@ -22,12 +29,16 @@ import { settingsApi } from "@/modules/settings/api";
 import { useMarketingCampaigns } from "../hooks/useMarketingCampaigns";
 import { CampaignStats } from "../components/CampaignStats";
 import { CampaignForm } from "../components/CampaignForm";
+import { useSettings } from "@/hooks/use-settings";
+import { useModuleActions } from "@/modules/registry/hooks/useModuleActions";
 
 export default function MarketingPage() {
   const { t } = useTranslation();
   const { confirm } = useConfirm();
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
+  const { getQuickActionsByModule } = useSettings();
+  const marketingActions = useModuleActions("marketing");
 
   // Load reference data
   const { data: referenceData } = useReferenceData();
@@ -235,6 +246,10 @@ export default function MarketingPage() {
     actions,
   });
 
+  const bulkActionsList = useBulkActions("marketing");
+  const hasBulkDelete = bulkActionsList.some(a => a.id === "bulk_delete");
+  const hasBulkEdit = bulkActionsList.some(a => a.id === "bulk_edit");
+
   // Color mappings
   const getStatusBadge = (status: string) => {
     const statusData = statuses.find((s: any) => s.id === status);
@@ -263,10 +278,22 @@ export default function MarketingPage() {
     dates: "marketing.campaigns.dates",
   };
 
-  const allActions = [
-    { label: t("common.edit"), action: "edit", icon: "Pencil" },
-    { label: t("common.delete"), action: "delete", icon: "Trash2", variant: "destructive" as const },
-  ];
+  const systemActions = marketingActions.map((a: any) => ({
+    label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+    action: a.id,
+    icon: a.icon as any,
+    isQuickAction: a.defaultOrder < 50,
+    variant: a.id === 'delete' ? 'destructive' : undefined,
+  }));
+
+  const customQuickActions = getQuickActionsByModule('marketing').map((a: any) => ({
+    label: a.name,
+    action: a.action,
+    icon: a.icon,
+    isQuickAction: true,
+  }));
+
+  const allActions = [...customQuickActions, ...systemActions];
 
   const handleRowQuickAction = async (action: string, campaign: MarketingCampaign) => {
     if (action === "edit") {
@@ -288,11 +315,13 @@ export default function MarketingPage() {
           onSearchChange={table.setSearchQuery}
           selectedCount={table.selectedIds.size}
           onCancelSelection={table.clearSelection}
-          onBulkDelete={handleBulkDelete}
+          onBulkDelete={hasBulkDelete ? handleBulkDelete : undefined}
           bulkActions={
-            <BulkActionButton onClick={() => setBulkEditOpen(true)}>
-              <span className="hidden sm:inline">{t("marketing.bulk_edit.button")}</span>
-            </BulkActionButton>
+            hasBulkEdit ? (
+              <BulkActionButton onClick={() => setBulkEditOpen(true)}>
+                <span className="hidden sm:inline">{t("marketing.bulk_edit.button")}</span>
+              </BulkActionButton>
+            ) : null
           }
           tabsConfig={table.tabsConfig}
           onMoveTab={table.moveTab}

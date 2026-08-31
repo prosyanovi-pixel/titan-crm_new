@@ -134,7 +134,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const contractorTypes = settingsData?.referenceData?.contractorTypes || settingsData?.refs?.contractorTypes || [];
   const taxRegimes = (settingsData?.referenceData as Record<string, unknown>)?.taxRegimes as Array<{ id: number; name: string; code: string }> || (settingsData?.refs as Record<string, unknown>)?.taxRegimes as Array<{ id: number; name: string; code: string }> || [];
   
-  const quickActions = settingsData?.apiQuickActions || [];
+  const allQuickActions = settingsData?.apiQuickActions || [];
+  const quickActions = allQuickActions.filter((qa: QuickAction) => qa.isActive !== false);
   const legalForms = Array.isArray(settingsData?.legalFormsRes) ? settingsData?.legalFormsRes : ((settingsData?.legalFormsRes as { data?: LegalFormItem[] })?.data || []);
   const legalFormGroups = Array.isArray(settingsData?.legalFormGroupsRes) ? settingsData?.legalFormGroupsRes : (settingsData?.legalFormGroupsRes?.rows || []);
   const positions = Array.isArray(settingsData?.positionsRes) ? settingsData?.positionsRes : ((settingsData?.positionsRes as { data?: PositionItem[] })?.data || []);
@@ -211,7 +212,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
   const contextValue: SettingsContextType = {
     theme, accentColor, sidebarCollapsed, density, tableFontSize, loading,
-    statuses, tags, priorities, projectStages, quickActions, relationshipTypes, taxRegimes, legalForms, legalFormGroups, contractorTypes, positions, modules,
+    statuses, tags, priorities, projectStages, quickActions, allQuickActions, relationshipTypes, taxRegimes, legalForms, legalFormGroups, contractorTypes, positions, modules,
     setTheme, setAccentColor, setSidebarCollapsed, setDensity, setTableFontSize,
     refresh: async () => { await loadData(); },
     addItem, updateItem, deleteItem, saveQuickActions,

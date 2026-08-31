@@ -2,24 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { useProducts } from '@/modules/products/hooks';
 import { useServices } from '@/modules/services/hooks';
-import { usePriceListItems, useBulkSetPriceListItems } from '../../hooks';
+import { usePriceListItems } from '../../hooks';
 import { PriceList } from '../../types';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Search, Loader2, Save, X } from 'lucide-react';
-import { toast } from 'sonner';
+import { Search, Loader2 } from 'lucide-react';
 
 interface PriceListItemsTabProps {
   priceList: PriceList;
   itemType: 'product' | 'service';
+  editedPrices: Record<number, string>;
+  onEditedPricesChange: React.Dispatch<React.SetStateAction<Record<number, string>>>;
 }
 
-export function PriceListItemsTab({ priceList, itemType }: PriceListItemsTabProps) {
+export function PriceListItemsTab({ priceList, itemType, editedPrices, onEditedPricesChange }: PriceListItemsTabProps) {
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
 
-  // We fetch without pagination for MVP inside the sheet, or we could handle it.
-  // Actually useProducts and useServices take pagination params, let's fetch a large limit.
   const { data: productsData, isLoading: loadingProducts } = useProducts(
     itemType === 'product' ? { limit: 1000, search } : {}
   );
@@ -28,14 +26,6 @@ export function PriceListItemsTab({ priceList, itemType }: PriceListItemsTabProp
   );
   
   const { data: priceListItems = [], isLoading: loadingItems } = usePriceListItems(priceList.id, itemType);
-  const bulkSetPriceListItems = useBulkSetPriceListItems();
-
-  const [editedPrices, setEditedPrices] = useState<Record<number, string>>({});
-
-  // Reset edited prices if price list changes
-  useEffect(() => {
-    setEditedPrices({});
-  }, [priceList.id, itemType]);
 
   const loading = (itemType === 'product' ? loadingProducts : loadingServices) || loadingItems;
   
@@ -43,20 +33,18 @@ export function PriceListItemsTab({ priceList, itemType }: PriceListItemsTabProp
     ? (Array.isArray(productsData) ? productsData : (productsData as any)?.data || [])
     : (Array.isArray(servicesData) ? servicesData : (servicesData as any)?.data || []);
 
-  const groupedItems = itemsList.reduce((acc: any, item: any) => {
-    const category = item.categoryName || item.category_name || t('common.uncategorized', 'Без категории');
+  const groupedItems = itemsList.reduce((acc: Record<string, any[]>, item: any) => {
+    const category = item.categoryName || item.category_name || t('common.uncategorized');
     if (!acc[category]) acc[category] = [];
     acc[category].push(item);
     return acc;
-  }, {} as Record<string, any[]>);
-
-  const hasChanges = Object.keys(editedPrices).length > 0;
+  }, {});
 
   const handlePriceChange = (itemId: number, priceStr: string) => {
     const currentItem = priceListItems.find(i => i.itemId === itemId);
     const originalPriceStr = currentItem ? String(currentItem.price) : '';
     
-    setEditedPrices(prev => {
+    onEditedPricesChange(prev => {
       const next = { ...prev };
       if (priceStr === originalPriceStr) {
         delete next[itemId];
@@ -65,34 +53,6 @@ export function PriceListItemsTab({ priceList, itemType }: PriceListItemsTabProp
       }
       return next;
     });
-  };
-
-  const handleSave = async () => {
-    const itemsToSave = Object.keys(editedPrices).map(itemIdStr => {
-      const priceStr = editedPrices[Number(itemIdStr)];
-      const price = priceStr && priceStr.trim() !== '' ? parseFloat(priceStr) : null;
-      return {
-        itemType,
-        itemId: parseInt(itemIdStr, 10),
-        price,
-        currency: priceList.currency,
-      };
-    });
-
-    try {
-      await bulkSetPriceListItems.mutateAsync({
-        priceListId: priceList.id,
-        items: itemsToSave
-      });
-      setEditedPrices({});
-      toast.success(t('common.saved_successfully'));
-    } catch {
-      toast.error(t('common.error'));
-    }
-  };
-
-  const handleCancel = () => {
-    setEditedPrices({});
   };
 
   return (
@@ -107,23 +67,6 @@ export function PriceListItemsTab({ priceList, itemType }: PriceListItemsTabProp
             className="pl-8"
           />
         </div>
-        
-        {hasChanges && (
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={handleCancel}>
-              <X className="w-4 h-4 mr-1" />
-              {t('common.cancel')}
-            </Button>
-            <Button size="sm" onClick={handleSave} disabled={bulkSetPriceListItems.isPending}>
-              {bulkSetPriceListItems.isPending ? (
-                <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-              ) : (
-                <Save className="w-4 h-4 mr-1" />
-              )}
-              {t('common.save')}
-            </Button>
-          </div>
-        )}
       </div>
 
       <div className="rounded-md border">
@@ -145,7 +88,7 @@ export function PriceListItemsTab({ priceList, itemType }: PriceListItemsTabProp
               </tr>
             </thead>
             <tbody>
-              {Object.entries(groupedItems).map(([category, items]) => (
+              {Object.entries(groupedItems).map(([category, items]: [string, any[]]) => (
                 <React.Fragment key={category}>
                   <tr className="bg-muted/40">
                     <td colSpan={2} className="px-4 py-2 text-xs font-semibold uppercase text-muted-foreground tracking-wider">
@@ -175,15 +118,6 @@ export function PriceListItemsTab({ priceList, itemType }: PriceListItemsTabProp
                             onChange={(e) => handlePriceChange(item.id, e.target.value)}
                             placeholder="0.00"
                             className="h-8 w-32"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Escape') {
-                                handleCancel();
-                                e.currentTarget.blur();
-                              } else if (e.key === 'Enter') {
-                                if (hasChanges) handleSave();
-                                e.currentTarget.blur();
-                              }
-                            }}
                           />
                         </td>
                       </tr>

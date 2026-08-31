@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useTranslation } from "@/lib/i18n";
 import { TabConfig } from "@/hooks/useDataTable";
 import { Button } from "@/components/ui/button";
+import { useBulkActions } from "@/modules/registry/hooks/useBulkActions";
 
 interface WarehouseToolbarProps {
   searchQuery: string;
@@ -72,13 +73,16 @@ export function WarehouseToolbar({
     </div>
   );
 
+  const bulkActionsList = useBulkActions("warehouse");
+  const hasBulkDelete = bulkActionsList.some(a => a.id === "bulk_delete");
+
   return (
     <DataTableToolbar
       searchQuery={searchQuery}
       onSearchChange={onSearchChange}
       selectedCount={selectedCount}
       onCancelSelection={onCancelSelection}
-      onBulkDelete={onBulkDelete}
+      onBulkDelete={hasBulkDelete ? onBulkDelete : undefined}
       bulkActions={bulkActions}
       tabsConfig={tabsConfig}
       onMoveTab={onMoveTab}

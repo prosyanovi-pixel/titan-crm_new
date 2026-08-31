@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const result = await db.query(
-      'SELECT * FROM quick_actions WHERE is_active = TRUE ORDER BY module, displayorder'
+      'SELECT * FROM quick_actions ORDER BY module, displayorder'
     );
     res.json(result.rows);
   } catch (err) {
@@ -20,7 +20,7 @@ router.get('/:module', async (req, res) => {
   try {
     const { module } = req.params;
     const result = await db.query(
-      'SELECT * FROM quick_actions WHERE module = $1 AND is_active = TRUE ORDER BY displayorder',
+      'SELECT * FROM quick_actions WHERE module = $1 ORDER BY displayorder',
       [module]
     );
     res.json(result.rows);
@@ -123,7 +123,7 @@ router.delete('/:id', async (req, res) => {
     const { id } = req.params;
 
     const result = await db.query(
-      'UPDATE quick_actions SET is_active = FALSE, updated_at = CURRENT_TIMESTAMP WHERE id = $1 RETURNING *',
+      'DELETE FROM quick_actions WHERE id = $1 RETURNING *',
       [id]
     );
 

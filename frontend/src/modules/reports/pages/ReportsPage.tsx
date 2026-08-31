@@ -33,6 +33,8 @@ import { DataTableToolbar, SortableTabsList } from '@/components/shared';
 import { QuickActionsMenu } from '@/components/ui/QuickActionsMenu';
 import { useDataTable } from '@/hooks/useDataTable';
 import { SortableTableHead } from '@/components/shared/SortableTableHead';
+import { useModuleActions } from '@/modules/registry/hooks/useModuleActions';
+import { useSettings } from '@/hooks/use-settings';
 
 /** Получить ID текущего пользователя из localStorage (единый ключ с api.ts) */
 function getCurrentUserId(): string {
@@ -56,6 +58,9 @@ export function ReportsPage() {
   const { t } = useTranslation();
   const navigate      = useNavigate();
   const currentUserId = getCurrentUserId();
+  const moduleActions = useModuleActions('reports');
+  const { getQuickActionsByModule } = useSettings();
+  const quickActions = getQuickActionsByModule('reports');
 
   const { data: configs = [], isLoading } = useReportConfigs();
   const deleteConfig    = useDeleteReportConfig();
@@ -283,15 +288,24 @@ export function ReportsPage() {
               const meta = getReportTypeMeta(config.reportType);
               const isOwner = String(config.createdBy) === String(currentUserId);
               
+              const systemActions = moduleActions.map((a: any) => ({
+                label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+                action: a.id,
+                icon: a.icon as any,
+                isQuickAction: a.defaultOrder < 50,
+                variant: (a.id === 'delete' ? 'destructive' : undefined) as "default" | "destructive" | undefined,
+              }));
+
               const actions = [
-                { label: t('common.view'), action: 'view', icon: 'Eye' },
-                { label: t('common.duplicate'), action: 'duplicate', icon: 'Copy' },
-                { 
-                  label: config.isShared ? t('reports.close_access') : t('common.share'), 
-                  action: 'share', 
-                  icon: 'Share2' 
-                },
-                { label: t('common.delete'), action: 'delete', icon: 'Trash2', variant: 'destructive' as const },
+                ...quickActions.map(a => ({
+                  label: a.name, action: a.action, icon: a.icon, isQuickAction: true,
+                })),
+                ...systemActions.map(a => {
+                  if (a.action === 'share') {
+                    return { ...a, label: config.isShared ? t('reports.close_access') : t('common.share') };
+                  }
+                  return a;
+                })
               ];
 
               const handleAction = (action: string) => {

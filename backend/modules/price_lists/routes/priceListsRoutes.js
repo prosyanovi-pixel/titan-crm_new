@@ -33,4 +33,7 @@ router.post('/:id/bulk-items', checkPermission('settings.write'), priceListsCont
 // GET /api/price-lists/:id/items
 router.get('/:id/items', checkPermission('settings.read'), priceListsController.getPriceListItems);
 
+// GET /api/price-lists/:id/pdf
+router.get('/:id/pdf', checkPermission('settings.read'), priceListsController.exportPriceListPdf);
+
 module.exports = router;

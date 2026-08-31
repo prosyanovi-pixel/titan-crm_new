@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { TabConfig } from "@/hooks/useDataTable";
 import { Wrench, Plus } from "lucide-react";
+import { useBulkActions } from "@/modules/registry/hooks/useBulkActions";
 
 interface ServicesToolbarProps {
   searchQuery: string;
@@ -77,13 +78,16 @@ export function ServicesToolbar({
     </div>
   );
 
+  const bulkActionsList = useBulkActions("services");
+  const hasBulkDelete = bulkActionsList.some(a => a.id === "bulk_delete");
+
   return (
     <DataTableToolbar
       searchQuery={searchQuery}
       onSearchChange={onSearchChange}
       selectedCount={selectedCount}
       onCancelSelection={onCancelSelection}
-      onBulkDelete={onBulkDelete}
+      onBulkDelete={hasBulkDelete ? onBulkDelete : undefined}
       tabsConfig={tabsConfig}
       onMoveTab={onMoveTab}
       onToggleTab={onToggleTab}

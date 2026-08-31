@@ -10,18 +10,8 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import {
-  MoreVertical,
-  Eye, Pencil, Trash2,
-  Mail, Phone, Plus, Gavel, FolderKanban,
-  CheckSquare, RefreshCw, User, UserCog,
-  Calendar, Bell, Video, DollarSign,
-  FileText, Send, StickyNote, FilePlus,
-  Upload, Search, Download, List,
-  MessageSquare, Paperclip, FolderPlus,
-} from 'lucide-react';
-import React from 'react';
-import { LucideIcon } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
+import { LucideIcon, MoreVertical } from 'lucide-react';
 
 export interface QuickActionMenuOption {
   label: string;
@@ -51,22 +41,12 @@ interface QuickActionsMenuProps {
   onAction: (action: string, itemId: string | number) => void;
 }
 
-const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
-  Eye, Pencil, Trash2,
-  Mail, Phone, Plus, Gavel, FolderKanban,
-  CheckSquare, RefreshCw, User, UserCog,
-  Calendar, Bell, Video, DollarSign,
-  FileText, Send, StickyNote, FilePlus,
-  Upload, Search, Download, List,
-  MessageSquare, Paperclip, FolderPlus,
-};
-
 function ActionIcon({ icon }: { icon?: string | LucideIcon }) {
   if (!icon) return <MoreVertical className="w-4 h-4" />;
   
-  // If icon is a string, look it up in ICON_MAP
+  // If icon is a string, look it up in LucideIcons
   if (typeof icon === 'string') {
-    const Icon = ICON_MAP[icon];
+    const Icon = (LucideIcons as any)[icon];
     if (!Icon) return <MoreVertical className="w-4 h-4" />;
     return <Icon className="w-4 h-4" />;
   }

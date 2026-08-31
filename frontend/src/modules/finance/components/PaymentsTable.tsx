@@ -17,6 +17,7 @@ import { QuickAction } from '@/lib/settings-data';
 import { SortableTableHead, TableHeaderCheckbox } from '@/components/shared';
 import { useColumnDrag } from '@/hooks/useColumnDrag';
 import { useCallback } from 'react';
+import { useModuleActions } from '@/modules/registry/hooks/useModuleActions';
 
 interface PaymentsTableProps {
   payments: Payment[];
@@ -52,6 +53,7 @@ export function PaymentsTable({
   onColumnResize,
 }: PaymentsTableProps) {
   const { t } = useTranslation();
+  const moduleActions = useModuleActions("finance");
 
   const handleReorder = useCallback((from: string, to: string) => {
     onReorderColumn?.(from, to);
@@ -205,9 +207,13 @@ export function PaymentsTable({
                       ...quickActions.map(a => ({
                         label: a.name, action: a.action, icon: a.icon, isQuickAction: true,
                       })),
-                      { label: 'Просмотреть', action: 'view', icon: 'Eye', isQuickAction: false },
-                      { label: 'Редактировать', action: 'edit', icon: 'Pencil', isQuickAction: false },
-                      { label: 'Удалить', action: 'delete', icon: 'Trash2', isQuickAction: false, variant: 'destructive' as const },
+                      ...moduleActions.map((a: any) => ({
+                        label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+                        action: a.id,
+                        icon: a.icon as any,
+                        isQuickAction: a.defaultOrder < 50,
+                        variant: (a.id === 'delete' ? 'destructive' : undefined) as "default" | "destructive" | undefined,
+                      })),
                     ]}
                     onAction={(actionType, itemId) => void onQuickAction(actionType, itemId)}
                   />

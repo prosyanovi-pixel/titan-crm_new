@@ -7,6 +7,7 @@ import { Tag } from "@/components/ui/status-system/Tag";
 import { useTranslation } from "@/lib/i18n";
 import { QuickActionsMenu, QuickActionMenuOption } from "@/components/ui/QuickActionsMenu";
 import { useSettings } from "@/hooks/use-settings";
+import { useModuleActions } from "@/modules/registry/hooks/useModuleActions";
 
 interface ServicesTableProps {
   services: Service[];
@@ -35,6 +36,7 @@ export function ServicesTable({
 }: ServicesTableProps) {
   const { t } = useTranslation();
   const { getQuickActionsByModule, getTagsByModule } = useSettings();
+  const moduleActions = useModuleActions("services");
 
   const quickActions = getQuickActionsByModule('services');
   const availableTags = getTagsByModule('services');
@@ -94,16 +96,23 @@ export function ServicesTable({
           </TableRow>
         ) : (
           services.map((service) => {
+            const systemActions: QuickActionMenuOption[] = moduleActions.map((a: any) => ({
+              label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+              action: a.id,
+              icon: a.icon as any,
+              isQuickAction: a.defaultOrder < 50,
+              variant: a.id === 'delete' ? 'destructive' : undefined,
+            }));
+
             const options: QuickActionMenuOption[] = [
-            ...quickActions.map(a => ({
-              label: a.name,
-              action: a.action,
-              icon: a.icon,
-              isQuickAction: true,
-            })),
-            { label: t('common.edit'), action: 'edit', icon: 'Pencil', isQuickAction: false },
-            { label: t('common.delete'), action: 'delete', icon: 'Trash2', isQuickAction: false, variant: 'destructive' as const },
-          ];
+              ...quickActions.map(a => ({
+                label: a.name,
+                action: a.action,
+                icon: a.icon,
+                isQuickAction: true,
+              })),
+              ...systemActions
+            ];
 
           return (
             <TableRow key={service.id}>

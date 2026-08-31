@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { QuickActionsMenu, QuickActionMenuOption } from "@/components/ui/QuickActionsMenu";
 import { useSettings } from "@/hooks/use-settings";
 import { useTranslation } from "@/lib/i18n";
+import { useModuleActions } from "@/modules/registry/hooks/useModuleActions";
 import { Contractor } from "../types/contractor.types";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { LegalFormBadge } from "./LegalFormBadge";
@@ -49,6 +50,15 @@ export function ContractorTable({
   const { getQuickActionsByModule } = useSettings();
   const contractorActions = getQuickActionsByModule('contractors');
   const contractorRelTypes = relationshipTypes;
+  const moduleActions = useModuleActions("contractors");
+
+  const systemActions: QuickActionMenuOption[] = moduleActions.map((a: any) => ({
+    label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+    action: a.id,
+    icon: a.icon as any,
+    isQuickAction: a.defaultOrder < 50,
+    variant: a.id === 'delete' ? 'destructive' : undefined,
+  }));
 
   // Combine quick actions with regular actions
   const allActions: QuickActionMenuOption[] = [
@@ -61,9 +71,7 @@ export function ContractorTable({
     })),
     // Separator will be added in QuickActionsMenu
     // Regular actions
-    { label: t('generated.prosmotret'), action: 'view', icon: 'Eye', isQuickAction: false },
-    { label: t('generated.redaktirovat'), action: 'edit', icon: 'Pencil', isQuickAction: false },
-    { label: t('generated.udalit'), action: 'delete', icon: 'Trash2', isQuickAction: false, variant: 'destructive' as const },
+    ...systemActions
   ];
 
   const isAllSelected = contractors.length > 0 && selectedIds && selectedIds.size === contractors.length;

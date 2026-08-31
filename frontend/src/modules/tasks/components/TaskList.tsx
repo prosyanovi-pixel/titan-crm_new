@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Task } from "../types";
 import { TaskTableRow } from "./TaskTableRow";
 import { DataTable } from "@/components/ui/data-table";
-import { QuickAction } from "@/lib/settings-data";
 import { SortConfig } from "@/hooks/useDataTable";
 
 /** Объект состояния таблицы, передаваемый из useTasksPage */
@@ -35,7 +34,6 @@ interface TaskListProps {
   columnOrder: string[];
   onEdit: (task: Task) => void;
   onAction: (action: string, itemId: string | number) => void;
-  quickActions: QuickAction[];
   table: TaskTableState;
   totalCount: number;
 }
@@ -47,7 +45,6 @@ export function TaskList({
   columnOrder,
   onEdit,
   onAction,
-  quickActions,
   table,
   totalCount,
 }: TaskListProps) {
@@ -91,7 +88,6 @@ export function TaskList({
           onEdit={onEdit}
           onAction={onAction}
           onExpandChange={toggleExpand}
-          quickActions={quickActions}
         />
       )}
     />

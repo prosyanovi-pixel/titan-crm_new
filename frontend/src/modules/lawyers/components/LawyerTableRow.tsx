@@ -5,8 +5,9 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { StatusBadge } from "@/components/ui/status-system";
-
-import { QuickActionsMenu } from "@/components/ui/QuickActionsMenu";
+import { QuickActionsMenu, QuickActionMenuOption } from "@/components/ui/QuickActionsMenu";
+import { useSettings } from "@/hooks/use-settings";
+import { useModuleActions } from "@/modules/registry/hooks/useModuleActions";
 
 interface LawyerTableRowProps {
   lawyer: Lawyer;
@@ -14,7 +15,6 @@ interface LawyerTableRowProps {
   columnOrder: string[];
   onEdit: (lawyer: Lawyer) => void;
   onAction?: (action: string, id: string | number) => void;
-  quickActions?: any[];
 }
 
 export function LawyerTableRow({ 
@@ -23,20 +23,29 @@ export function LawyerTableRow({
   columnOrder, 
   onEdit,
   onAction,
-  quickActions = []
 }: LawyerTableRowProps) {
   const { t } = useTranslation();
+  const { getQuickActionsByModule } = useSettings();
+  const lawyerActions = useModuleActions("lawyers");
 
-  const allActions = [
-    ...quickActions.map(a => ({
-      label: a.name,
-      action: a.action,
-      icon: a.icon,
-      isQuickAction: true
-    })),
-    { label: t('generated.redaktirovat'), action: 'edit', icon: 'Pencil', isQuickAction: false },
-    { label: t('generated.udalit'), action: 'delete', icon: 'Trash2', isQuickAction: false, variant: 'destructive' as const }
-  ];
+  // Системные действия через ActionRegistry
+  const systemActions: QuickActionMenuOption[] = lawyerActions.map((a: any) => ({
+    label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+    action: a.id,
+    icon: a.icon as any,
+    isQuickAction: a.defaultOrder < 50,
+    variant: a.id === 'delete' ? 'destructive' : undefined,
+  }));
+
+  // Кастомные быстрые действия
+  const customQuickActions: QuickActionMenuOption[] = getQuickActionsByModule('lawyers').map((a: any) => ({
+    label: a.name,
+    action: a.action,
+    icon: a.icon,
+    isQuickAction: true,
+  }));
+
+  const allActions = [...customQuickActions, ...systemActions];
 
   return (
     <TableRow className="cursor-pointer hover:bg-muted/50" onClick={() => onEdit(lawyer)}>

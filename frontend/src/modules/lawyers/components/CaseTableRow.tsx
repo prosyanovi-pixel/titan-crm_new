@@ -7,10 +7,12 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StatusBadge, OutcomeBadge } from "@/components/ui/status-system";
 import { Checkbox } from "@/components/ui/checkbox";
-import { QuickActionsMenu } from "@/components/ui/QuickActionsMenu";
+import { QuickActionsMenu, QuickActionMenuOption } from "@/components/ui/QuickActionsMenu";
 import { Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useSettings } from "@/hooks/use-settings";
+import { useModuleActions } from "@/modules/registry/hooks/useModuleActions";
 
 const getCurrencySymbol = (currency: string): string => {
   const symbols: Record<string, string> = { 'RUB': '₽', 'USD': '$', 'EUR': '€', 'GBP': '£', 'CNY': '¥' };
@@ -26,7 +28,6 @@ interface CaseTableRowProps {
   columnOrder: string[];
   onToggleSelection: (id: string) => void;
   onEdit: (legalCase: LegalCase) => void;
-  quickActions: QuickAction[];
   onAction: (action: string, itemId: string | number) => void;
 }
 
@@ -37,10 +38,30 @@ export function CaseTableRow({
   columnOrder,
   onToggleSelection,
   onEdit,
-  quickActions,
   onAction,
 }: CaseTableRowProps) {
   const { t } = useTranslation();
+  const { getQuickActionsByModule } = useSettings();
+  const caseActions = useModuleActions("cases");
+
+  // Системные действия через ActionRegistry
+  const systemActions: QuickActionMenuOption[] = caseActions.map((a: any) => ({
+    label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+    action: a.id,
+    icon: a.icon as any,
+    isQuickAction: a.defaultOrder < 50,
+    variant: a.id === 'delete' ? 'destructive' : undefined,
+  }));
+
+  // Кастомные быстрые действия
+  const customQuickActions: QuickActionMenuOption[] = getQuickActionsByModule('cases').map((a: any) => ({
+    label: a.name,
+    action: a.action,
+    icon: a.icon,
+    isQuickAction: true,
+  }));
+
+  const allActions = [...customQuickActions, ...systemActions];
 
   const handleRowClick = useCallback(() => {
     onEdit(legalCase);
@@ -184,7 +205,7 @@ export function CaseTableRow({
         <QuickActionsMenu
           itemId={legalCase.id}
           itemName={legalCase.title}
-          options={quickActions}
+          options={allActions}
           onAction={onAction}
         />
       </TableCell>

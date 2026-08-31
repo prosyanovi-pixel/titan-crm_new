@@ -23,6 +23,7 @@ export function ContractsSettingsTab() {
   const { 
     modules,
     quickActions,
+    allQuickActions,
     saveQuickActions
   } = useSettings() as any;
 
@@ -67,9 +68,14 @@ export function ContractsSettingsTab() {
         <TagEditor selectedModule="contracts" modules={modules} />
       </TabsContent>
 
-      <TabsContent value="actions" className="mt-0">
+      <TabsContent value="actions" className="mt-0 space-y-6">
+        <ModuleSettingsEditor 
+          moduleId="contracts" 
+          moduleName={t('sidebar.contracts')} 
+          showActionsOnly={true}
+        />
         <QuickActionEditor
-          quickActions={quickActions}
+          quickActions={allQuickActions}
           onSave={saveQuickActions}
           selectedModule="contracts"
           modules={modules}

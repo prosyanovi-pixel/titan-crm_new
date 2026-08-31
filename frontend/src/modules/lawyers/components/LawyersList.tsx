@@ -3,7 +3,6 @@ import React from "react";
 import { Lawyer } from "../types";
 import { LawyerTableRow } from "./LawyerTableRow";
 import { DataTable, DataTableState } from "@/components/ui/data-table";
-import { QuickAction } from "@/lib/settings-data";
 
 interface LawyersListProps {
   lawyers: Lawyer[];
@@ -11,7 +10,6 @@ interface LawyersListProps {
   columnOrder?: string[];
   onEdit: (lawyer: Lawyer) => void;
   onAction?: (action: string, id: string | number) => void;
-  quickActions?: QuickAction[];
   table: DataTableState<Lawyer>;
   totalCount: number;
 }
@@ -22,7 +20,6 @@ export function LawyersList({
   columnOrder: columnOrderProp,
   onEdit,
   onAction,
-  quickActions,
   table,
   totalCount,
 }: LawyersListProps) {
@@ -54,7 +51,6 @@ export function LawyersList({
           columnOrder={columnOrder}
           onEdit={onEdit}
           onAction={onAction}
-          quickActions={quickActions}
         />
       )}
     />

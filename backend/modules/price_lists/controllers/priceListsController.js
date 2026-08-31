@@ -246,3 +246,27 @@ exports.bulkDeletePriceLists = async (req, res, next) => {
     next(error);
   }
 };
+
+const pdfService = require('../services/pdfService');
+
+exports.exportPriceListPdf = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    
+    // Validate id
+    if (isNaN(parseInt(id, 10))) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const pdfBuffer = await pdfService.generatePriceListPdf(id);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=price-list-${id}.pdf`);
+    res.send(pdfBuffer);
+  } catch (error) {
+    if (error.message === 'Price list not found') {
+      return res.status(404).json({ error: error.message });
+    }
+    next(error);
+  }
+};

@@ -39,6 +39,7 @@ export interface QuickAction {
   icon: string;
   action: string;
   module: string;
+  isActive?: boolean;
 }
 
 export interface RelationshipTypeItem {

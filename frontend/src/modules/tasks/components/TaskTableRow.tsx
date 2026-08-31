@@ -7,11 +7,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StatusBadge, PriorityBadge } from "@/components/ui/status-system";
 import { Button } from "@/components/ui/button";
-import { QuickActionsMenu } from "@/components/ui/QuickActionsMenu";
+import { QuickActionsMenu, QuickActionMenuOption } from "@/components/ui/QuickActionsMenu";
 import { ChevronRight, ChevronDown, Calendar, CheckSquare } from "lucide-react";
-import { QuickAction } from "@/lib/settings-data";
 import React from 'react';
 import { cn } from "@/lib/utils";
+import { useSettings } from "@/hooks/use-settings";
+import { useModuleActions } from "@/modules/registry/hooks/useModuleActions";
 
 interface TaskTableRowProps {
   task: Task;
@@ -24,7 +25,6 @@ interface TaskTableRowProps {
   onEdit: (task: Task) => void;
   onAction: (action: string, itemId: string | number) => void;
   onExpandChange: (id: string, expanded: boolean) => void;
-  quickActions: QuickAction[];
 }
 
 export function TaskTableRow({
@@ -38,9 +38,10 @@ export function TaskTableRow({
   onEdit,
   onAction,
   onExpandChange,
-  quickActions,
 }: TaskTableRowProps) {
   const { t } = useTranslation();
+  const { getQuickActionsByModule } = useSettings();
+  const taskActions = useModuleActions("tasks");
   const hasSubTasks = task.subTasks && task.subTasks.length > 0;
 
   const handleExpandClick = useCallback((e: React.MouseEvent) => {
@@ -56,15 +57,24 @@ export function TaskTableRow({
     e.stopPropagation();
   }, []);
 
-  const allActions = [
-    ...quickActions.map(a => ({
-      label: a.name,
-      action: a.action,
-      icon: a.icon,
-    })),
-    { label: t('generated.redaktirovat'), action: 'edit', icon: 'Pencil' },
-    { label: t('generated.udalit'), action: 'delete', icon: 'Trash2', variant: 'destructive' as const },
-  ];
+  // Системные действия через ActionRegistry
+  const systemActions: QuickActionMenuOption[] = taskActions.map((a: any) => ({
+    label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+    action: a.id,
+    icon: a.icon as any,
+    isQuickAction: a.defaultOrder < 50,
+    variant: a.id === 'delete' ? 'destructive' : undefined,
+  }));
+
+  // Кастомные быстрые действия
+  const customQuickActions: QuickActionMenuOption[] = getQuickActionsByModule('tasks').map((a: any) => ({
+    label: a.name,
+    action: a.action,
+    icon: a.icon,
+    isQuickAction: true,
+  }));
+
+  const allActions = [...customQuickActions, ...systemActions];
 
   const mainRowContent = (
     <>

@@ -21,6 +21,8 @@ import { Badge as StatusSystemBadge, UniversalTagList } from '@/components/ui/st
 import { AlertTriangle } from 'lucide-react';
 import type { DataTableState } from '@/components/ui/data-table';
 import { ContractKanbanBoard } from './ContractKanbanBoard';
+import { useSettings } from "@/hooks/use-settings";
+import { useModuleActions } from "@/modules/registry/hooks/useModuleActions";
 
 interface ContractListProps {
   onSelectContract?: (contractId: string) => void;
@@ -93,6 +95,8 @@ export function ContractList({ onSelectContract, onEditContract, table, statusFi
   const navigate = useNavigate();
   const { confirm } = useConfirm();
   const deleteMutation = useDeleteContract();
+  const { getQuickActionsByModule } = useSettings();
+  const contractActions = useModuleActions("contracts");
 
   const {
     searchQuery,
@@ -164,11 +168,22 @@ export function ContractList({ onSelectContract, onEditContract, table, statusFi
       }
     };
 
-    const actions: QuickActionMenuOption[] = [
-      { label: t('general.view'), action: 'view', icon: 'Eye', isQuickAction: false },
-      { label: t('general.edit'), action: 'edit', icon: 'Pencil', isQuickAction: false },
-      { label: t('general.delete'), action: 'delete', icon: 'Trash2', isQuickAction: false, variant: 'destructive' },
-    ];
+    const systemActions: QuickActionMenuOption[] = contractActions.map((a: any) => ({
+      label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+      action: a.id,
+      icon: a.icon as any,
+      isQuickAction: a.defaultOrder < 50,
+      variant: a.id === 'delete' ? 'destructive' : undefined,
+    }));
+
+    const customQuickActions: QuickActionMenuOption[] = getQuickActionsByModule('contracts').map((a: any) => ({
+      label: a.name,
+      action: a.action,
+      icon: a.icon,
+      isQuickAction: true,
+    }));
+
+    const actions = [...customQuickActions, ...systemActions];
 
     return (
       <TableRow

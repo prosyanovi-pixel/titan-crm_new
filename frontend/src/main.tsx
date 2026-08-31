@@ -5,6 +5,7 @@ import { I18nProvider } from "@/lib/i18n";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ConfirmDialogProvider } from "@/components/ui/confirm-dialog";
 import { initErrorHandler } from "@/lib/errorHandler";
+import { registerDefaultActions } from "@/modules/registry/registerDefaultActions";
 import { SettingsProvider } from "@/context/SettingsContext";
 import { LayoutProvider } from "@/context/LayoutContext";
 import { QueryClient } from '@tanstack/react-query';
@@ -13,6 +14,7 @@ import { createIDBPersister } from '@/lib/queryPersister';
 
 // Initialize global error handling
 initErrorHandler();
+registerDefaultActions();
 
 const queryClient = new QueryClient({
   defaultOptions: {

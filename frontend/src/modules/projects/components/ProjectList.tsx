@@ -3,7 +3,6 @@ import React, { useMemo, useState } from "react";
 import { Project } from "../types";
 import { ProjectTableRow } from "./ProjectTableRow";
 import { DataTable, DataTableState } from "@/components/ui/data-table";
-import { QuickAction } from "@/lib/settings-data";
 
 /**
  * Свойства компонента ProjectList
@@ -19,7 +18,6 @@ interface ProjectListProps {
   onDelete?: (id: number) => void;
   onSort?: (column: string) => void;
   sortConfig?: { key: string; direction: 'asc' | 'desc' } | null;
-  quickActions: QuickAction[];
   onAction: (action: string, project: Project) => void;
   columnWidths?: Record<string, number>;
   onResizeColumn?: (column: string, width: number) => void;
@@ -39,7 +37,6 @@ export function ProjectList({
   onSort,
   sortConfig,
   onAction,
-  quickActions,
   columnWidths,
   onResizeColumn,
   table,
@@ -103,7 +100,6 @@ export function ProjectList({
           onEdit={onEdit}
           onAction={onAction}
           onExpandChange={toggleExpand}
-          quickActions={quickActions}
         />
       )}
     />

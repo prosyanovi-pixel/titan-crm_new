@@ -19,6 +19,7 @@ export interface SettingsContextType {
   priorities: PriorityItem[];
   projectStages: ProjectStageItem[];
   quickActions: QuickAction[];
+  allQuickActions: QuickAction[];
   relationshipTypes: RelationshipTypeItem[];
   taxRegimes: Array<{ id: number; name: string; code: string }>;
   legalForms: LegalFormItem[];

@@ -18,6 +18,9 @@ import TemplateDetailPage from './TemplateDetailPage';
 import { usePermission } from '@/hooks/usePermission';
 import { PERMISSIONS } from '@/constants/permissions';
 import { useConfirm } from '@/components/ui/confirm-dialog';
+import { useSettings } from "@/hooks/use-settings";
+import { useModuleActions } from "@/modules/registry/hooks/useModuleActions";
+import { QuickActionMenuOption } from "@/components/ui/QuickActionsMenu";
 
 const TemplatesListView = () => {
   const { t } = useTranslation();
@@ -31,6 +34,8 @@ const TemplatesListView = () => {
   const canWrite = hasPermission(PERMISSIONS.templates.write);
   const canDelete = hasPermission(PERMISSIONS.templates.delete);
   const currentUserId = typeof window !== 'undefined' ? localStorage.getItem('titan_user_id') : null;
+  const { getQuickActionsByModule } = useSettings();
+  const templateActions = useModuleActions("templates");
   
   const handleOpenEdit = (template: Template) => {
     if (canWrite && (isAdmin() || template.createdBy === currentUserId)) {
@@ -115,11 +120,12 @@ const TemplatesListView = () => {
     }
   };
 
-  const allActions = [
-    { action: 'download', label: t('common.download'), icon: 'Download' },
-  ];
-  
-  // We will dynamically add edit/delete actions inside renderRow depending on permissions and ownership
+  const customQuickActions: QuickActionMenuOption[] = getQuickActionsByModule('templates').map((a: any) => ({
+    label: a.name,
+    action: a.action,
+    icon: a.icon,
+    isQuickAction: true,
+  }));
 
   const {
     visibleColumns,
@@ -223,10 +229,21 @@ const TemplatesListView = () => {
                   itemId={template.id}
                   itemName={template.name}
                   options={[
-                    ...allActions,
-                    ...(canWrite && (isAdmin() || template.createdBy === currentUserId) ? [{ action: 'edit', label: t('common.edit'), icon: 'Pencil' }] : []),
-                    ...(canWrite ? [{ action: 'copy', label: t('common.copy'), icon: 'Copy' }] : []),
-                    ...(canDelete && (isAdmin() || template.createdBy === currentUserId) ? [{ action: 'delete', label: t('common.delete'), variant: 'destructive' as const, icon: 'Trash2' }] : []),
+                    ...customQuickActions,
+                    ...templateActions
+                      .filter((a: any) => {
+                        if (a.id === 'edit') return canWrite && (isAdmin() || template.createdBy === currentUserId);
+                        if (a.id === 'copy') return canWrite;
+                        if (a.id === 'delete') return canDelete && (isAdmin() || template.createdBy === currentUserId);
+                        return true;
+                      })
+                      .map((a: any) => ({
+                        label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+                        action: a.id,
+                        icon: a.icon as any,
+                        isQuickAction: a.defaultOrder < 50,
+                        variant: (a.id === 'delete' ? 'destructive' : undefined) as "default" | "destructive" | undefined,
+                      })),
                   ]}
                   onAction={(actionType) => handleRowQuickAction(actionType, template)}
                 />
