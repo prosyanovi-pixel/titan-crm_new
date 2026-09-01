@@ -15,16 +15,15 @@
 - Frontend: `frontend/src/modules/reports/pages/ReportBuilderPage.tsx`, `ReportViewPage.tsx`, `ReportsPage.tsx`, `api/reports.api.ts`
 - Backend: `backend/modules/reports/routes.js`
 
-### API конечные точки
-- `GET/POST /api/reports` — отчёты
-- `GET /api/reports/:id` — просмотр
-- `POST /api/reports/:id/generate`, `/:id/generate-bulk`, `/:id/generate-bulk-async` — генерация
-- `GET /api/reports/:id/pdf`, `/:id/download`, `/:file` — выгрузка файлов
-- `/api/reports/dashboard` — данные для дашборда
+### API конечные точки (префикс `/api/reports`)
+- `GET /api/reports/preview?reportType=...` — предпросмотр отчёта по типу
+- Конфигурации: `GET /api/reports/configs`, `GET /api/reports/configs/:id`, `POST /api/reports/configs`, `PUT /:id`, `DELETE /:id`, `POST /:id/duplicate`
+- Готовые отчёты: `GET /api/reports/finance/pl | dds | receivables | register`, `GET /api/reports/projects/summary | tasks-by-status | budget | stages`, `GET /api/reports/contractors/activity | debts | contracts`, `GET /api/reports/lawyers/performance | workload`, `GET /api/reports/tasks/workload | overdue`
+- Экспорт: `POST /api/reports/export` (CSV/PDF)
 
 ### Схема базы данных
-- `report_configs` — сохранённые конфигурации отчётов
-- `report_status` — статусы генерации
+- `report_configs` — сохранённые конфигурации отчётов (со статусом)
+- `report_status` — справочник статусов отчётов
 
 ## Структура компонентов
 - ReportsPage.tsx (реестр отчётов)

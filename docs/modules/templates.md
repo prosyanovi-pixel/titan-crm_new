@@ -15,12 +15,20 @@
 - Frontend: `frontend/src/modules/templates/pages/TemplateCreatePage.tsx`, `TemplateDetailPage.tsx`, `TemplatesPage.tsx`
 - Backend: `backend/modules/templates/routes.js`
 
-### API конечные точки
-- `GET/POST /api/templates` — шаблоны
-- `GET/PUT/DELETE /api/templates/:id`
-- `POST /api/templates/:id/create-version` — создание версии
-- `POST /api/templates/:id/revert-to-version/:versionId` — откат к версии
-- `GET /api/templates/:id/versions` — список версий
+### API конечные точки (префикс `/api/templates`)
+- `GET /api/templates` — список шаблонов
+- `GET /api/templates/:id` — шаблон
+- `POST /api/templates` — создание (multipart, файл)
+- `PUT /api/templates/:id` — обновление (multipart, файл)
+- `DELETE /api/templates/:id` — удаление
+- `GET /api/templates/:id/download` — скачивание файла шаблона
+- `POST /api/templates/:id/copy` — копирование
+- Генерация документов: `POST /:id/generate`, `POST /:id/generate-action`, `POST /:id/generate-bulk`, `POST /:id/generate-bulk-async`
+- Переменные: `GET/POST /api/templates/variables`, `PUT/DELETE /variables/:id`
+- Нумераторы: `GET/POST /api/templates/numerators`, `PUT/DELETE /numerators/:id`
+- Поля модуля: `GET /api/templates/fields/:moduleId`
+
+Отдельных эндпоинтов версий (`create-version`, `revert-to-version`, `versions`) у шаблонов нет — версии есть у договоров (`/api/contracts/:id/versions`).
 
 ### Схема базы данных
 - Шаблоны договоров: `contract_templates`

@@ -12,17 +12,19 @@
 ## Технические спецификации
 
 ### Ключевые файлы
-- Frontend: `frontend/src/modules/auth/pages/` (Login, ResetPassword), `api/authService.ts`
-- Backend: `backend/modules/auth/routes.js`, монтируется на `/api/auth`
+- Frontend: `frontend/src/modules/auth/pages/` (Login, ResetPassword), `frontend/src/modules/auth/api/authService.ts`
+- Backend: `backend/modules/auth/` (routes.js, controllers.js, services/authService.js), монтируется на `/api/auth`
 
 ### API конечные точки
-- `POST /api/auth/login` — вход, получение токена
-- `POST /api/auth/logout`
-- `POST /api/auth/refresh` — обновление JWT
-- `POST /api/auth/reset-password` (и сопутствующие) — восстановление пароля
+- `GET /api/auth/` — проверка сессии/текущего пользователя
+- `POST /api/auth/login` — вход, получение JWT
+- `POST /api/auth/forgot-password` — запрос восстановления пароля (ссылка через Telegram/e-mail)
+- `POST /api/auth/reset-password` — установка нового пароля по токену
+
+Отдельных эндпоинтов `logout` и `refresh` нет — токен инвалидируется на клиенте.
 
 ### Схема базы данных
-- `users` — учётные записи (email, password_hash, role, status)
+- `users` — учётные записи (email, nickname, password_hash, role, telegram_token, is_blocked, reset_token, reset_token_expires)
 
 ## Структура компонентов
 - Login.tsx

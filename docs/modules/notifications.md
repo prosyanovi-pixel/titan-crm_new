@@ -12,26 +12,25 @@
 
 ## Технические спецификации
 
+### Ключевые файлы
+- Frontend: `frontend/src/hooks/useNotifications.ts`, `frontend/src/components/layout/NotificationDropdown.tsx`
+- Backend: `backend/modules/notifications/routes.js`, prefix `/api/notifications`
+
 ### API конечные точки
-- `POST /api/notifications` - Создание нового уведомления
 - `GET /api/notifications` - Список уведомлений пользователя
-- `GET /api/notifications/:id` - Получение конкретного уведомления
-- `PUT /api/notifications/:id/read` - Пометка уведомления как прочитанного
+- `PATCH /api/notifications/:id/read` - Пометка уведомления как прочитанного
+- `PATCH /api/notifications/read-all` - Пометить все как прочитанные
 - `DELETE /api/notifications/:id` - Удаление уведомления
-- `POST /api/notifications/preferences` - Обновление настроек уведомлений
+
+Отдельных эндпоинтов preferences и шаблонов уведомлений нет.
 
 ### Схема базы данных
-- Таблица уведомлений с содержанием и статусом
-- Таблица настроек уведомлений для пользователей
-- Таблица шаблонов уведомлений
-- Таблица каналов доставки уведомлений
+- `notifications` - уведомления (содержание, статус прочтения)
+- `calendar_event_notifications` - напоминания календаря
 
 ## Структура компонентов
-- NotificationList
-- NotificationSettings
-- RealTimeNotifications
-- NotificationModal
-- PreferenceEditor
+- NotificationDropdown.tsx (выпадающий список уведомлений)
+- useNotifications.ts (хук загрузки и отметок прочтения)
 
 ## Лучшие практики
 - Реализация доставки уведомлений в реальном времени

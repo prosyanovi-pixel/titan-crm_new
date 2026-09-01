@@ -11,13 +11,15 @@
 ## Технические спецификации
 
 ### Ключевые файлы
-- Frontend: `frontend/src/modules/trash/pages/TrashPage.tsx` (при наличии)
-- Backend: `backend/modules/trash/routes.js`
+- Frontend: `frontend/src/modules/trash/pages/TrashPage.tsx`, `hooks/useTrash.ts`, `api/trash.api.ts`
+- Backend: `backend/modules/trash/routes.js`, prefix `/api/trash`
 
 ### API конечные точки
 - `GET /api/trash` — список удалённых записей
-- `POST /api/trash/:id/restore` — восстановление
-- `DELETE /api/trash/:id` — окончательное удаление
+- `POST /api/trash/:module/:id/restore` — восстановление записи модуля
+- `DELETE /api/trash/:module/:id` — окончательное удаление
+- `POST /api/trash/empty` — очистить корзину
+- `POST /api/trash/cleanup` — очистка просроченных записей
 
 ### Схема базы данных
 - Мягкое удаление реализуется флагом `is_deleted`/`deleted_at` в таблицах сущностей либо отдельным журналом корзины

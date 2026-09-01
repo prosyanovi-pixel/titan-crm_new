@@ -15,10 +15,13 @@
 - Frontend: `frontend/src/modules/products/pages/ProductsPage.tsx`
 - Backend: `backend/modules/products/routes.js`
 
-### API конечные точки
-- `GET/POST /api/products` — товары
-- `GET/PUT/DELETE /api/products/:id`
-- Категории/статусы/теги — сопутствующие эндпоинты модуля
+### API конечные точки (префикс `/api/products`)
+- `GET /api/products` — товары
+- `POST /api/products` — создание
+- `PUT/DELETE /api/products/:id` — обновление/удаление
+- `POST /api/products/bulk-delete`, `POST /api/products/bulk-update` — массовые операции
+- `POST /api/products/export`, `POST /api/products/import` — экспорт/импорт
+- Категории: `GET /api/products/categories`, `POST /categories`, `PUT/DELETE /categories/:id`
 
 ### Схема базы данных
 - `products`

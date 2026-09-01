@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BACKUP_ROOT="${BACKUP_ROOT:-$ROOT_DIR/local-backups}"
 TIMESTAMP="$(date +"%Y-%m-%d_%H-%M-%S")"
 TARGET_DIR="$BACKUP_ROOT/system-backup-$TIMESTAMP"

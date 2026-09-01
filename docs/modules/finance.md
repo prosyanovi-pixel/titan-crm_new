@@ -17,12 +17,16 @@
 - Frontend: `frontend/src/modules/finance/pages/FinancePage.tsx`, `api/finance.api.ts`, `api/finance.keys.ts`
 - Backend: `backend/modules/finance/` (routes)
 
-### API конечные точки
-- `/api/invoices` — счета (список, создание, статусы)
-- `/api/payments` — платежи
-- `/api/statements` — банковские выписки
-- `/api/income-categories`, `/api/expense-categories` — категории
-- `/api/finance/...` — вспомогательные (см. `backend/modules/finance/routes*.js`)
+### API конечные точки (все под префиксом `/api/finance`)
+- `/api/finance/invoices` — счета (`GET /`, `GET /:id`, `POST /`, `PUT /:id`, `DELETE /:id`, `POST /:id/send`, `POST /:id/recalculate-status`, `POST /:id/generate-document`, `POST /bulk-update`)
+- `/api/finance/payments` — платежи (`GET/POST /`, `PUT/DELETE /:id`, `POST /:id/unlink-from-invoice`, `POST /bulk-update`, `POST /bulk-delete`)
+- `/api/finance/statements` — банковские выписки (`GET /`, `GET /:id/lines`, `POST /import`, `POST /:id/reconcile`, `PUT /lines/:lineId`, `DELETE /:id`)
+- `/api/finance/categories`, `/api/finance/income-categories` — категории расходов/доходов
+- `/api/finance/projects` — финансы проектов (`GET /`, `GET /:projectId/summary`)
+- `/api/finance/reconciliation-act/:contractorId` — акт сверки
+- `/api/finance/reports` — receivables, pl, dds, register
+- `/api/finance/settings` — налоговые режимы/ставки, методы распределения, накладные статьи, настройки по умолчанию
+- `/api/finance/calendar-payments` — платежи для календаря
 
 ### Схема базы данных
 - `finance_invoices`, `finance_invoice_documents`, `finance_invoice_status`

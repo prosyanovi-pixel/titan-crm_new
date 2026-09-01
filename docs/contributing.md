@@ -5,9 +5,9 @@ This document provides guidelines for contributing to the TITAN CRM project.
 
 ## Development Setup
 1. Clone the repository
-2. Install dependencies with `npm install`
-3. Run tests with `npm test`
-4. Start development server with `npm run dev`
+2. Install dependencies: `npm install` (root), `npm install --prefix frontend`, `npm install --prefix backend`
+3. Run tests with `npm test` (backend integration, Jest), `npm --prefix frontend run test` (Vitest)
+4. Start development server: `npm --prefix backend run dev` (API) and `npm --prefix frontend run dev` (UI)
 
 ## Code Style
 - Follow TypeScript strict mode

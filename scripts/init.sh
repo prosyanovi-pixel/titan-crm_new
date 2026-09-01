@@ -21,9 +21,16 @@ echo ""
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Function to install dependencies
+# Skips the directory if it does not exist (frontend/backend may be on different machines)
 install_deps() {
     local dir=$1
     local name=$2
+    
+    if [ ! -d "$dir" ]; then
+        echo -e "${YELLOW}[$name]${NC} Directory not found: $dir — skipping"
+        echo ""
+        return 0
+    fi
     
     echo -e "${YELLOW}[$name]${NC} Installing dependencies..."
     

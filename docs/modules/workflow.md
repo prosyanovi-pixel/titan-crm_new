@@ -11,19 +11,26 @@
 ## Технические спецификации
 
 ### Ключевые файлы
-- Frontend: `frontend/src/modules/workflow/pages/WorkflowPage.tsx` (при наличии)
-- Backend: `backend/modules/workflow/routes.js`
+- Frontend: `frontend/src/modules/workflow/pages/WorkflowsPage.tsx`
+- Backend: `backend/modules/workflow/workflowRoutes.js`, prefix `/api/workflows`
 
-### API конечные точки
-- `GET/POST /api/workflow/...` — воркфлоу и этапы (см. `backend/modules/workflow/routes.js`)
+### API конечные точки (префикс `/api/workflows`)
+- `GET /api/workflows` — список воркфлоу
+- `GET /api/workflows/:id` — воркфлоу
+- `POST /api/workflows` — создание
+- `PUT/DELETE /api/workflows/:id` — обновление/удаление
+- `POST /api/workflows/:id/run` — запуск
+- `POST /api/workflows/:id/validate` — валидация
+- История исполнений: `GET /:id/history`, `GET /:id/history/:execId`, `POST /:id/history/:execId/retry`, `POST /:id/history/:execId/approve`, `DELETE /:id/history`, `DELETE /:id/history/:execId`
+- Триггеры: `POST /api/workflows/:id/webhook`, `GET /api/workflows/registry/actions`
 
 ### Схема базы данных
 - `workflows` — рабочие потоки
-- `workflow_stages` — этапы воркфлоу
-- Таблицы условий/переходов (см. миграции модуля)
+- `workflow_steps` — шаги воркфлоу (с условиями)
+- `workflow_executions`, `workflow_execution_logs` — исполнения и логи
 
 ## Структура компонентов
-- WorkflowPage.tsx (конструктор воркфлоу)
+- WorkflowsPage.tsx (конструктор воркфлоу)
 
 ## Лучшие практики
 - Движение по воркфлоу логировать в активности сущности

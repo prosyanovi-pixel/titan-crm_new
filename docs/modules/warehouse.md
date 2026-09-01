@@ -17,16 +17,17 @@
 - Frontend: `frontend/src/modules/warehouse/pages/WarehousePage.tsx`
 - Backend: `backend/modules/warehouse/routes.js`
 
-### API конечные точки
-- `GET/POST /api/warehouse/...` — склады и операции (см. `backend/modules/warehouse/routes.js`)
-- `/api/warehouse/.../entries`, `.../exits`, `.../transfers`, `.../inventories` — типовые операции
+### API конечные точки (префикс `/api/warehouse`)
+- Склады: `GET /api/warehouse/warehouses`, `POST /warehouses`, `PUT/DELETE /warehouses/:id`, `POST /warehouses/bulk-delete`, `POST /warehouses/bulk-update`
+- Остатки: `GET /api/warehouse/balances`, `GET /balances/:productId`
+- Операции: `GET/POST /api/warehouse/transactions` (поступления/списания/перемещения — тип операции в транзакции)
+- Заявки на закупку: `GET/POST /api/warehouse/purchase-requests`, `PUT /purchase-requests/:id`
 
 ### Схема базы данных
-- `warehouses` — склады
-- `warehouse_entries` — поступления
-- `warehouse_exits` — списания
-- `warehouse_transfers` — перемещения
-- `warehouse_inventories` — инвентаризации
+- `warehouses`, `warehouse_tags` — склады и теги
+- `inventory_balances` — остатки
+- `inventory_transactions`, `inventory_serials`, `inventory_transaction_serials` — операции и серийный учёт
+- `purchase_requests` — заявки на закупку
 
 ## Структура компонентов
 - WarehousePage.tsx (складской учёт)

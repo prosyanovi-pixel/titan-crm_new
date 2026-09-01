@@ -14,10 +14,13 @@
 - Frontend: `frontend/src/modules/price_lists/pages/PriceListsPage.tsx`
 - Backend: `backend/modules/price_lists/routes.js`, монтируется на `/api/price-lists`
 
-### API конечные точки
-- `GET/POST /api/price-lists` — прайс-листы
-- `GET/PUT/DELETE /api/price-lists/:id` — карточка прайс-листа
-- `/api/price-lists/:id/items` — позиции
+### API конечные точки (префикс `/api/price-lists`)
+- `GET /api/price-lists` — список прайс-листов
+- `GET /api/price-lists/:id` — карточка прайс-листа
+- `POST /api/price-lists`, `PUT /:id`, `DELETE /:id` — CRUD
+- `POST /api/price-lists/bulk-update`, `POST /bulk-delete` — массовые операции
+- Позиции: `GET /:id/items`, `POST /:id/items`, `POST /:id/bulk-items`
+- Экспорт: `GET /api/price-lists/:id/pdf`
 
 ### Схема базы данных
 - `price_lists`

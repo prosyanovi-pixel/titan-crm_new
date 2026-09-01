@@ -10,17 +10,19 @@
 ## Технические спецификации
 
 ### Ключевые файлы
-- Frontend: `frontend/src/modules/registry/` (каталог-заготовка)
-- Backend: `backend/modules/registry/routes.js`
+- Frontend: `frontend/src/modules/registry/` — ActionRegistry (`ActionRegistry.ts`, `registerDefaultActions.ts`, `manifests.tsx`), хуки `useModuleActions`, `useBulkActions`
+- Backend: `backend/modules/registry/index.js` — экспортирует только настройки, API отсутствует (пустой роутер на `/api/registry`)
 
 ### API конечные точки
-- Уточняются по мере реализации модуля (см. `backend/modules/registry/routes.js`)
+- Отсутствуют (backend-часть модуля — только настройки для маркетплейса модулей)
 
 ### Схема базы данных
-- `registry` (при реализации), `modules`, `module_settings`
+- `modules`, `module_settings` — настройки модулей и действий
 
 ## Структура компонентов
-- На этапе разработки
+- ActionRegistry.ts — реестр межмодульных действий
+- registerDefaultActions.ts — дефолтные действия модулей
+- hooks/useModuleActions.ts, hooks/useBulkActions.ts
 
 ## Лучшие практики
 - При развитии модуля следовать паттернам модульных границ и системы прав

@@ -12,26 +12,34 @@
 
 ## Технические спецификации
 
+### Ключевые файлы
+- Frontend: `frontend/src/modules/documents/` — DocumentsPage, `api/documents.api.ts`, `api/documentService.ts`
+- Backend: `backend/modules/documents/` (controllers/documents.js, controllers/documentsAccess.js), prefix `/api/documents`
+
 ### API конечные точки
-- `POST /api/documents` - Загрузка нового документа
-- `GET /api/documents` - Список всех документов
-- `GET /api/documents/:id` - Получение конкретного документа
-- `PUT /api/documents/:id` - Обновление документа
-- `DELETE /api/documents/:id` - Удаление документа
-- `POST /api/documents/search` - Поиск документов
+- `GET /api/documents` - Список документов
+- `GET /api/documents/stats` - Статистика
+- `GET /api/documents/path/:id` - Путь папки
+- `POST /api/documents/upload` - Загрузка файла (multipart/form-data)
+- `POST /api/documents/folder` - Создание папки
+- `PATCH /api/documents/:id/star` - Избранное
+- `PATCH /api/documents/:id/template` - Флаг шаблона
+- `POST /api/documents/check-exists`, `POST /api/documents/compute-hash` - Проверки при загрузке
+- `POST /api/documents/bulk-move`, `POST /api/documents/bulk-rename` - Массовые операции
+- `POST /api/documents/restore`, `POST /api/documents/delete` - Восстановление и удаление (корзина)
+- `POST /api/documents/trash/delete`, `POST /api/documents/trash/clear` - Очистка корзины
+- Доступ: `GET /api/documents/download/:id`, `GET /api/documents/:id/versions`, `GET /api/documents/version/:versionId/download`, `GET /api/documents/share/:id`
 
 ### Схема базы данных
-- Таблица документов с метаданными
-- Таблица версий документов
-- Таблица прав доступа к документам
-- Таблица категорий документов
+- `documents` - документы и метаданные (папки, звёзды, флаг шаблона, мягкое удаление `deleted_at`)
+- `document_versions` - версии документов
+- `share_links` - ссылки общего доступа
 
 ## Структура компонентов
-- DocumentListPage
-- DocumentDetailPage
-- UploadComponent
-- SearchBar
-- VersionManager
+- DocumentsPage.tsx (страница модуля)
+- FileCard.tsx, FilePreview.tsx, DocumentStats.tsx
+- VersionHistoryDialog.tsx, GlobalDropzone.tsx
+- dnd/ (DraggableItem.tsx, DroppableFolder.tsx)
 
 ## Лучшие практики
 - Обеспечение безопасности хранения документов

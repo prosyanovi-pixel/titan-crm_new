@@ -16,7 +16,7 @@
 - Backend: `backend/modules/dashboard/routes.js`
 
 ### API конечные точки
-- `GET /api/dashboard/...` — агрегированные данные для виджетов (состав см. в `backend/modules/dashboard/routes.js`)
+- `GET /api/dashboard/stats` — агрегированные данные для виджетов (см. `backend/modules/dashboard/routes.js`)
 
 ### Схема базы данных
 - Отдельных таблиц не создаёт — агрегирует данные остальных модулей

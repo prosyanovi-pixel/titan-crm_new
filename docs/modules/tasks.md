@@ -17,14 +17,17 @@
 - Frontend: `frontend/src/modules/tasks/pages/TasksPage.tsx`, `api/taskService.ts`, `api/tasks.api.ts`, `api/endpoints.ts`
 - Backend: `backend/modules/tasks/routes.js`
 
-### API конечные точки
-- `GET/POST /api/tasks` — задачи
-- `GET/PUT/DELETE /api/tasks/:id`
-- `POST /api/tasks/:id/complete` — завершение
-- `/api/tasks/:id/activity` — активности задачи
-- `/api/tasks/:id/files` — файлы задачи
-- `/api/tasks/:id/star` — избранное
-- Подзадачи и статусы — в сопутствующих эндпоинтах модуля
+### API конечные точки (префикс `/api/tasks`)
+- `GET /api/tasks` — задачи
+- `GET /api/tasks/stats` — агрегаты
+- `GET /api/tasks/:id` — карточка задачи
+- `GET /api/tasks/:id/activity` — активности задачи
+- `POST /api/tasks` — создание
+- `PUT /api/tasks/:id` — обновление
+- `DELETE /api/tasks/:id` — удаление
+- `POST /api/tasks/bulk-delete`, `POST /api/tasks/bulk-update` — массовые операции
+
+Отдельных эндпоинтов файлов и star у задач нет.
 
 ### Схема базы данных
 - `tasks`, `subtasks`

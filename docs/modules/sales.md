@@ -14,9 +14,9 @@
 - Frontend: `frontend/src/modules/sales/pages/SalesPipelinePage.tsx`
 - Backend: `backend/modules/sales/routes.js`
 
-### API конечные точки
-- `GET/POST /api/sales/...` — воронка и сделки (см. `backend/modules/sales/routes.js`)
-- `/api/sales/:id/stages`, `/:id/stages/summary` — этапы сделки и сводка
+### API конечные точки (префикс `/api/sales`)
+- `POST /api/sales/deals/wizard` — создание сделки из мастера (wizard)
+- Данные воронки — `GET /api/projects/sales-pipeline` (модуль projects)
 
 ### Схема базы данных
 - `sales_stages` — этапы воронки продаж

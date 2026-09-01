@@ -15,12 +15,16 @@
 - Frontend: `frontend/src/modules/quotes/pages/QuoteFormPage.tsx`, `QuotesPage.tsx`
 - Backend: `backend/modules/quotes/routes.js`, монтируется на `/api/quotes`
 
-### API конечные точки
-- `GET/POST /api/quotes` — КП
-- `GET/PUT/DELETE /api/quotes/:id`
-- `/api/quotes/:id/items` — позиции
-- `POST /api/quotes/:id/convert` — конвертация в договор
-- `GET /api/quotes/:id/pdf` — печатная форма
+### API конечные точки (префикс `/api/quotes`)
+- `GET /api/quotes` — список КП
+- `GET /api/quotes/:id` — карточка КП
+- `POST /api/quotes` — создание
+- `PUT /api/quotes/:id` — обновление
+- `DELETE /api/quotes/:id` — удаление
+- `GET /api/quotes/:id/pdf` — печатная форма (PDF)
+- `POST /api/quotes/bulk-update`, `POST /api/quotes/bulk-delete` — массовые операции
+
+Отдельных эндпоинтов позиций (`/:id/items`) и конвертации в договор нет — позиции хранятся в `quote_items`, управляются вместе с КП.
 
 ### Схема базы данных
 - `quotes`

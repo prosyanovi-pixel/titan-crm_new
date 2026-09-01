@@ -14,10 +14,14 @@
 - Frontend: `frontend/src/modules/profile/pages/Profile.tsx`, `api/profileService.ts`
 - Backend: `backend/modules/profile/routes.js`
 
-### API конечные точки
-- `GET/PUT /api/profile` — данные текущего пользователя
+### API конечные точки (префикс `/api/profile`)
+- `GET /api/profile` — данные текущего пользователя
+- `PATCH /api/profile` — обновление своих данных
+- `POST /api/profile/avatar` — загрузка аватара
 - `POST /api/profile/change-password` — смена пароля
-- `GET/PUT /api/profile/settings` — персональные настройки
+- `POST /api/profile/share-links`, `DELETE /api/profile/share-links/:linkId` — ссылки общего доступа
+- `GET /api/profile/:userId/documents` — документы пользователя
+- `GET /api/profile/:id`, `PUT /api/profile/:id`, `POST /:id/avatar` — управление другими профилями (по правам)
 
 ### Схема базы данных
 - `users` (личные данные)

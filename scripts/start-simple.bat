@@ -37,8 +37,8 @@ if %ERRORLEVEL% NEQ 0 (
 echo [OK] npm found
 echo.
 
-REM Set paths
-set "ROOT_DIR=%~dp0"
+REM Set paths (script is in scripts/, project root is one level up)
+set "ROOT_DIR=%~dp0..\"
 set "BACKEND_DIR=%ROOT_DIR%backend"
 set "FRONTEND_DIR=%ROOT_DIR%frontend"
 

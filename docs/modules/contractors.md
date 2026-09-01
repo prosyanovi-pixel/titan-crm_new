@@ -22,15 +22,17 @@
 ### API конечные точки
 - `GET/POST /api/contractors` — список/создание контрагентов
 - `GET/PUT/DELETE /api/contractors/:id` — карточка контрагента
-- `/api/contractors/:id/contacts`, `/api/contractors/:id/bank-accounts` — контакты и счета
-- `/api/contractors/:id/tax-history` — налоговая история
-- `/api/contractors/:id/documents` — документы контрагента
-- Enrichment-эндпоинты (обогащение данных) — в `backend/modules/enrichment/`
+- `POST /api/contractors/bulk-update`, `POST /api/contractors/bulk-delete` — массовые операции
+- `GET /api/contractors/:id/activity` (+ `/chart`) — активность контрагента
+- `POST /api/contractors/:id/convert` — конвертация (лид ↔ контрагент)
+- Налоги: `GET /api/contractors/:id/taxes`, `PATCH /:id/tax-system`, `GET /:id/taxes/history`, `GET /:id/taxes/calculate`, `GET /:id/taxes/limits-check`, `GET /:id/taxes/optimization-suggestions`
+- ОПФ: `GET /api/contractors/legal-forms`, `GET /api/contractors/legal-forms/:code/tax-regimes`
+- Enrichment-эндпоинты (обогащение данных) — в `backend/modules/enrichment/` (`/api/enrichment`)
 
 ### Схема базы данных
 - `contractors`, `contractor_contacts`, `contractor_bank_accounts`
 - `contractor_status`, `contractor_type`, `contractor_tags`, `contractor_tax_history`
-- `contractor_documents`, `defined_tags`
+- `defined_tags`
 - `legal_form`, `legal_form_groups` — классификация ОПФ
 - `enrichment_jobs`, `enrichment_stats`, `ai_insights` — обогащение
 

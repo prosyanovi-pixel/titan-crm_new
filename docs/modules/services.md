@@ -14,10 +14,13 @@
 - Frontend: `frontend/src/modules/services/pages/ServicesPage.tsx`
 - Backend: `backend/modules/services/routes.js`
 
-### API конечные точки
-- `GET/POST /api/services` — услуги
-- `GET/PUT/DELETE /api/services/:id`
-- Категории/статусы/теги — сопутствующие эндпоинты модуля
+### API конечные точки (префикс `/api/services`)
+- `GET /api/services` — услуги
+- `GET /api/services/:id` — карточка услуги
+- `POST /api/services` — создание
+- `PUT/DELETE /api/services/:id` — обновление/удаление
+- `POST /api/services/bulk-delete`, `POST /api/services/bulk-update` — массовые операции
+- Категории: `GET /api/services/categories/tree`, `POST /categories`, `PUT/DELETE /categories/:id`
 
 ### Схема базы данных
 - `services`

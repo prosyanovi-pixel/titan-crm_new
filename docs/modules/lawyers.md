@@ -18,7 +18,7 @@
 ### API конечные точки
 - `GET/POST /api/lawyers` — список/создание юристов
 - `GET/PUT/DELETE /api/lawyers/:id` — карточка юриста
-- Справочники судов/судей — `backend/modules/lawyers/routes.js` (см. также `references`)
+- Справочники судов — отдельный эндпоинт `/api/courts` (реализация в `backend/modules/legal_cases/controllers/courts`), исходы дел — `/api/case-outcomes`
 
 ### Схема базы данных
 - `lawyer_status` — статусы юристов (справочник)

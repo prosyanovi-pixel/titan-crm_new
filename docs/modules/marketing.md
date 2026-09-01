@@ -14,9 +14,13 @@
 - Frontend: `frontend/src/modules/marketing/pages/MarketingPage.tsx`
 - Backend: `backend/modules/marketing/routes.js`
 
-### API конечные точки
-- `GET/POST /api/marketing/campaigns` — кампании
-- `GET/PUT/DELETE /api/marketing/campaigns/:id`
+### API конечные точки (префикс `/api/marketing`)
+- `GET /api/marketing` — список кампаний
+- `GET /api/marketing/:id` — кампания
+- `POST /api/marketing` — создание
+- `PUT /api/marketing/:id` — обновление
+- `DELETE /api/marketing/:id` — удаление
+- `POST /api/marketing/bulk-delete`, `POST /api/marketing/bulk-update` — массовые операции
 
 ### Схема базы данных
 - `marketing_campaigns`
