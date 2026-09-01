@@ -9,17 +9,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CheckSquare2, ChevronDown } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
+import { useSettings } from "@/hooks/use-settings";
 import { Quote } from "../types";
 
-const STATUSES: Quote['status'][] = ['draft', 'sent', 'accepted', 'rejected'];
-
 interface QuoteBulkStatusMenuProps {
-  onSelectStatus: (status: Quote['status']) => void;
+  onSelectStatus: (statusId: string) => void;
 }
 
 /** Меню массовой смены статуса выбранных КП. */
 export function QuoteBulkStatusMenu({ onSelectStatus }: QuoteBulkStatusMenuProps) {
   const { t } = useTranslation();
+  const { getStatusesByModule } = useSettings();
+  const statuses = getStatusesByModule('quotes') || [];
 
   return (
     <DropdownMenu>
@@ -33,9 +34,9 @@ export function QuoteBulkStatusMenu({ onSelectStatus }: QuoteBulkStatusMenuProps
       <DropdownMenuContent align="end" className="w-48">
         <DropdownMenuLabel>{t('quotes.bulk.status_title')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {STATUSES.map(status => (
-          <DropdownMenuItem key={status} onClick={() => onSelectStatus(status)}>
-            {t(`quotes.statuses.${status}`)}
+        {statuses.map(status => (
+          <DropdownMenuItem key={status.id} onClick={() => onSelectStatus(status.id)}>
+            {status.name?.includes('.') ? t(status.name) : status.name}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

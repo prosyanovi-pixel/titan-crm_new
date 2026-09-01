@@ -41,7 +41,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     const root = document.documentElement;
     let isDark = newTheme === 'dark';
     if (newTheme === 'system') {
-      isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      isDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ?? false;
     }
     root.classList.toggle('dark', isDark);
   }, []);
@@ -134,7 +134,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const contractorTypes = settingsData?.referenceData?.contractorTypes || settingsData?.refs?.contractorTypes || [];
   const taxRegimes = (settingsData?.referenceData as Record<string, unknown>)?.taxRegimes as Array<{ id: number; name: string; code: string }> || (settingsData?.refs as Record<string, unknown>)?.taxRegimes as Array<{ id: number; name: string; code: string }> || [];
   
-  const allQuickActions = settingsData?.apiQuickActions || [];
+  const allQuickActions = Array.isArray(settingsData?.apiQuickActions) ? settingsData.apiQuickActions : [];
   const quickActions = allQuickActions.filter((qa: QuickAction) => qa.isActive !== false);
   const legalForms = Array.isArray(settingsData?.legalFormsRes) ? settingsData?.legalFormsRes : ((settingsData?.legalFormsRes as { data?: LegalFormItem[] })?.data || []);
   const legalFormGroups = Array.isArray(settingsData?.legalFormGroupsRes) ? settingsData?.legalFormGroupsRes : (settingsData?.legalFormGroupsRes?.rows || []);

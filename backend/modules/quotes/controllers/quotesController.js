@@ -4,10 +4,13 @@ const { generatePdfBuffer } = require('../../../utils/pdfGenerator');
 exports.getQuotes = async (req, res, next) => {
   try {
     const { rows } = await db.query(
-      `SELECT q.*, c.name as contractor_name, p.name as project_name 
+      `SELECT q.*, c.name as contractor_name, p.name as project_name,
+              array_remove(array_agg(t.tag), NULL) as tags
        FROM quotes q 
        LEFT JOIN contractors c ON q.contractor_id = c.id
        LEFT JOIN projects p ON q.project_id = p.id
+       LEFT JOIN quote_tags t ON q.id = t.quote_id
+       GROUP BY q.id, c.name, p.name
        ORDER BY q.created_at DESC`
     );
     res.json(rows);
@@ -20,11 +23,14 @@ exports.getQuoteById = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { rows } = await db.query(
-      `SELECT q.*, c.name as contractor_name, p.name as project_name 
+      `SELECT q.*, c.name as contractor_name, p.name as project_name,
+              array_remove(array_agg(t.tag), NULL) as tags
        FROM quotes q 
        LEFT JOIN contractors c ON q.contractor_id = c.id
        LEFT JOIN projects p ON q.project_id = p.id
-       WHERE q.id = $1`, [id]
+       LEFT JOIN quote_tags t ON q.id = t.quote_id
+       WHERE q.id = $1
+       GROUP BY q.id, c.name, p.name`, [id]
     );
 
     if (rows.length === 0) {
@@ -47,7 +53,7 @@ exports.getQuoteById = async (req, res, next) => {
 
 exports.createQuote = async (req, res, next) => {
   try {
-    const { number, date, validUntil, status, contractorId, projectId, addressedTo, totalAmount, taxAmount, discountAmount, notes, items, executorType, executorId, totalCost, totalMargin } = req.body;
+    const { number, date, validUntil, statusId, contractorId, projectId, addressedTo, totalAmount, taxAmount, discountAmount, notes, items, executorType, executorId, totalCost, totalMargin, tags } = req.body;
 
     if (!number) {
       return res.status(400).json({ message: 'Quote number is required' });
@@ -57,9 +63,9 @@ exports.createQuote = async (req, res, next) => {
 
     const result = await db.query(
       `INSERT INTO quotes 
-      (number, date, valid_until, status, contractor_id, project_id, addressed_to, total_amount, tax_amount, discount_amount, notes, executor_type, executor_id, total_cost, total_margin) 
+      (number, date, valid_until, status_id, contractor_id, project_id, addressed_to, total_amount, tax_amount, discount_amount, notes, executor_type, executor_id, total_cost, total_margin) 
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *`,
-      [number, date || new Date(), validUntil || null, status || 'draft', contractorId || null, projectId || null, addressedTo || null, totalAmount || 0, taxAmount || 0, discountAmount || 0, notes || null, executorType || null, executorId || null, totalCost || 0, totalMargin || 0]
+      [number, date || new Date(), validUntil || null, statusId || 'draft', contractorId || null, projectId || null, addressedTo || null, totalAmount || 0, taxAmount || 0, discountAmount || 0, notes || null, executorType || null, executorId || null, totalCost || 0, totalMargin || 0]
     );
 
     const quoteId = result.rows[0].id;
@@ -75,8 +81,17 @@ exports.createQuote = async (req, res, next) => {
       }
     }
 
+    if (Array.isArray(tags) && tags.length > 0) {
+      for (const tag of tags) {
+        await db.query(
+          `INSERT INTO quote_tags (quote_id, tag) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+          [quoteId, tag]
+        );
+      }
+    }
+
     // Если КП сразу со статусом accepted и привязано к проекту, обновляем бюджет проекта
-    if (status === 'accepted' && projectId) {
+    if (statusId === 'accepted' && projectId) {
        await db.query(
          `UPDATE projects SET budget = $1, profit_plan = $2 WHERE id = $3`,
          [totalAmount || 0, totalMargin || 0, projectId]
@@ -94,7 +109,7 @@ exports.createQuote = async (req, res, next) => {
 exports.updateQuote = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { number, date, validUntil, status, contractorId, projectId, addressedTo, totalAmount, taxAmount, discountAmount, notes, items, executorType, executorId, totalCost, totalMargin } = req.body;
+    const { number, date, validUntil, statusId, contractorId, projectId, addressedTo, totalAmount, taxAmount, discountAmount, notes, items, executorType, executorId, totalCost, totalMargin, tags } = req.body;
 
     if (!number) {
       return res.status(400).json({ message: 'Quote number is required' });
@@ -103,16 +118,16 @@ exports.updateQuote = async (req, res, next) => {
     await db.query('BEGIN');
 
     // Получаем текущий статус КП
-    const { rows: currentQuotes } = await db.query(`SELECT status FROM quotes WHERE id = $1`, [id]);
+    const { rows: currentQuotes } = await db.query(`SELECT status_id as status FROM quotes WHERE id = $1`, [id]);
     const oldStatus = currentQuotes.length > 0 ? currentQuotes[0].status : null;
 
     const result = await db.query(
       `UPDATE quotes SET 
-        number = $1, date = $2, valid_until = $3, status = $4, contractor_id = $5, project_id = $6, addressed_to = $7, 
+        number = $1, date = $2, valid_until = $3, status_id = $4, contractor_id = $5, project_id = $6, addressed_to = $7, 
         total_amount = $8, tax_amount = $9, discount_amount = $10, notes = $11, executor_type = $12, executor_id = $13, 
         total_cost = $14, total_margin = $15, updated_at = CURRENT_TIMESTAMP
        WHERE id = $16 RETURNING *`,
-      [number, date, validUntil || null, status || 'draft', contractorId || null, projectId || null, addressedTo || null, totalAmount || 0, taxAmount || 0, discountAmount || 0, notes || null, executorType || null, executorId || null, totalCost || 0, totalMargin || 0, id]
+      [number, date, validUntil || null, statusId || 'draft', contractorId || null, projectId || null, addressedTo || null, totalAmount || 0, taxAmount || 0, discountAmount || 0, notes || null, executorType || null, executorId || null, totalCost || 0, totalMargin || 0, id]
     );
 
     if (result.rows.length === 0) {
@@ -134,8 +149,20 @@ exports.updateQuote = async (req, res, next) => {
       }
     }
 
+    if (tags) {
+      await db.query(`DELETE FROM quote_tags WHERE quote_id = $1`, [id]);
+      if (Array.isArray(tags) && tags.length > 0) {
+        for (const tag of tags) {
+          await db.query(
+            `INSERT INTO quote_tags (quote_id, tag) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+            [id, tag]
+          );
+        }
+      }
+    }
+
     // Если статус изменился на accepted, обновляем бюджет проекта
-    if (status === 'accepted' && oldStatus !== 'accepted' && projectId) {
+    if (statusId === 'accepted' && oldStatus !== 'accepted' && projectId) {
        await db.query(
          `UPDATE projects SET budget = $1, profit_plan = $2 WHERE id = $3`,
          [totalAmount || 0, totalMargin || 0, projectId]
@@ -268,15 +295,15 @@ exports.bulkUpdateQuotes = async (req, res, next) => {
     if (!Array.isArray(ids) || ids.length === 0) {
       return res.status(400).json({ error: 'ids are required' });
     }
-    const status = patch?.status;
-    if (!status) {
-      return res.status(400).json({ error: 'status is required' });
+    const statusId = patch?.statusId || patch?.status;
+    if (!statusId) {
+      return res.status(400).json({ error: 'statusId is required' });
     }
 
     const { rows } = await db.query(
-      `UPDATE quotes SET status = $1, updated_at = CURRENT_TIMESTAMP
+      `UPDATE quotes SET status_id = $1, updated_at = CURRENT_TIMESTAMP
        WHERE id = ANY($2) RETURNING id`,
-      [status, ids]
+      [statusId, ids]
     );
     res.json({ updated: rows.length });
   } catch (error) {
@@ -294,6 +321,7 @@ exports.bulkDeleteQuotes = async (req, res, next) => {
       return res.status(400).json({ error: 'ids are required' });
     }
 
+    await db.query(`DELETE FROM quote_tags WHERE quote_id = ANY($1)`, [ids]);
     await db.query(`DELETE FROM quote_items WHERE quote_id = ANY($1)`, [ids]);
     const { rows } = await db.query(
       `DELETE FROM quotes WHERE id = ANY($1) RETURNING id`,

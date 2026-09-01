@@ -5,9 +5,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { settingsApi } from "../api";
 
+const DEFAULT_SETTINGS = {};
+
 export function useModuleSettings(moduleId: string | undefined) {
   const {
-    data: settings = {},
+    data: settings = DEFAULT_SETTINGS as Record<string, unknown>,
     isLoading,
     error,
   } = useQuery({

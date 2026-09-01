@@ -2,6 +2,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { QuickActionsMenu, QuickActionMenuOption } from "@/components/ui/QuickActionsMenu";
+import { StatusBadge, TagList } from "@/components/ui/status-system";
 import { useTranslation } from "@/lib/i18n";
 import { Quote } from "../types";
 import { useSettings } from "@/hooks/use-settings";
@@ -17,15 +18,7 @@ interface QuoteTableRowProps {
   onQuickAction: (action: string, id: number | string) => Promise<void>;
 }
 
-/** Возвращает бейдж статуса КП по его коду. */
-const getStatusBadge = (status: string, t: (key: string) => string) => {
-  switch (status) {
-    case 'accepted': return <Badge className="bg-green-500">{t('quotes.statuses.accepted')}</Badge>;
-    case 'rejected': return <Badge variant="destructive">{t('quotes.statuses.rejected')}</Badge>;
-    case 'sent': return <Badge variant="secondary" className="bg-blue-100 text-blue-800">{t('quotes.statuses.sent')}</Badge>;
-    default: return <Badge variant="outline">{t('quotes.statuses.draft')}</Badge>;
-  }
-};
+
 
 /** Строка таблицы КП: чекбокс выбора + ячейки в соответствии с настройкой колонок. */
 export function QuoteTableRow({
@@ -39,26 +32,25 @@ export function QuoteTableRow({
 }: QuoteTableRowProps) {
   const { t } = useTranslation();
   const { getQuickActionsByModule } = useSettings();
-  const quoteActions = useModuleActions("quotes");
+  
+  const rawActions: QuickActionMenuOption[] = [
+    ...getQuickActionsByModule('quotes').map((a) => ({
+      label: a.name,
+      action: a.action,
+      icon: a.icon,
+      isQuickAction: true,
+    })),
+    ...useModuleActions("quotes").map((a) => ({
+      label: (a.labelKey as string).includes('.') ? t(a.labelKey as string) : a.labelKey as string,
+      action: a.id,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      icon: a.icon as any,
+      isQuickAction: (a.defaultOrder as number) < 50,
+      variant: (a.id === 'delete' ? 'destructive' : undefined) as 'destructive' | 'default' | undefined,
+    }))
+  ];
 
-  // Системные действия через ActionRegistry
-  const systemActions: QuickActionMenuOption[] = quoteActions.map((a: any) => ({
-    label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
-    action: a.id,
-    icon: a.icon as any,
-    isQuickAction: a.defaultOrder < 50,
-    variant: a.id === 'delete' ? 'destructive' : undefined,
-  }));
-
-  // Кастомные быстрые действия
-  const customQuickActions: QuickActionMenuOption[] = getQuickActionsByModule('quotes').map((a: any) => ({
-    label: a.name,
-    action: a.action,
-    icon: a.icon,
-    isQuickAction: true,
-  }));
-
-  const allActions = [...customQuickActions, ...systemActions];
+  const allActions = Array.from(new Map(rawActions.map(a => [a.action, a])).values());
 
   const isSelected = selectedIds.has(quote.id);
 
@@ -95,12 +87,17 @@ export function QuoteTableRow({
                 {quote.projectName && (
                   <span className="text-[10px] text-muted-foreground truncate">{quote.projectName}</span>
                 )}
+                {quote.tags && quote.tags.length > 0 && (
+                  <div className="mt-1">
+                    <TagList tags={quote.tags.map(tag => typeof tag === 'string' ? { id: tag, name: tag } : tag)} module="quotes" maxVisible={3} />
+                  </div>
+                )}
               </div>
             </TableCell>
           );
           case 'status': return (
             <TableCell key="status">
-              {getStatusBadge(quote.status, t)}
+              <StatusBadge module="quotes" statusId={quote.statusId} />
             </TableCell>
           );
           case 'total': return (

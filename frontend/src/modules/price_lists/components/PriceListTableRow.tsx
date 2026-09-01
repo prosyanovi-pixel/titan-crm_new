@@ -2,6 +2,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { QuickActionsMenu, QuickActionMenuOption } from "@/components/ui/QuickActionsMenu";
+import { StatusBadge, TagList } from "@/components/ui/status-system";
 import { useTranslation } from "@/lib/i18n";
 import { useSettings } from "@/hooks/use-settings";
 import { useModuleActions } from "@/modules/registry/hooks/useModuleActions";
@@ -31,25 +32,26 @@ export function PriceListTableRow({
   const { getQuickActionsByModule } = useSettings();
   const isSelected = selectedIds.has(priceList.id);
   const rawActions: QuickActionMenuOption[] = [
-    ...getQuickActionsByModule('price_lists').map((a: any) => ({
+    ...getQuickActionsByModule('price_lists').map((a) => ({
       label: a.name,
       action: a.action,
       icon: a.icon,
       isQuickAction: true,
     })),
     ...useModuleActions("price_lists")
-      .filter((a: any) => {
+      .filter((a) => {
         if (a.id === 'activate' && priceList.isActive) return false;
         if (a.id === 'deactivate' && !priceList.isActive) return false;
         if (a.id === 'make_default' && priceList.isDefault) return false;
         return true;
       })
-      .map((a: any) => ({
-        label: a.labelKey.includes('.') ? t(a.labelKey) : a.labelKey,
+      .map((a) => ({
+        label: (a.labelKey as string).includes('.') ? t(a.labelKey as string) : a.labelKey as string,
         action: a.id,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         icon: a.icon as any,
-        isQuickAction: a.defaultOrder < 50,
-        variant: a.id === 'delete' ? 'destructive' : undefined,
+        isQuickAction: (a.defaultOrder as number) < 50,
+        variant: (a.id === 'delete' ? 'destructive' : undefined) as 'destructive' | 'default' | undefined,
       }))
   ];
 
@@ -72,7 +74,14 @@ export function PriceListTableRow({
         switch (key) {
           case 'name': return (
             <TableCell key="name">
-              <span className="font-semibold text-foreground truncate">{priceList.name}</span>
+              <div className="flex flex-col min-w-0">
+                <span className="font-semibold text-foreground truncate">{priceList.name}</span>
+                {priceList.tags && priceList.tags.length > 0 && (
+                  <div className="mt-1">
+                    <TagList tags={priceList.tags.map(tag => typeof tag === 'string' ? { id: tag, name: tag } : tag)} module="price_lists" maxVisible={3} />
+                  </div>
+                )}
+              </div>
             </TableCell>
           );
           case 'currency': return (
@@ -84,9 +93,13 @@ export function PriceListTableRow({
           );
           case 'isActive': return (
             <TableCell key="isActive">
-              <Badge variant={priceList.isActive ? 'default' : 'secondary'}>
-                {priceList.isActive ? t('common.active') : t('common.inactive')}
-              </Badge>
+              {priceList.statusId ? (
+                <StatusBadge module="price_lists" statusId={priceList.statusId} />
+              ) : (
+                <Badge variant={priceList.isActive ? 'default' : 'secondary'}>
+                  {priceList.isActive ? t('common.active') : t('common.inactive')}
+                </Badge>
+              )}
             </TableCell>
           );
           case 'isDefault': return (

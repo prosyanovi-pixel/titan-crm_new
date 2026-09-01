@@ -41,9 +41,9 @@ export function ProjectRevenuesSheet({
   setFormData,
   handleSave,
   vatRateOptions,
-  stages,
-  contractors,
-  categories,
+  stages = [],
+  contractors = [],
+  categories = [],
 }: ProjectRevenuesSheetProps) {
   const { t } = useTranslation();
   const { data: currencies = [] } = useCurrencies();

@@ -10,8 +10,10 @@ import { useQuotes } from './index';
 import { Quote } from '../types';
 import { LayoutList, FileText, Send, CheckCircle, XCircle } from 'lucide-react';
 
+import { useSettings } from '@/hooks/use-settings';
+
 /** Вкладки страницы КП (статусы живой ленты). */
-const QUOTE_TABS = [
+const DEFAULT_QUOTE_TABS = [
   { id: 'all', label: 'quotes.tabs.all', icon: LayoutList, visible: true },
   { id: 'draft', label: 'quotes.tabs.draft', icon: FileText, visible: true },
   { id: 'sent', label: 'quotes.tabs.sent', icon: Send, visible: true },
@@ -41,12 +43,27 @@ export function useQuotesPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { getStatusesByModule } = useSettings();
   const { data: quotes = [], isLoading } = useQuotes();
+  
+  const quoteStatuses = getStatusesByModule('quotes');
+  const dynamicTabs = useMemo(() => {
+    if (!quoteStatuses || quoteStatuses.length === 0) return DEFAULT_QUOTE_TABS;
+    return [
+      { id: 'all', label: 'quotes.tabs.all', icon: LayoutList, visible: true },
+      ...quoteStatuses.map((s) => ({
+        id: s.id,
+        label: s.name?.includes('.') ? t(s.name) : s.name,
+        icon: FileText,
+        visible: true,
+      }))
+    ];
+  }, [quoteStatuses, t]);
 
   const table = useDataTable<Quote>({
     initialData: [],
     initialColumns: QUOTE_COLUMNS,
-    initialTabs: QUOTE_TABS,
+    initialTabs: dynamicTabs,
     storageKey: 'quotes',
     defaultRowsPerPage: '25',
   });
@@ -70,7 +87,7 @@ export function useQuotesPage() {
 
   const sortedQuotes = useMemo(() => {
     const items = quotes
-      .filter((quote) => activeTab === 'all' || quote.status === activeTab)
+      .filter((quote) => activeTab === 'all' || quote.statusId === activeTab || quote.status === activeTab)
       .filter(searchable);
     if (!sortKey || !table.sortConfig) return items;
 
@@ -81,7 +98,7 @@ export function useQuotesPage() {
         case 'number': return (a.number.localeCompare(b.number)) * dir;
         case 'date': return (new Date(a.date).getTime() - new Date(b.date).getTime()) * dir;
         case 'contractor': return ((a.contractorName || '').localeCompare(b.contractorName || '')) * dir;
-        case 'status': return (a.status.localeCompare(b.status)) * dir;
+        case 'status': return ((a.statusId || a.status || '').localeCompare(b.statusId || b.status || '')) * dir;
         case 'total': return (a.totalAmount - b.totalAmount) * dir;
         default: return byId(a, b);
       }
@@ -99,11 +116,12 @@ export function useQuotesPage() {
   // ── Счётчики по вкладкам ───────────────────────────────────────────────
   const tabCounts = useMemo(() => {
     const counts: Record<string, number> = { all: quotes.length };
-    (['draft', 'sent', 'accepted', 'rejected'] as Quote['status'][]).forEach(s => {
-      counts[s] = quotes.filter(q => q.status === s).length;
+    const allTabIds = dynamicTabs.filter(t => t.id !== 'all').map(t => t.id);
+    allTabIds.forEach(s => {
+      counts[s] = quotes.filter(q => q.statusId === s || q.status === s).length;
     });
     return counts;
-  }, [quotes]);
+  }, [quotes, dynamicTabs]);
 
   // ── При открытии страницы сбрасываем выбор ────────────────────────────
   const clearSelection = () => table.clearSelection();
@@ -123,11 +141,11 @@ export function useQuotesPage() {
   };
 
   /** Массовая смена статуса выбранных КП. */
-  const handleBulkStatus = async (status: Quote['status']) => {
+  const handleBulkStatus = async (statusId: string) => {
     try {
       await api.post('/quotes/bulk-update', {
         ids: [...selectedIds],
-        patch: { status },
+        patch: { statusId },
       });
       queryClient.invalidateQueries({ queryKey: ['quotes'] });
       toast.success(t('common.saved_successfully'));

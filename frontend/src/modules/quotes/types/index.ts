@@ -15,7 +15,9 @@ export interface Quote {
   number: string;
   date: string;
   validUntil?: string | null;
-  status: 'draft' | 'sent' | 'accepted' | 'rejected';
+  statusId: string;
+  status?: string; // Legacy string fallback just in case
+  tags?: string[];
   contractorId?: number | null;
   contractorName?: string;
   projectId?: number | null;

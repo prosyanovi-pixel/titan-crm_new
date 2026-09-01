@@ -3,6 +3,8 @@ export interface PriceList {
   name: string;
   currency: string;
   isActive: boolean;
+  statusId?: string;
+  tags?: string[];
   isDefault: boolean;
   validFrom: string | null;
   validTo: string | null;

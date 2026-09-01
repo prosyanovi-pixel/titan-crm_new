@@ -19,7 +19,7 @@ vi.mock('@/lib/api', () => ({
 }));
 
 vi.mock('@/lib/i18n', async (importOriginal) => {
-  const actual = await importOriginal<any>();
+  const actual = await importOriginal<Record<string, unknown>>();
   return {
     ...actual,
     useTranslation: vi.fn(() => ({
@@ -29,11 +29,11 @@ vi.mock('@/lib/i18n', async (importOriginal) => {
 });
 
 // Mock ResizeObserver
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-}));
+global.ResizeObserver = class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
 
 describe('ProjectStagesTab', () => {
   const mockStages = [
@@ -51,13 +51,20 @@ describe('ProjectStagesTab', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useProjectStages as any).mockReturnValue({
-      stages: mockStages,
-      summary: {},
+    vi.mocked(useProjectStages).mockReturnValue({
+      stages: mockStages as any,
+      summary: {
+        totalStages: 1,
+        completedStages: 0,
+        pendingStages: 1,
+        avgProgress: 0,
+        totalTasks: 0,
+        completedTasks: 0,
+      },
       isLoading: false,
       loadStages: vi.fn(),
       loadSummary: vi.fn(),
-    });
+    } as any);
   });
 
   it('should pass projectName to new tasks', async () => {
@@ -66,8 +73,8 @@ describe('ProjectStagesTab', () => {
     // Expand stage
     fireEvent.click(screen.getByText('Stage 1'));
 
-    // Click add task
-    const addTaskButton = screen.getByText('projects.stages.tasks.add_first');
+    // Click add task (second element is the inline creator button, first is just empty state text)
+    const addTaskButton = screen.getAllByText('projects.stages.tasks.add_first')[1];
     fireEvent.click(addTaskButton);
 
     // Fill task title

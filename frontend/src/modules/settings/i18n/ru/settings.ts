@@ -1297,6 +1297,7 @@ export const settings = {
     "products": "Товары",
     "services": "Услуги",
     "price_lists": "Прайс-листы",
+    "quotes": "Коммерческие предложения",
     "warehouse": "Склад",
     "templates": "Шаблоны документов",
     "backups": "Резервные копии",

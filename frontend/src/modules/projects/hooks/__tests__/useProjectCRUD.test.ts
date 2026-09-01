@@ -10,6 +10,7 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { I18nProvider } from '@/lib/i18n';
 import { SettingsProvider } from '@/context/SettingsContext';
+import { projectsApi } from '../../api/projects.api';
 
 // Mock API
 vi.mock('@/lib/api', () => ({
@@ -18,6 +19,16 @@ vi.mock('@/lib/api', () => ({
     post: vi.fn(() => Promise.resolve({})),
     put: vi.fn(() => Promise.resolve({})),
     delete: vi.fn(() => Promise.resolve({})),
+  },
+}));
+
+vi.mock('../../api/projects.api', () => ({
+  projectsApi: {
+    create: vi.fn((data) => Promise.resolve({ id: 2, ...data })),
+    update: vi.fn((id, data) => Promise.resolve({ id, ...data })),
+    delete: vi.fn(() => Promise.resolve({})),
+    bulkDelete: vi.fn(() => Promise.resolve({ deleted: 2 })),
+    bulkUpdate: vi.fn(() => Promise.resolve({ updated: 1 })),
   },
 }));
 
@@ -130,19 +141,13 @@ describe('useProjectCRUD', () => {
       client: 'New Client',
     } as Project;
 
-    const { api } = await import('@/lib/api');
-    vi.mocked(api.post).mockResolvedValueOnce({
-      ...newProject,
-      id: 2,
-    });
-
     const { result, setProjectsState } = createWrapper();
 
     await act(async () => {
       await result.current.handleSaveProject(newProject);
     });
 
-    expect(api.post).toHaveBeenCalledWith('/projects', newProject);
+    expect(projectsApi.create).toHaveBeenCalledWith(newProject);
     expect(setProjectsState).toHaveBeenCalled();
   });
 
@@ -151,9 +156,6 @@ describe('useProjectCRUD', () => {
       ...mockProjects[0],
       name: 'Updated Project',
     };
-
-    const { api } = await import('@/lib/api');
-    vi.mocked(api.put).mockResolvedValueOnce(updatedProject);
 
     const { result, setProjectsState } = createWrapper();
 
@@ -166,21 +168,18 @@ describe('useProjectCRUD', () => {
       await result.current.handleSaveProject(updatedProject);
     });
 
-    expect(api.put).toHaveBeenCalledWith(`/projects/${mockProjects[0].id}`, updatedProject);
+    expect(projectsApi.update).toHaveBeenCalledWith(mockProjects[0].id, updatedProject);
     expect(setProjectsState).toHaveBeenCalled();
   });
 
   it('should delete project', async () => {
-    const { api } = await import('@/lib/api');
-    vi.mocked(api.delete).mockResolvedValueOnce({});
-
     const { result, setProjectsState } = createWrapper();
 
     await act(async () => {
       await result.current.handleDeleteProject(1);
     });
 
-    expect(api.delete).toHaveBeenCalledWith('/projects/1');
+    expect(projectsApi.delete).toHaveBeenCalledWith(1);
     expect(setProjectsState).toHaveBeenCalled();
   });
 
@@ -214,16 +213,11 @@ describe('useProjectCRUD', () => {
       await result.current.handleBulkDelete();
     });
 
-    expect(api.delete).toHaveBeenCalledTimes(2);
+    expect(projectsApi.bulkDelete).toHaveBeenCalledTimes(1);
     expect(clearSelection).toHaveBeenCalled();
   });
 
   it('should handle bulk edit', async () => {
-    const { api } = await import('@/lib/api');
-    vi.mocked(api.post).mockResolvedValueOnce([
-      { ...mockProjects[0], status: 'active' },
-    ]);
-
     const selectedIds = new Set<number>([1, 2]);
     const clearSelection = vi.fn();
     const setProjectsState = vi.fn();
@@ -247,16 +241,14 @@ describe('useProjectCRUD', () => {
       await result.current.handleBulkEdit('status', 'active');
     });
 
-    expect(api.put).toHaveBeenCalledTimes(1);
-    expect(api.put).toHaveBeenCalledWith('/projects/1', expect.objectContaining({
-      status: 'active',
-    }));
+    expect(projectsApi.bulkUpdate).toHaveBeenCalledTimes(1);
+    expect(projectsApi.bulkUpdate).toHaveBeenCalledWith([1, 2], 'status', 'active');
     expect(clearSelection).toHaveBeenCalled();
   });
 
   it('should handle API errors gracefully', async () => {
-    const { api } = await import('@/lib/api');
-    vi.mocked(api.post).mockRejectedValueOnce(new Error('API Error'));
+    const { projectsApi } = await import('../../api/projects.api');
+    vi.mocked(projectsApi.create).mockRejectedValueOnce(new Error('API Error'));
 
     const { result, setProjectsState } = createWrapper();
 

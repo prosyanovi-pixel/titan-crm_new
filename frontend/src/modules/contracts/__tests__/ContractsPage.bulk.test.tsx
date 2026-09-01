@@ -3,8 +3,9 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import ContractsPage from '../pages/ContractsPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter } from 'react-router';
-
+// @ts-ignore - MemoryRouter is not in the type definitions for react-router-dom but works in runtime
+import { MemoryRouter } from 'react-router-dom';
+import { SettingsProvider } from '@/context/SettingsContext';
 // Mocks
 vi.mock('@/lib/i18n', () => ({
   useTranslation: () => ({ t: (k: string) => k }),
@@ -51,6 +52,13 @@ vi.mock('@/context/LayoutContext', () => ({
   usePageSettings: vi.fn(),
 }));
 
+vi.mock('@/modules/registry/hooks/useBulkActions', () => ({
+  useBulkActions: () => [
+    { id: 'bulk_delete', icon: vi.fn(), label: 'delete', action: vi.fn(), isDestructive: true },
+    { id: 'bulk_edit', icon: vi.fn(), label: 'edit', action: vi.fn() },
+  ],
+}));
+
 // Prevent actual API calls in BulkEditDialog if opened
 vi.mock('@/lib/api', () => ({ api: { get: vi.fn().mockResolvedValue({ fields: [] }), post: vi.fn().mockResolvedValue({}) } }));
 
@@ -64,9 +72,11 @@ describe('ContractsPage bulk actions', () => {
   it('calls bulk delete when Delete button clicked in toolbar', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <MemoryRouter initialEntries={["/"]}>
-          <ContractsPage />
-        </MemoryRouter>
+        <SettingsProvider>
+          <MemoryRouter initialEntries={["/"]}>
+            <ContractsPage />
+          </MemoryRouter>
+        </SettingsProvider>
       </QueryClientProvider>
     );
 
