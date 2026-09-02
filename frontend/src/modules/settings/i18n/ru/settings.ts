@@ -8,6 +8,9 @@ export const settings = {
   search_placeholder: "Поиск настроек...",
   action_not_implemented: "Действие не реализовано",
   appearance: "Внешний вид",
+  finance: {
+    tax_regimes: "Режимы налогообложения"
+  },
   badge_editor: {
     main: "Основное",
     geometry: "Геометрия",

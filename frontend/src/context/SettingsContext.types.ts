@@ -2,6 +2,30 @@ import {
   StatusItem, TagItem, PriorityItem, ProjectStageItem, QuickAction, RelationshipTypeItem, LegalFormGroupItem, LegalFormItem, PositionItem,
 } from '../modules/settings/types/settings.types';
 
+/** Профиль компании с налоговым режимом */
+export interface CompanyProfile {
+  id?: number;
+  fullName?: string;
+  shortName?: string;
+  inn?: string;
+  kpp?: string;
+  taxRegimeId?: number | null;
+  [key: string]: unknown;
+}
+
+/** Налоговый режим из справочника */
+export interface TaxRegimeItem {
+  id: number;
+  code: string;
+  name: string;
+  /** Применяется ли НДС (из поля has_vat в БД) */
+  hasVat?: boolean;
+  /** Синоним hasVat из расширенной миграции */
+  requiresNds?: boolean;
+  /** Ставка НДС по умолчанию для режима, в процентах */
+  defaultVatRate?: number;
+}
+
 export type ThemeType = 'light' | 'dark' | 'system';
 export type DensityType = 'comfortable' | 'compact' | 'high';
 export type FontSizeType = 'small' | 'medium' | 'large';
@@ -21,7 +45,8 @@ export interface SettingsContextType {
   quickActions: QuickAction[];
   allQuickActions: QuickAction[];
   relationshipTypes: RelationshipTypeItem[];
-  taxRegimes: Array<{ id: number; name: string; code: string }>;
+  taxRegimes: TaxRegimeItem[];
+  companyProfile: CompanyProfile | null;
   legalForms: LegalFormItem[];
   legalFormGroups: LegalFormGroupItem[];
   contractorTypes: Record<string, unknown>[];

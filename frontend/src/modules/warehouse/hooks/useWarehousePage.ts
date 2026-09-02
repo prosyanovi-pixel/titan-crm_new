@@ -21,6 +21,8 @@ export function useWarehousePage(): {
   setIsTransactionFormOpen: (value: boolean) => void;
   isWarehouseFormOpen: boolean;
   setIsWarehouseFormOpen: (value: boolean) => void;
+  editingWarehouse: Warehouse | null;
+  setEditingWarehouse: (value: Warehouse | null) => void;
   balancesTable: ReturnType<typeof useDataTable<InventoryBalance>>;
   filteredBalances: InventoryBalance[];
   balancesLoading: boolean;
@@ -92,7 +94,7 @@ export function useWarehousePage(): {
 
   const warehousesTable = useDataTable<Warehouse>({
     initialData: warehouses || [],
-    initialColumns: { name: true, type: true, address: true, status: true },
+    initialColumns: { name: true, type: true, address: true, status: true, tags: true },
     storageKey: 'warehouse-list',
   });
 
@@ -138,6 +140,7 @@ export function useWarehousePage(): {
   const [claimSheet, setClaimSheet] = useState<{ isOpen: boolean; contractorId: number; contractorName: string }>({ isOpen: false, contractorId: 0, contractorName: '' });
   const [eventSheet, setEventSheet] = useState<{ isOpen: boolean; contractorId: number; contractorName: string }>({ isOpen: false, contractorId: 0, contractorName: '' });
   const [reminderSheet, setReminderSheet] = useState<{ isOpen: boolean; contractorId: number; contractorName: string }>({ isOpen: false, contractorId: 0, contractorName: '' });
+  const [editingWarehouse, setEditingWarehouse] = useState<Warehouse | null>(null);
 
   const handleWarehouseQuickAction = async (action: string, id: number | string): Promise<void> => {
     const warehouse = warehouses?.find(w => w.id === Number(id));
@@ -151,6 +154,10 @@ export function useWarehousePage(): {
     };
 
     switch (action) {
+      case 'edit':
+        setEditingWarehouse(warehouse);
+        setIsWarehouseFormOpen(true);
+        return;
       case 'create_task': return setTaskSheet(commonSheetState);
       case 'create_project': return setProjectSheet(commonSheetState);
       case 'create_claim': return setClaimSheet(commonSheetState);
@@ -170,6 +177,7 @@ export function useWarehousePage(): {
     
     isTransactionFormOpen, setIsTransactionFormOpen,
     isWarehouseFormOpen, setIsWarehouseFormOpen,
+    editingWarehouse, setEditingWarehouse,
 
     balancesTable, filteredBalances, balancesLoading,
     warehousesTable, filteredWarehouses, warehousesLoading,

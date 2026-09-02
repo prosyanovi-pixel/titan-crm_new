@@ -53,6 +53,7 @@ export const RESOURCES = {
   DEPARTMENTS: 'departments',
   POSITIONS: 'positions',
   CONTRACTS: 'contracts', // New resource for Contracts module
+  QUOTES: 'quotes', // Resource for Quotes module
   MARKETING: 'marketing',
   TEMPLATES: 'templates',
 } as const;
@@ -228,6 +229,13 @@ export const PERMISSIONS = {
     read: perm(RESOURCES.CONTRACTS, ACTIONS.READ),
     write: perm(RESOURCES.CONTRACTS, ACTIONS.WRITE),
     delete: perm(RESOURCES.CONTRACTS, ACTIONS.DELETE),
+  },
+
+  // Коммерческие предложения (Quotes)
+  quotes: {
+    read: perm(RESOURCES.QUOTES, ACTIONS.READ),
+    write: perm(RESOURCES.QUOTES, ACTIONS.WRITE),
+    delete: perm(RESOURCES.QUOTES, ACTIONS.DELETE),
   },
 
   // Маркетинг

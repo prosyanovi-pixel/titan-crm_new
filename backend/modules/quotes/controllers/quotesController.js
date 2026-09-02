@@ -1,5 +1,4 @@
 const db = require('../../../db');
-const { generatePdfBuffer } = require('../../../utils/pdfGenerator');
 
 exports.getQuotes = async (req, res, next) => {
   try {
@@ -190,100 +189,6 @@ exports.deleteQuote = async (req, res, next) => {
   }
 };
 
-exports.generatePdf = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const { rows } = await db.query(
-      `SELECT q.*, c.name as contractor_name 
-       FROM quotes q 
-       LEFT JOIN contractors c ON q.contractor_id = c.id
-       WHERE q.id = $1`, [id]
-    );
-
-    if (rows.length === 0) {
-      return res.status(404).json({ message: 'Quote not found' });
-    }
-
-    const quote = rows[0];
-    const { rows: items } = await db.query(
-      `SELECT * FROM quote_items WHERE quote_id = $1 ORDER BY id ASC`, [id]
-    );
-
-    const docDefinition = {
-      content: [
-        { text: 'КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ', style: 'header', alignment: 'center' },
-        { text: `№ ${quote.number} от ${new Date(quote.date).toLocaleDateString()}`, alignment: 'center', margin: [0, 0, 0, 20] },
-        { text: `Клиент: ${quote.contractor_name || 'Частное лицо'}`, margin: [0, 0, 0, 5] },
-        { text: `Кому адресовано: ${quote.addressed_to || '-'}`, margin: [0, 0, 0, 5] },
-        { text: `Действительно до: ${quote.valid_until ? new Date(quote.valid_until).toLocaleDateString() : 'Бессрочно'}`, margin: [0, 0, 0, 20] },
-        
-        {
-          table: {
-            headerRows: 1,
-            widths: ['*', 'auto', 'auto', 'auto', 'auto'],
-            body: [
-              [
-                { text: 'Наименование', style: 'tableHeader' },
-                { text: 'Кол-во', style: 'tableHeader' },
-                { text: 'Цена (₽)', style: 'tableHeader' },
-                { text: 'Скидка (%)', style: 'tableHeader' },
-                { text: 'Сумма (₽)', style: 'tableHeader' }
-              ],
-              ...items.map(item => [
-                item.name,
-                item.quantity.toString(),
-                Number(item.price).toLocaleString(),
-                item.discount_percent.toString(),
-                Number(item.total).toLocaleString()
-              ])
-            ]
-          },
-          layout: 'lightHorizontalLines',
-          margin: [0, 0, 0, 20]
-        },
-        
-        { text: `Скидка: ${Number(quote.discount_amount).toLocaleString()} ₽`, alignment: 'right', margin: [0, 0, 0, 5] },
-        { text: `Налог: ${Number(quote.tax_amount).toLocaleString()} ₽`, alignment: 'right', margin: [0, 0, 0, 5] },
-        { text: `ИТОГО: ${Number(quote.total_amount).toLocaleString()} ₽`, style: 'total', alignment: 'right', margin: [0, 0, 0, 20] },
-        
-        { text: 'Примечания:', style: 'subheader', margin: [0, 20, 0, 5] },
-        { text: quote.notes || 'Нет примечаний.' }
-      ],
-      styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 0, 0, 10]
-        },
-        subheader: {
-          fontSize: 14,
-          bold: true,
-        },
-        tableHeader: {
-          bold: true,
-          fontSize: 11,
-          color: 'black',
-          fillColor: '#eeeeee'
-        },
-        total: {
-          fontSize: 14,
-          bold: true
-        }
-      },
-      defaultStyle: {
-        font: 'Roboto'
-      }
-    };
-
-    const pdfBuffer = await generatePdfBuffer(docDefinition);
-
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="КП_${quote.number}.pdf"`);
-    res.send(pdfBuffer);
-  } catch (error) {
-    next(error);
-  }
-};
 
 /**
  * Массовое обновление КП (смена статуса).

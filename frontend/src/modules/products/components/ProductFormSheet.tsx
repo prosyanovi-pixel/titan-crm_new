@@ -19,6 +19,7 @@ import { useTranslation } from "@/lib/i18n";
 import { ProductBalancesTab } from "./ProductBalancesTab";
 import { ProductBundlesTab } from "./ProductBundlesTab";
 import { Layers } from "lucide-react";
+import { useCompanyVat } from "@/hooks/useCompanyVat";
 
 interface ProductFormSheetProps {
   open: boolean;
@@ -39,6 +40,22 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
   const { settings } = useModuleSettings("products");
   const { statuses } = useStatuses({ module: "products" });
   const types = (settings?.types || []) as StatusType[];
+
+  /** НДС компании — единый хук, не дублируем логику */
+  const { hasVat, vatRate: companyVatRate, taxRegimeName } = useCompanyVat();
+
+  /**
+   * Нормализует ставку НДС к строке, совместимой с вариантами Select.
+   * Например: 22.0 → "22", 10.5 → "10" (ближайший стандартный)
+   */
+  const normalizeVatRate = (rate: number | string | undefined | null): string => {
+    const n = Math.round(parseFloat(String(rate ?? '0')) || 0);
+    const allowed = [0, 5, 7, 10, 20, 22];
+    const closest = allowed.reduce((prev, curr) =>
+      Math.abs(curr - n) < Math.abs(prev - n) ? curr : prev
+    );
+    return String(closest);
+  };
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -113,7 +130,19 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
         setSkuInternal(product.skuInternal || "");
         setSkuExternal(product.skuExternal || "");
         setPurchasePrice(product.purchasePrice?.toString() || "");
-        setVatRate(product.vatRate?.toString() || "0");
+
+        // Логика ставки НДС при редактировании:
+        // — если у товара уже есть ненулевая ставка → берём её
+        // — если ставка = 0 и у компании ОСН (hasVat) → подставляем ставку компании
+        const productVatRate = parseFloat(String(product.vatRate ?? '0')) || 0;
+        if (productVatRate > 0) {
+          setVatRate(normalizeVatRate(productVatRate));
+        } else if (hasVat) {
+          setVatRate(normalizeVatRate(companyVatRate));
+        } else {
+          setVatRate("0");
+        }
+
         setCategoryId(product.categoryId?.toString() || "");
         setStatus(product.status || "active");
         setType(product.type || "");
@@ -128,12 +157,17 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
         setCharacteristics((product.characteristics || []).map(c => ({ id: crypto.randomUUID(), name: c.name, value: c.value, unit: c.unit })));
         setImageUrls((product.images || []).join('\n'));
         const rawTr = product.translations || {};
-        setTranslations(Object.fromEntries(Object.entries(rawTr).map(([k, v]) => [k, { name: v?.name || '', description: v?.description || '' }])));
-      } else if (open && !product) {
+          setTranslations(Object.fromEntries(Object.entries(rawTr).map(([k, v]) => [k, { name: v?.name || '', description: v?.description || '' }])));
+        } else if (open && !product) {
         resetForm();
+        // При создании: ставка из настроек компании
+        if (hasVat) {
+          setVatRate(normalizeVatRate(companyVatRate));
+        }
       }
     });
-  }, [open, product]);
+  }, [open, product, hasVat, companyVatRate]);
+
 
   const handleTranslationChange = (langCode: string, field: 'name' | 'description', value: string) => {
     setTranslations(prev => ({
@@ -286,15 +320,82 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
                 </Select>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>{t('products.form.fields.purchase_price')}</Label>
-                  <Input type="number" step="0.01" value={purchasePrice} onChange={e => setPurchasePrice(e.target.value)} />
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold">{t('products.form.fields.purchase_price')}</Label>
+                  {hasVat && (
+                    <span className="text-xs text-muted-foreground">
+                      {t('settings.finance.tax_regimes')}: {taxRegimeName ?? '—'}
+                    </span>
+                  )}
                 </div>
-                <div className="space-y-2">
-                  <Label>{t('products.form.fields.vat_rate')}</Label>
-                  <Input type="number" value={vatRate} onChange={e => setVatRate(e.target.value)} />
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-xs text-muted-foreground">{t('products.form.fields.purchase_price')}</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      placeholder="0.00"
+                      value={purchasePrice}
+                      onChange={e => setPurchasePrice(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs text-muted-foreground">{t('products.form.fields.vat_rate')}</Label>
+                    <Select
+                      value={vatRate}
+                      onValueChange={setVatRate}
+                      disabled={!hasVat && parseFloat(vatRate || "0") === 0}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="0%" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="0">{t('services.form.vat_rates.none')}</SelectItem>
+                        <SelectItem value="5">5%</SelectItem>
+                        <SelectItem value="7">7%</SelectItem>
+                        <SelectItem value="10">{t('services.form.vat_rates.rate_10')}</SelectItem>
+                        <SelectItem value="20">{t('services.form.vat_rates.rate_20')}</SelectItem>
+                        <SelectItem value="22">{t('services.form.vat_rates.rate_22')}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
+
+                {/* Динамический расчёт НДС.
+                    Показывается если: есть цена И ставка > 0
+                    Не зависит от hasVat — редактируемый товар может иметь свою ставку */}
+                {parseFloat(purchasePrice || "0") > 0 && parseFloat(vatRate || "0") > 0 && (
+                  <div className="rounded-md border bg-muted/40 px-4 py-3 grid grid-cols-3 gap-2 text-sm">
+                    <div className="space-y-0.5">
+                      <p className="text-xs text-muted-foreground">{t('products.form.fields.purchase_price')}</p>
+                      <p className="font-medium">
+                        {parseFloat(purchasePrice || "0").toLocaleString('ru-RU', { style: 'currency', currency: 'RUB' })}
+                      </p>
+                    </div>
+                    <div className="space-y-0.5">
+                      <p className="text-xs text-muted-foreground">{t('products.form.fields.vat_rate')} ({vatRate}%)</p>
+                      <p className="font-medium text-amber-600 dark:text-amber-400">
+                        {(parseFloat(purchasePrice || "0") * (parseFloat(vatRate || "0") / 100))
+                          .toLocaleString('ru-RU', { style: 'currency', currency: 'RUB' })}
+                      </p>
+                    </div>
+                    <div className="space-y-0.5">
+                      <p className="text-xs text-muted-foreground">{t('finance.invoice.field.total_with_vat')}</p>
+                      <p className="font-semibold text-primary">
+                        {(parseFloat(purchasePrice || "0") * (1 + parseFloat(vatRate || "0") / 100))
+                          .toLocaleString('ru-RU', { style: 'currency', currency: 'RUB' })}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Подсказка: только если у компании нет НДС И ставка товара = 0 */}
+                {!hasVat && parseFloat(vatRate || "0") === 0 && (
+                  <p className="text-xs text-muted-foreground">{t('quotes.no_vat')}</p>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">

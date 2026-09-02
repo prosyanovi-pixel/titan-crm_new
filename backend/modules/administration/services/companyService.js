@@ -20,7 +20,7 @@ async function updateProfile(data) {
     full_name = '', short_name = '', legal_address = '', actual_address = '',
     inn = '', kpp = '', ogrn = '', bik = '',
     bank_account = '', corr_account = '', bank_name = '',
-    phone = '', email = '', website = '', logo_url = ''
+    phone = '', email = '', website = '', logo_url = '', tax_regime_id = null
   } = data;
 
   const { rows: existing } = await db.query('SELECT id FROM company_profile LIMIT 1');
@@ -29,11 +29,11 @@ async function updateProfile(data) {
     const { rows } = await db.query(`
       INSERT INTO company_profile
         (full_name, short_name, legal_address, actual_address, inn, kpp, ogrn,
-         bik, bank_account, corr_account, bank_name, phone, email, website, logo_url, updated_at)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,CURRENT_TIMESTAMP)
+         bik, bank_account, corr_account, bank_name, phone, email, website, logo_url, tax_regime_id, updated_at)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,CURRENT_TIMESTAMP)
       RETURNING *
     `, [full_name, short_name, legal_address, actual_address, inn, kpp, ogrn,
-        bik, bank_account, corr_account, bank_name, phone, email, website, logo_url]);
+        bik, bank_account, corr_account, bank_name, phone, email, website, logo_url, tax_regime_id]);
     return rows[0];
   }
 
@@ -42,11 +42,11 @@ async function updateProfile(data) {
     SET full_name=$1, short_name=$2, legal_address=$3, actual_address=$4,
         inn=$5, kpp=$6, ogrn=$7, bik=$8, bank_account=$9, corr_account=$10,
         bank_name=$11, phone=$12, email=$13, website=$14, logo_url=$15,
-        updated_at=CURRENT_TIMESTAMP
-    WHERE id=$16
+        tax_regime_id=$16, updated_at=CURRENT_TIMESTAMP
+    WHERE id=$17
     RETURNING *
   `, [full_name, short_name, legal_address, actual_address, inn, kpp, ogrn,
-      bik, bank_account, corr_account, bank_name, phone, email, website, logo_url,
+      bik, bank_account, corr_account, bank_name, phone, email, website, logo_url, tax_regime_id,
       existing[0].id]);
 
   return rows[0];

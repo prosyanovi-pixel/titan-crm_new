@@ -27,6 +27,7 @@ import type { InvoiceFormValues } from "./invoiceFormSchema";
 import { useTasks } from "@/modules/tasks";
 import { SmartMetadataGrid, MetadataItem } from "@/components/shared";
 import { useLawyers } from "@/modules/lawyers";
+import { useCompanyVat } from "@/hooks/useCompanyVat";
 
 interface Opt { id: number; name: string; taxRegimeId?: number; legalForm?: string }
 interface CurrencyOpt { id: string }
@@ -63,6 +64,9 @@ export function InvoiceFormContent({
   const { lawyers = [] } = useLawyers();
   const { tasks = [] } = useTasks();
 
+  /** НДС нашей компании — главная ставка для выставляемых документов */
+  const { hasVat: companyHasVat, vatRate: companyVatRate } = useCompanyVat();
+
   const watchedAmount = form.watch("amount");
   const watchedVatRate = form.watch("vatRate");
   const watchedContractId = form.watch("contractId");
@@ -88,7 +92,21 @@ export function InvoiceFormContent({
     }
   }, [watchedAmount, watchedVatRate, watchedIsTaxable, form]);
 
+  // Автоподбор НДС: при открытии формы или при инициализации
+  // ставка и isTaxable берутся из профиля нашей компании (companyHasVat)
+  useEffect(() => {
+    // Устанавливаем нашу ставку только если пользователь ещё не менял её вручную
+    if (!form.formState.isDirty) {
+      form.setValue("isTaxable", companyHasVat);
+      if (companyHasVat) {
+        form.setValue("vatRate", companyVatRate);
+      }
+    }
+  }, [companyHasVat, companyVatRate, form]);
+
   // Автоподбор НДС при выборе контрагента
+  // ВАЖНО: ставка остаётся нашей (companyVatRate), только isTaxable берётся
+  // от контрагента как справочная информация о его налоговом режиме.
   useEffect(() => {
     const applyContractorTax = async () => {
       if (!watchedContractorId) {
@@ -103,28 +121,28 @@ export function InvoiceFormContent({
         const taxInfo = await api.get(`/contractors/${watchedContractorId}/taxes`);
         setContractorInfo(taxInfo);
         
+        // Не перезаписываем если пользователь уже поменял значения
         if (form.formState.dirtyFields.vatRate || form.formState.dirtyFields.isTaxable) return;
 
+        // Ставка алюс остаётся нашей (companyHasVat / companyVatRate),
+        // isTaxable берём из данных контрагента (справочно)
         if (taxInfo?.taxRegime) {
           const requiresNds = !!taxInfo.taxRegime.requiresNds;
           form.setValue("isTaxable", requiresNds);
-          
-          const vatTax = taxInfo.activeTaxes?.find((t: Record<string, unknown>) => t.type === 'НДС');
-          if (vatTax) {
-            form.setValue("vatRate", vatTax.rate);
-          } else {
-            form.setValue("vatRate", requiresNds ? 20 : 0);
-          }
+          // Ставка НДС остаётся из настроек нашей компании (не от контрагента)
+          form.setValue("vatRate", requiresNds ? companyVatRate : 0);
         }
       } catch (e) {
+        // Fallback при ошибке API: используем нашу ставку компании, а не захардкоженную
         const isIndividual = contractor.legalForm === 'private' || contractor.legalForm === 'self';
         form.setValue("isTaxable", !isIndividual);
-        form.setValue("vatRate", isIndividual ? 0 : 20);
+        form.setValue("vatRate", isIndividual ? 0 : companyVatRate);
       }
     };
 
     applyContractorTax();
-  }, [watchedContractorId, contractors, form]);
+  }, [watchedContractorId, contractors, form, companyVatRate]);
+
 
   return (
     <Form {...form}>

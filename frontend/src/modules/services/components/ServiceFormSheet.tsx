@@ -16,6 +16,7 @@ import { TagInput, useStatuses } from '@/components/ui/status-system';
 import { useTranslation } from '@/lib/i18n';
 import { Info, Calculator, Globe, Languages, DollarSign } from 'lucide-react';
 import { ServicePricesTab } from './ServicePricesTab';
+import { useCompanyVat } from '@/hooks/useCompanyVat';
 
 interface ServiceFormSheetProps {
   open: boolean;
@@ -33,6 +34,10 @@ export function ServiceFormSheet({ open, onOpenChange, service, categories, sele
   const { statuses } = useStatuses({ module: "services" });
   const types = (settings?.types || []) as Array<{id: string, name: string}>;
   
+
+  /** НДС компании — единый хук, не дублируем логику */
+  const { hasVat, vatRate: companyVatRate } = useCompanyVat();
+
   const [formData, setFormData] = useState<Partial<Service>>({
     name: '',
     description: '',
@@ -41,7 +46,7 @@ export function ServiceFormSheet({ open, onOpenChange, service, categories, sele
     baseCost: 0,
     costType: 'fixed',
     taxContributionsRate: 30,
-    vatRate: 22,
+    vatRate: 0,   // будет установлен из настроек компании в useEffect
     isActive: true,
     status: 'active',
     tags: [],
@@ -63,7 +68,7 @@ export function ServiceFormSheet({ open, onOpenChange, service, categories, sele
             baseCost: 0,
             costType: 'fixed',
             taxContributionsRate: 30,
-            vatRate: 22,
+            vatRate: hasVat ? companyVatRate : 0,
             isActive: true,
             status: 'active',
             tags: [],
@@ -73,7 +78,7 @@ export function ServiceFormSheet({ open, onOpenChange, service, categories, sele
         }
       }
     });
-  }, [open, service, selectedCategoryId]);
+  }, [open, service, selectedCategoryId, hasVat, companyVatRate]);
 
   const handleChange = (field: keyof Service, value: string | number | boolean | Array<{id: number, name: string, depth: number}> | Record<string, unknown> | string[] | null) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -315,12 +320,15 @@ export function ServiceFormSheet({ open, onOpenChange, service, categories, sele
                 <div className="space-y-1">
                   <Label>{t('services.form.fields.vat_rate')}</Label>
                   <Select 
-                    value={formData.vatRate?.toString() || '22'} 
+                    value={formData.vatRate?.toString() || (hasVat ? companyVatRate.toString() : '0')} 
                     onValueChange={v => handleChange('vatRate', parseFloat(v))}
+                    disabled={!hasVat}
                   >
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="0">{t('services.form.vat_rates.none')}</SelectItem>
+                      <SelectItem value="5">5%</SelectItem>
+                      <SelectItem value="7">7%</SelectItem>
                       <SelectItem value="10">{t('services.form.vat_rates.rate_10')}</SelectItem>
                       <SelectItem value="20">{t('services.form.vat_rates.rate_20')}</SelectItem>
                       <SelectItem value="22">{t('services.form.vat_rates.rate_22')}</SelectItem>

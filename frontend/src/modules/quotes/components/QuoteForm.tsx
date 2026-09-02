@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from '@/lib/i18n';
-import { usePageSettings } from '@/context/LayoutContext';
-import { useQuote, useCreateQuote, useUpdateQuote } from '../hooks';
+import { useCreateQuote, useUpdateQuote } from '../hooks';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,25 +15,29 @@ import { api } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
 import { usePermission } from '@/hooks/usePermission';
 import { PERMISSIONS } from '@/constants/permissions';
+import { QuoteItemNameCell } from './QuoteItemNameCell';
+import { useCompanyVat } from '@/hooks/useCompanyVat';
 
-export function QuoteFormPage() {
-  const { id } = useParams();
-  const isNew = id === 'new';
-  const quoteId = isNew ? null : Number(id);
+interface QuoteFormProps {
+  quote?: any;
+  onSuccess?: () => void;
+  onCancel?: () => void;
+}
+
+export function QuoteForm({ quote, onSuccess, onCancel }: QuoteFormProps) {
+  const isNew = !quote;
+  const quoteId = quote?.id || null;
   
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { hasPermission, isAdmin } = usePermission();
   const canSeeFinance = isAdmin || hasPermission(PERMISSIONS.finance.read);
   
-  const { data: quote, isLoading } = useQuote(quoteId);
   const createQuote = useCreateQuote();
   const updateQuote = useUpdateQuote();
 
-  const handleConvertToContract = () => {
-    if (!quote) return;
-    navigate('/contracts/new', { state: { quote } });
-  };
+  /** НДС нашей компании — ставка из настроек профиля */
+  const { hasVat: companyHasVat, vatRate: companyVatRate } = useCompanyVat();
+
 
   const { data: contractors = [] } = useQuery({
     queryKey: ['contractors-all'],
@@ -46,7 +48,7 @@ export function QuoteFormPage() {
   });
 
   const { data: users = [] } = useQuery({
-    queryKey: ['users-all'],
+    queryKey: ['users'],
     queryFn: async () => {
       const res = await api.get("/users");
       return res as any[];
@@ -64,7 +66,8 @@ export function QuoteFormPage() {
       notes: '',
       items: [
         { 
-          itemType: 'custom', 
+          itemType: 'custom' as 'product' | 'service' | 'custom',
+          itemId: null as number | null, 
           name: '', 
           quantity: 1, 
           price: 0, 
@@ -122,15 +125,26 @@ export function QuoteFormPage() {
     const totalMargin = totalRevenue - totalCost;
     const marginPercent = totalRevenue > 0 ? (totalMargin / totalRevenue) * 100 : 0;
 
-    return { totalRevenue, totalCost, totalMargin, marginPercent };
+    // НДС берётся из настроек нашей компании, а не от контрагента
+    const hasVat = companyHasVat;
+    const dynamicVatRate = companyHasVat ? (companyVatRate / 100) : 0;
+
+    let taxAmount = 0;
+    if (hasVat) {
+      taxAmount = totalRevenue * dynamicVatRate;
+    }
+
+    return { totalRevenue, totalCost, totalMargin, marginPercent, taxAmount, hasVat, dynamicVatRate };
   };
 
   const metrics = calculateMetrics();
+  const { hasVat, dynamicVatRate } = metrics;
 
   const onSubmit = async (data: any) => {
     const payload = {
       ...data,
-      totalAmount: metrics.totalRevenue,
+      totalAmount: metrics.totalRevenue + metrics.taxAmount,
+      taxAmount: metrics.taxAmount,
       totalCost: metrics.totalCost,
       totalMargin: metrics.totalMargin,
       contractorId: data.contractorId ? Number(data.contractorId) : null,
@@ -155,34 +169,14 @@ export function QuoteFormPage() {
 
     if (isNew) {
       const res = await createQuote.mutateAsync(payload);
-      navigate(`/quotes/${res.id}`);
+      onSuccess?.();
     } else {
       await updateQuote.mutateAsync({ id: quoteId!, data: payload });
+      onSuccess?.();
     }
   };
 
-  usePageSettings({
-    title: isNew ? t('quotes.create') : t('quotes.edit'),
-    actions: (
-      <div className="flex gap-2">
-        {!isNew && (
-          <>
-            <Button variant="secondary" className="gap-2" onClick={handleConvertToContract}>
-              <FileText className="w-4 h-4" />
-              <span className="hidden sm:inline">{t('quotes.convert_to_contract')} {/* Создать договор */}</span>
-            </Button>
-            <Button variant="outline" className="gap-2" onClick={() => window.open(`/api/quotes/${quoteId}/pdf`, '_blank')}>
-              <Download className="w-4 h-4" />
-              <span className="hidden sm:inline">{t('quotes.download_pdf')}</span>
-            </Button>
-          </>
-        )}
-        <Button onClick={handleSubmit(onSubmit)}>{t('common.save')}</Button>
-      </div>
-    )
-  });
-
-  if (isLoading && !isNew) return <div>{t('common.loading')}</div>;
+  const isLoadingSubmit = createQuote.isPending || updateQuote.isPending;
 
   return (
     <div className="space-y-6 max-w-full overflow-x-hidden">
@@ -257,8 +251,10 @@ export function QuoteFormPage() {
           </div>
           <div className="flex gap-4">
             <div className="text-right">
-              <div className="text-sm text-muted-foreground">{t('quotes.total_revenue')} {/* Сумма КП */}</div>
-              <div className="text-xl font-bold text-primary">{metrics.totalRevenue.toLocaleString()} ₽</div>
+              <div className="text-sm text-muted-foreground">
+                {hasVat ? t('finance.invoice.field.total_with_vat') : t('quotes.total_revenue')}
+              </div>
+              <div className="text-xl font-bold text-primary">{(metrics.totalRevenue + metrics.taxAmount).toLocaleString()} ₽</div>
             </div>
             {canSeeFinance && (
               <>
@@ -290,6 +286,7 @@ export function QuoteFormPage() {
                   <TableHead className="w-[120px]">{t('quotes.price')}</TableHead>
                   <TableHead className="w-[100px]">{t('quotes.discount_short')}</TableHead>
                   <TableHead className="w-[120px] font-semibold text-primary">{t('quotes.total')}</TableHead>
+                  <TableHead className="w-[120px] bg-primary/5">{t('quotes.taxAmount')} {/* НДС */}</TableHead>
                   <TableHead className="w-[150px] bg-destructive/5">{t('quotes.executor_type')} {/* Исполнитель */}</TableHead>
                   <TableHead className="w-[200px] bg-destructive/5">{t('quotes.executor')} {/* Кто выполняет */}</TableHead>
                   {canSeeFinance && (
@@ -333,7 +330,19 @@ export function QuoteFormPage() {
                         />
                       </TableCell>
                       <TableCell className="p-2">
-                        <Input className="h-9" {...register(`items.${index}.name`)} placeholder={t('quotes.item_name_placeholder')} />
+                        <QuoteItemNameCell 
+                          itemType={watch(`items.${index}.itemType`) || 'custom'}
+                          itemId={watch(`items.${index}.itemId`)}
+                          name={watch(`items.${index}.name`) || ''}
+                          onNameChange={(name) => setValue(`items.${index}.name`, name, { shouldDirty: true })}
+                          onItemSelect={(id, name, price) => {
+                            setValue(`items.${index}.itemId`, id, { shouldDirty: true });
+                            setValue(`items.${index}.name`, name, { shouldDirty: true });
+                            if (price) {
+                              setValue(`items.${index}.price`, price, { shouldDirty: true });
+                            }
+                          }}
+                        />
                       </TableCell>
                       <TableCell className="p-2">
                         <Input className="h-9" type="number" min="1" step="0.01" {...register(`items.${index}.quantity`)} />
@@ -346,6 +355,11 @@ export function QuoteFormPage() {
                       </TableCell>
                       <TableCell className="p-2 bg-primary/5">
                         <div className="font-semibold">{total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                      </TableCell>
+                      <TableCell className="p-2 bg-primary/5">
+                        <div className="text-muted-foreground text-sm whitespace-nowrap">
+                          {hasVat ? `${(dynamicVatRate * 100).toFixed(0)}%: ${(total * dynamicVatRate).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : t('quotes.no_vat')}
+                        </div>
                       </TableCell>
                       
                       {/* Executor & P&L Block */}
@@ -436,7 +450,8 @@ export function QuoteFormPage() {
           
           <div className="flex justify-start items-center mt-4">
             <Button variant="outline" className="gap-2" onClick={() => append({ 
-              itemType: 'custom', 
+              itemType: 'custom' as 'product' | 'service' | 'custom',
+              itemId: null as number | null,
               name: '', 
               quantity: 1, 
               price: 0, 
@@ -452,6 +467,18 @@ export function QuoteFormPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Sticky Footer */}
+      <div className="sticky bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-md border-t flex justify-end gap-2 z-20">
+        {onCancel && (
+          <Button type="button" variant="outline" onClick={onCancel}>
+            {t('common.cancel')}
+          </Button>
+        )}
+        <Button onClick={handleSubmit(onSubmit)} disabled={isLoadingSubmit}>
+          {isLoadingSubmit ? t('common.loading') : (isNew ? t('common.create') : t('common.save'))}
+        </Button>
+      </div>
     </div>
   );
 }

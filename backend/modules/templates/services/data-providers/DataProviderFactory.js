@@ -4,6 +4,7 @@ const LegalCaseDataProvider = require('./LegalCaseDataProvider');
 const MailDataProvider = require('./MailDataProvider');
 const TaskDataProvider = require('./TaskDataProvider');
 const ContractorDataProvider = require('./ContractorDataProvider');
+const QuoteDataProvider = require('./QuoteDataProvider');
 
 class DataProviderFactory {
   /**
@@ -26,6 +27,8 @@ class DataProviderFactory {
         return new TaskDataProvider(entityId, moduleId);
       case 'contractors':
         return new ContractorDataProvider(entityId, moduleId);
+      case 'quotes':
+        return new QuoteDataProvider(entityId, moduleId);
       default:
         throw new Error(`Нет доступного DataProvider для модуля: ${moduleId}`);
     }
@@ -48,6 +51,8 @@ class DataProviderFactory {
         return TaskDataProvider;
       case 'contractors':
         return ContractorDataProvider;
+      case 'quotes':
+        return QuoteDataProvider;
       default:
         return null;
     }

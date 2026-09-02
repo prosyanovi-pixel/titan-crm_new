@@ -7,6 +7,8 @@ import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { Save, Building2 } from 'lucide-react';
 import { api } from '@/lib/api';
+import { useSettings } from '@/hooks/use-settings';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface CompanyProfile {
   id?: number;
@@ -24,13 +26,14 @@ interface CompanyProfile {
   phone: string;
   email: string;
   website: string;
+  tax_regime_id?: number | null;
 }
 
 const EMPTY: CompanyProfile = {
   full_name: '', short_name: '', legal_address: '', actual_address: '',
   inn: '', kpp: '', ogrn: '', bik: '',
   bank_account: '', corr_account: '', bank_name: '',
-  phone: '', email: '', website: '',
+  phone: '', email: '', website: '', tax_regime_id: null,
 };
 
 // db.js converts snake_case → camelCase; map back to snake_case for local state
@@ -51,10 +54,12 @@ const fromApi = (res: any): CompanyProfile => ({
   phone: res.phone ?? '',
   email: res.email ?? '',
   website: res.website ?? '',
+  tax_regime_id: res.taxRegimeId ?? res.tax_regime_id ?? null,
 });
 
 export function CompanyProfileEditor() {
   const { t } = useTranslation();
+  const { taxRegimes } = useSettings();
   const [data, setData] = useState<CompanyProfile>(EMPTY);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -171,6 +176,22 @@ export function CompanyProfileEditor() {
         <div className="space-y-2">
           <Label>{t('generated.ogrn')}</Label>
           <Input value={data.ogrn} onChange={set('ogrn')} placeholder="1027700000000" maxLength={15} />
+        </div>
+        <div className="space-y-2">
+          <Label>{t('settings.finance.tax_regimes')}</Label>
+          <Select 
+            value={data.tax_regime_id ? String(data.tax_regime_id) : ""} 
+            onValueChange={(val) => setData(prev => ({ ...prev, tax_regime_id: val ? Number(val) : null }))}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={t('generated.ne_vybrano')} />
+            </SelectTrigger>
+            <SelectContent>
+              {taxRegimes.map(r => (
+                <SelectItem key={r.id} value={String(r.id)}>{r.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

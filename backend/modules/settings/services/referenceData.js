@@ -8,8 +8,14 @@ const MODULE_TABLE = {
   cases: 'case_status',
   finance: 'finance_invoice_status',
   calendar: 'calendar_status',
+  contracts: 'contract_status',
+  contracts_payment: 'contract_payment_status',
   reports: 'report_status',
   marketing: 'marketing_status',
+  price_lists: 'price_list_status',
+  products: 'product_status',
+  quotes: 'quote_status',
+  services: 'service_status',
 };
 
 function toStatus(row, module) {
@@ -166,12 +172,25 @@ async function fetchProjectStages() {
 }
 
 async function fetchTaxRegimes() {
-  const { rows } = await db.query('SELECT id, code, name FROM finance_tax_regimes WHERE is_active = TRUE ORDER BY id');
-  return rows.map((row) => ({
-    id: Number(row.id),
-    code: row.code,
-    name: row.name,
-  }));
+  const { rows } = await db.query(
+    'SELECT id, code, name, requires_nds, default_vat_rate FROM finance_tax_regimes WHERE is_active = TRUE ORDER BY id'
+  );
+  return rows.map((row) => {
+    const defaultVatRate = parseFloat(String(row.defaultVatRate ?? row.default_vat_rate ?? '0')) || 0;
+    const requiresNds = Boolean(row.requiresNds ?? row.requires_nds ?? false);
+    
+    return {
+      id: Number(row.id),
+      code: row.code,
+      name: row.name,
+      /** Применяется ли НДС для данного режима — используем requires_nds ИЛИ проверяем наличие ставки по умолчанию */
+      hasVat: requiresNds || defaultVatRate > 0,
+      /** Синоним has_vat (расширенная таблица из миграции 110) */
+      requiresNds,
+      /** Ставка НДС по умолчанию для режима, в процентах */
+      defaultVatRate,
+    };
+  });
 }
 
 async function fetchMarketingTypes() {

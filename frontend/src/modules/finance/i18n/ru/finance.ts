@@ -105,6 +105,7 @@ export const finance = {
       is_taxable: 'Облагается НДС',
       vat_rate: 'Ставка НДС',
       vat_amount: 'Сумма НДС',
+      total_with_vat: 'Итого с НДС',
     },
     
     placeholder: {

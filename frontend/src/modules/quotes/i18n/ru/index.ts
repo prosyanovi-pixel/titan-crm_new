@@ -23,6 +23,8 @@ export const quotes = {
   discount: 'Скидка (%)',
   discount_short: 'Скидка %',
   download_pdf: 'Скачать PDF',
+  taxAmount: 'НДС',
+  no_vat: 'НДС не облагается',
   convert_to_contract: 'Создать договор',
   general_info: 'Общая информация',
   total_label: 'Итого:',

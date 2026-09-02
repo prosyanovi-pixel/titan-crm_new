@@ -302,6 +302,8 @@ export const general = {
     "ne_vybran": "Не выбран",
     "ne_vybrana": "Не выбрана",
     "ne_zapolneno": "не заполнено",
+    "ne_vybrano": "Не выбрано",
+    "ne_vypolneno": "Не выполнено",
     "neaktiven": "неактивен",
     "neaktivna": "неактивна",
     "nel_zya_udalit_bazovuyu_valyutu": "Нельзя удалить базовую валюту",

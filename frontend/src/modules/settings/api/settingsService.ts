@@ -10,6 +10,7 @@ import {
   Permission,
 } from "../types/settings.types";
 import { ENDPOINTS } from "./endpoints";
+import { TaxRegimeItem } from "@/context/SettingsContext.types";
 
 export interface ReferenceDataResponse {
   statuses: StatusItem[];
@@ -17,7 +18,7 @@ export interface ReferenceDataResponse {
   priorities: PriorityItem[];
   relationshipTypes: RelationshipTypeItem[];
   contractorTypes: Array<{ id: string; name: string }>;
-  taxRegimes: Array<{ id: number; name: string; code: string }>;
+  taxRegimes: TaxRegimeItem[];
   marketingStatuses: StatusItem[];
   marketingTypes: Array<{ id: string; name: string; color?: string; order?: number }>;
 }

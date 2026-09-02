@@ -23,6 +23,8 @@ const MODULE_TABLE = {
   reports: 'report_status',
   products:    'product_status',
   services:    'service_status',
+  quotes:      'quote_status',
+  price_lists: 'price_list_status',
 };
 
 /**

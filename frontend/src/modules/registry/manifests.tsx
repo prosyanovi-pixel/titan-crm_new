@@ -44,7 +44,7 @@ const WarehousePage = lazy(() => import("@/modules/warehouse").then(m => ({ defa
 const ServicesPage = lazy(() => import("@/modules/services").then(m => ({ default: m.ServicesPage })));
 const PriceListsPage = lazy(() => import("@/modules/price_lists").then(m => ({ default: m.PriceListsPage })));
 const QuotesPage = lazy(() => import("@/modules/quotes/pages/QuotesPage").then(m => ({ default: m.QuotesPage })));
-const QuoteFormPage = lazy(() => import("@/modules/quotes/pages/QuoteFormPage").then(m => ({ default: m.QuoteFormPage })));
+const QuoteDetailPage = lazy(() => import("@/modules/quotes/pages/QuoteDetailPage").then(m => ({ default: m.QuoteDetailPage })));
 import { Briefcase, FileSpreadsheet } from "lucide-react";
 
 export const moduleManifests: ModuleManifest[] = [
@@ -424,6 +424,8 @@ export const moduleManifests: ModuleManifest[] = [
       icon: FileSpreadsheet,
       order: 91,
     },
+    settingsModuleId: "quotes",
+    quickActionsModuleId: "quotes",
   },
   {
     id: "quote-form",
@@ -431,7 +433,7 @@ export const moduleManifests: ModuleManifest[] = [
       path: "/quotes/:id",
       titleKey: "quotes.edit",
       featureFlag: "quotes",
-      element: <QuoteFormPage />,
+      element: <QuoteDetailPage />,
     },
     settingsModuleId: "quotes"
   },

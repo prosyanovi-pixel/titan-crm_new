@@ -214,7 +214,8 @@ INSERT INTO modules (id, name, icon, displayorder, is_active) VALUES
     ('contracts', 'Договоры', 'FileSignature', 5, true),
     ('mail', 'Почта', 'Mail', 6, true),
     ('lawyers', 'Юристы', 'Scale', 7, true),
-    ('cases', 'Дела', 'Gavel', 8, true)
+    ('cases', 'Дела', 'Gavel', 8, true),
+    ('quotes', 'Коммерческие предложения', 'FileText', 9, true)
 ON CONFLICT (id) DO UPDATE SET 
     name = EXCLUDED.name, 
     icon = EXCLUDED.icon,
@@ -339,7 +340,11 @@ INSERT INTO permissions (id, name, category, description) VALUES
     -- backups
     ('backups.read', 'backups.read', 'backups', 'Просмотр резервных копий'),
     ('backups.write', 'backups.write', 'backups', 'Создание резервных копий'),
-    ('backups.delete', 'backups.delete', 'backups', 'Удаление резервных копий')
+    ('backups.delete', 'backups.delete', 'backups', 'Удаление резервных копий'),
+    -- quotes
+    ('quotes.read', 'quotes.read', 'quotes', 'Просмотр коммерческих предложений'),
+    ('quotes.write', 'quotes.write', 'quotes', 'Создание и редактирование коммерческих предложений'),
+    ('quotes.delete', 'quotes.delete', 'quotes', 'Удаление коммерческих предложений')
 ON CONFLICT (id) DO UPDATE SET
     name = EXCLUDED.name,
     category = EXCLUDED.category,
@@ -351,7 +356,7 @@ UPDATE roles SET permissions = '[
     "contractors.*", "projects.*", "tasks.*", "documents.*",
     "calendar.*", "mail.*", "reports.*", "cases.*",
     "lawyers.*", "finance.*", "statuses.*", "tags.*",
-    "backups.read", "backups.write"
+    "backups.read", "backups.write", "quotes.*"
 ]'::jsonb WHERE id = 'manager';
 UPDATE roles SET permissions = '[
     "cases.*", "documents.*", "calendar.*", "tasks.read", "tasks.write",
@@ -367,7 +372,7 @@ UPDATE roles SET permissions = '[
     "projects.read", "tasks.read", "contractors.read", "documents.read",
     "calendar.read", "cases.read", "mail.read", "mail.write",
     "dashboard.read", "profile.read", "profile.write",
-    "statuses.read", "tags.read"
+    "statuses.read", "tags.read", "quotes.read", "quotes.write"
 ]'::jsonb WHERE id = 'user';
 UPDATE roles SET permissions = '[
     "projects.read", "tasks.read", "contractors.read", "documents.read",

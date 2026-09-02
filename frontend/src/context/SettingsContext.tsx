@@ -9,7 +9,7 @@ import {
 } from '../lib/settings-data';
 import { api } from '@/lib/api';
 import { settingsService } from '@/modules/settings/api/settingsService';
-import { ThemeType, DensityType, FontSizeType, SettingsContextType } from './SettingsContext.types';
+import { ThemeType, DensityType, FontSizeType, SettingsContextType, CompanyProfile, TaxRegimeItem } from './SettingsContext.types';
 import { SettingsContext } from './useSettingsContext';
 
 const STORAGE_KEYS = {
@@ -87,7 +87,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     queryKey: ['global-settings'],
     queryFn: async () => {
       try {
-        const [referenceData, refs, dbTheme, dbAccent, dbCollapsed, dbDensity, dbFontSize, legalFormsRes, legalFormGroupsRes, apiQuickActions, positionsRes] = await Promise.all([
+        const [referenceData, refs, dbTheme, dbAccent, dbCollapsed, dbDensity, dbFontSize, legalFormsRes, legalFormGroupsRes, apiQuickActions, positionsRes, companyProfileRes] = await Promise.all([
           settingsService.getReferenceData().catch(() => null),
           api.get('/references').catch(() => null),
           api.get(`/user-settings/${STORAGE_KEYS.theme}`).catch(() => null),
@@ -99,11 +99,12 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           api.get('/references/legal_form_groups').catch(() => []),
           api.get('/quick-actions').catch(() => []),
           api.get('/references/positions').catch(() => []),
+          api.get('/company/profile').catch(() => null),
         ]);
         
         return {
-          referenceData, refs, dbTheme, dbAccent, dbCollapsed, dbDensity, dbFontSize, 
-          legalFormsRes, legalFormGroupsRes, apiQuickActions, positionsRes
+          referenceData, refs, dbTheme, dbAccent, dbCollapsed, dbDensity, dbFontSize,
+          legalFormsRes, legalFormGroupsRes, apiQuickActions, positionsRes, companyProfileRes
         };
       } catch (e) {
         console.error('Failed to load settings:', e);
@@ -132,7 +133,28 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const projectStages = (settingsData?.referenceData as Record<string, unknown>)?.projectStages as ProjectStageItem[] || (settingsData?.refs as Record<string, unknown>)?.projectStages as ProjectStageItem[] || [];
   const relationshipTypes = settingsData?.referenceData?.relationshipTypes || settingsData?.refs?.relationshipTypes || defaultRelationshipTypes;
   const contractorTypes = settingsData?.referenceData?.contractorTypes || settingsData?.refs?.contractorTypes || [];
-  const taxRegimes = (settingsData?.referenceData as Record<string, unknown>)?.taxRegimes as Array<{ id: number; name: string; code: string }> || (settingsData?.refs as Record<string, unknown>)?.taxRegimes as Array<{ id: number; name: string; code: string }> || [];
+  const taxRegimes = (
+    (settingsData?.referenceData as Record<string, unknown>)?.taxRegimes ||
+    (settingsData?.refs as Record<string, unknown>)?.taxRegimes ||
+    []
+  ) as TaxRegimeItem[];
+
+  /** Профиль компании — загружается глобально, не нужен отдельный запрос в компонентах */
+  const companyProfile: CompanyProfile | null = (() => {
+    const raw = settingsData?.companyProfileRes;
+    if (!raw || typeof raw !== 'object') return null;
+    const r = raw as Record<string, unknown>;
+    // db.js конвертирует snake_case → camelCase автоматически
+    return {
+      id: r.id as number | undefined,
+      fullName: (r.fullName ?? r.full_name) as string | undefined,
+      shortName: (r.shortName ?? r.short_name) as string | undefined,
+      inn: r.inn as string | undefined,
+      kpp: r.kpp as string | undefined,
+      taxRegimeId: ((r.taxRegimeId ?? r.tax_regime_id) as number | null | undefined) ?? null,
+      ...r,
+    };
+  })();
   
   const allQuickActions = Array.isArray(settingsData?.apiQuickActions) ? settingsData.apiQuickActions : [];
   const quickActions = allQuickActions.filter((qa: QuickAction) => qa.isActive !== false);
@@ -213,6 +235,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const contextValue: SettingsContextType = {
     theme, accentColor, sidebarCollapsed, density, tableFontSize, loading,
     statuses, tags, priorities, projectStages, quickActions, allQuickActions, relationshipTypes, taxRegimes, legalForms, legalFormGroups, contractorTypes, positions, modules,
+    companyProfile,
     setTheme, setAccentColor, setSidebarCollapsed, setDensity, setTableFontSize,
     refresh: async () => { await loadData(); },
     addItem, updateItem, deleteItem, saveQuickActions,

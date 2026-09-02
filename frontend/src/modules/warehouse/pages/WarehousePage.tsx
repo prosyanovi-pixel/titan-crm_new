@@ -30,6 +30,8 @@ export const WarehousePage = () => {
     setIsTransactionFormOpen,
     isWarehouseFormOpen,
     setIsWarehouseFormOpen,
+    editingWarehouse,
+    setEditingWarehouse,
     balancesTable,
     warehousesTable,
     transactionsTable,
@@ -124,14 +126,24 @@ export const WarehousePage = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isWarehouseFormOpen} onOpenChange={setIsWarehouseFormOpen}>
+      <Dialog open={isWarehouseFormOpen} onOpenChange={(open) => {
+        setIsWarehouseFormOpen(open);
+        if (!open) setEditingWarehouse(null);
+      }}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>{t('warehouse.warehouse_new')}</DialogTitle>
+            <DialogTitle>{editingWarehouse ? t('warehouse.warehouse_edit') : t('warehouse.warehouse_new')}</DialogTitle>
           </DialogHeader>
           <WarehouseForm 
-            onSuccess={() => setIsWarehouseFormOpen(false)}
-            onCancel={() => setIsWarehouseFormOpen(false)}
+            warehouse={editingWarehouse}
+            onSuccess={() => {
+              setIsWarehouseFormOpen(false);
+              setEditingWarehouse(null);
+            }}
+            onCancel={() => {
+              setIsWarehouseFormOpen(false);
+              setEditingWarehouse(null);
+            }}
             statuses={(pageState.warehouseSettings as { statuses?: Array<{id: string, name: string}> }).statuses || []}
           />
         </DialogContent>
