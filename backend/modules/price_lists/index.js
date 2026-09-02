@@ -1,6 +1,6 @@
 const routes = require('./routes/priceListsRoutes');
 
 module.exports = {
-  routes,
+  router: routes,
   prefix: '/api/price-lists'
 };

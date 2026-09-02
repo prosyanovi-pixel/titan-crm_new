@@ -75,6 +75,9 @@ router.put('/:id', async (req, res) => {
     res.json(rows[0]);
   } catch (error) {
     logger.error(`Error updating payment ${req.params.id}:`, error);
+    if (error && error.code === '23505' && String(error.constraint).includes('idx_finance_payments_unique')) {
+      return res.status(400).json({ error: 'Платеж с такими параметрами (сумма, дата, контрагент, тип) уже существует.' });
+    }
     res.status(500).json({ error: error.message });
   }
 });
