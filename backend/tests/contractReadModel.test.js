@@ -42,11 +42,11 @@ test('contractReadModel helper', async (t) => {
         if (sql.includes('totalInvoiced')) return { rows: [{ totalInvoiced: '10', totalPaid: '4' }] };
         if (sql.includes('finance_invoices')) return { rows: [{ id: 'i1' }] };
         if (sql.includes('finance_payments')) return { rows: [{ id: 'p1' }] };
-        if (sql.includes('contract_versions')) return { rows: [{ version_number: 2 }] };
+        if (sql.includes('contract_versions')) return { rows: [{ versionNumber: 2 }] };
         if (sql.includes('contract_approvals')) return { rows: [{ id: 'a1' }] };
         if (sql.includes('contract_files')) return { rows: [{ id: 'f1' }] };
         if (sql.includes('contract_cases')) return { rows: [{ id: 'cc1' }] };
-        if (sql.includes('contract_tags')) return { rows: [{ tag_id: 'tag-1' }] };
+        if (sql.includes('contract_tags')) return { rows: [{ tagId: 'tag-1' }] };
         if (sql.includes('FROM contracts c')) return { rows: [{ id: 'c1', name: 'Test' }] };
         return { rows: [] };
       },
