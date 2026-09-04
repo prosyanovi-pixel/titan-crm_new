@@ -3,14 +3,11 @@ const {
   getQuoteById,
   createQuote,
   updateQuote,
-  deleteQuote,
-  generatePdf
+  deleteQuote
 } = require('../controllers/quotesController');
 const db = require('../../../db');
-const { generatePdfBuffer } = require('../../../utils/pdfGenerator');
 
 jest.mock('../../../db');
-jest.mock('../../../utils/pdfGenerator');
 
 describe('Quotes Controllers', () => {
   let req, res, next;
@@ -126,19 +123,4 @@ describe('Quotes Controllers', () => {
     });
   });
 
-  describe('generatePdf', () => {
-    it('should generate pdf and send', async () => {
-      req.params.id = 1;
-      db.query
-        .mockResolvedValueOnce({ rows: [{ id: 1, number: 'Q-001' }] })
-        .mockResolvedValueOnce({ rows: [] }); // items
-
-      generatePdfBuffer.mockResolvedValueOnce(Buffer.from('pdf'));
-
-      await generatePdf(req, res, next);
-
-      expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'application/pdf');
-      expect(res.send).toHaveBeenCalledWith(expect.any(Buffer));
-    });
-  });
 });

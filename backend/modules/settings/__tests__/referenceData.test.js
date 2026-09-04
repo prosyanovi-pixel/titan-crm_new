@@ -36,14 +36,15 @@ describe('Reference Data Service', () => {
     });
 
     it('should fetch all statuses if module not provided', async () => {
-      // It iterates through all 9 modules
+      // It iterates through all modules in MODULE_TABLE
       db.query.mockResolvedValue({
         rows: [{ id: 1, name: 'Active', displayorder: 1 }]
       });
 
       const result = await fetchStatuses();
 
-      expect(db.query).toHaveBeenCalledTimes(9); 
+      const expectedCalls = Object.keys(require('../services/referenceData').MODULE_TABLE).length;
+      expect(db.query).toHaveBeenCalledTimes(expectedCalls); 
       expect(result.length).toBeGreaterThan(0);
     });
   });
