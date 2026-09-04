@@ -1,3 +1,8 @@
+-- Register products module if it doesn't exist
+INSERT INTO modules (id, name, icon, folder, displayorder, is_active)
+VALUES ('products', 'Продукты', 'Package', 'products', 160, true)
+ON CONFLICT (id) DO NOTHING;
+
 -- Seed basic characteristic templates for products module
 INSERT INTO module_settings (module_id, setting_key, value, updated_at)
 VALUES (
