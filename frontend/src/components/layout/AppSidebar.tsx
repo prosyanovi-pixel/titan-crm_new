@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import { getModuleNavigation } from "@/modules";
 import { isFeatureEnabled } from "@/config/featureFlags";
 import { usePermission } from "@/hooks/usePermission";
-import { useReferenceData } from "@/hooks/useReferenceData";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Megaphone,
@@ -57,8 +56,7 @@ export function AppSidebar({ isMobileView = false, onNavigate, forceCollapsed }:
   // If forceCollapsed is provided (e.g. on tablets), respect it
   const isCollapsed = isMobileView ? false : (forceCollapsed !== undefined ? forceCollapsed : sidebarCollapsed);
 
-  const { data: refData } = useReferenceData();
-  const dbModules = (refData as any)?.modules || [];
+  const { modules: dbModules = [] } = useSettings();
   const activeModuleIds = new Set(dbModules.filter((m: any) => m.isActive !== false).map((m: any) => m.id));
 
   const moduleNavigationItems = getModuleNavigation()

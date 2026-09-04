@@ -53,6 +53,11 @@ export interface SettingsContextType {
   positions: PositionItem[];
   modules: Record<string, unknown>[];
   
+  managers: Record<string, unknown>[];
+  marketingStatuses: StatusItem[];
+  marketingTypes: Record<string, unknown>[];
+  projectStatuses: StatusItem[];
+
   setTheme: (theme: ThemeType) => void;
   setAccentColor: (color: string) => void;
   setSidebarCollapsed: (collapsed: boolean) => void;

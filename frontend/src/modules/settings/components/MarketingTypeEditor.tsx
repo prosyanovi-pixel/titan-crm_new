@@ -10,7 +10,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useConfirm } from '@/components/ui/confirm-dialog';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
-import { useReferenceData } from '@/hooks/useReferenceData';
+import { useSettings } from '@/hooks/use-settings';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface MarketingTypeEditorProps {
@@ -29,8 +29,9 @@ export function MarketingTypeEditor({ onUpdate }: MarketingTypeEditorProps) {
   const { confirm } = useConfirm();
   const queryClient = useQueryClient();
 
-  const { data: referenceData, isLoading, refetch } = useReferenceData();
-  const types = referenceData?.marketingTypes || [];
+  const settings = useSettings();
+  const { refresh, loading: isLoading } = settings;
+  const types = (settings.marketingTypes || []) as unknown as MarketingType[];
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState<{
@@ -67,7 +68,7 @@ export function MarketingTypeEditor({ onUpdate }: MarketingTypeEditorProps) {
         color: editData.color,
       });
       setEditingId(null);
-      await refetch();
+      await refresh();
       queryClient.invalidateQueries({ queryKey: ['referenceData'] });
       onUpdate?.();
       toast.success(t('common.saved_successfully'));
@@ -92,7 +93,7 @@ export function MarketingTypeEditor({ onUpdate }: MarketingTypeEditorProps) {
         color: '#3B82F6',
       });
       setIsAdding(false);
-      await refetch();
+      await refresh();
       queryClient.invalidateQueries({ queryKey: ['referenceData'] });
       onUpdate?.();
       toast.success(t('common.added_successfully'));
@@ -111,7 +112,7 @@ export function MarketingTypeEditor({ onUpdate }: MarketingTypeEditorProps) {
     ) {
       try {
         await api.delete(`/references/marketing_type/${id}`);
-        await refetch();
+        await refresh();
         queryClient.invalidateQueries({ queryKey: ['referenceData'] });
         onUpdate?.();
         toast.success(t('common.deleted_successfully'));

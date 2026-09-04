@@ -10,7 +10,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { useTranslation } from "@/lib/i18n";
 import { Project } from "../types";
-import { api } from "@/lib/api";
+import { useSettings } from "@/hooks/use-settings";
 
 interface ProjectBulkEditDialogProps {
   open: boolean;
@@ -33,35 +33,13 @@ interface ProjectReferences {
 
 export function ProjectBulkEditDialog({ open, onOpenChange, onSave, count }: ProjectBulkEditDialogProps) {
   const { t } = useTranslation();
+  const settings = useSettings();
   const [field, setField] = useState<string>("status");
   const [value, setValue] = useState<string>("");
   
-  // Reference data
-  const [references, setReferences] = useState<ProjectReferences>({ statuses: [], priorities: [], managers: [] });
-
-  useEffect(() => {
-      if (open) {
-          api.get('/references').then((data: ProjectReferences) => {
-              setReferences({
-                  statuses: data.projectStatuses || [],
-                  priorities: data.priorities,
-                  managers: data.managers
-              });
-          });
-      }
-      const onRefs = (e: Event) => {
-        const detail = (e as CustomEvent<ProjectReferences>).detail;
-        if (detail) {
-          setReferences({
-            statuses: detail.projectStatuses || [],
-            priorities: detail.priorities,
-            managers: detail.managers
-          });
-        }
-      };
-      window.addEventListener('references:updated', onRefs as EventListener);
-      return () => window.removeEventListener('references:updated', onRefs as EventListener);
-  }, [open]);
+  const statuses = settings.projectStatuses || [];
+  const priorities = settings.priorities || [];
+  const managers = (settings.managers || []) as { id: string, name: string }[];
 
   const handleSave = () => {
     if (field && value) {
@@ -103,8 +81,8 @@ export function ProjectBulkEditDialog({ open, onOpenChange, onSave, count }: Pro
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent>
-                  {references.statuses.map((s) => (
-                    <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                  {statuses.map((s) => (
+                    <SelectItem key={s.id} value={String(s.id)}>{s.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -115,8 +93,8 @@ export function ProjectBulkEditDialog({ open, onOpenChange, onSave, count }: Pro
                 <SelectValue placeholder="Select priority" />
               </SelectTrigger>
               <SelectContent>
-                  {references.priorities.map((p) => (
-                    <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                  {priorities.map((p) => (
+                    <SelectItem key={p.id} value={String(p.id)}>{p.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -127,7 +105,7 @@ export function ProjectBulkEditDialog({ open, onOpenChange, onSave, count }: Pro
                 <SelectValue placeholder="Select manager" />
               </SelectTrigger>
               <SelectContent>
-                  {references.managers.map((m) => (
+                  {managers.map((m) => (
                     <SelectItem key={m.id} value={m.name}>{m.name}</SelectItem>
                 ))}
               </SelectContent>

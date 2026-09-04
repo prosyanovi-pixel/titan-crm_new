@@ -23,7 +23,7 @@ import { MarketingCampaign } from "../types";
 import { DataTable } from "@/components/ui/data-table";
 import { useDataTable } from "@/hooks/useDataTable";
 import { QuickActionsMenu } from "@/components/ui/QuickActionsMenu";
-import { useReferenceData } from "@/hooks/useReferenceData";
+
 import { useQuery } from "@tanstack/react-query";
 import { settingsApi } from "@/modules/settings/api";
 import { useMarketingCampaigns } from "../hooks/useMarketingCampaigns";
@@ -37,13 +37,13 @@ export default function MarketingPage() {
   const { confirm } = useConfirm();
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
-  const { getQuickActionsByModule } = useSettings();
+  const settings = useSettings();
+  const { getQuickActionsByModule } = settings;
   const marketingActions = useModuleActions("marketing");
 
   // Load reference data
-  const { data: referenceData } = useReferenceData();
-  const statuses = referenceData?.marketingStatuses || [];
-  const types = referenceData?.marketingTypes || [];
+  const statuses = settings.marketingStatuses || [];
+  const types = (settings.marketingTypes || []) as Array<{ id: string; name: string; color?: string; order?: number }>;
 
   // Edit / Create States
   const [sheetOpen, setSheetOpen] = useState(false);

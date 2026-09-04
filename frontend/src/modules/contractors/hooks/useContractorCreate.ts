@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { Contractor } from "../types/contractor.types";
 import { useContractorForm } from "./useContractorForm";
+import { useSettings } from "@/hooks/use-settings";
 import { mapTypeToLegalDetails } from "../utils/contractor-utils";
 
 /** Тип формы контрагента (организация, ИП, физ лицо или иностранное юр. лицо) */
@@ -52,16 +53,8 @@ export function useContractorCreate({
 
   const { setFormData, handleChange, handleSubmit } = form;
 
-  // Load tax regimes
-  const { data: taxRegimesList = [] } = useQuery({
-    queryKey: ['contractors-tax-regimes'],
-    queryFn: async () => {
-      const res = await api.get('/references');
-      return res?.taxRegimes || [];
-    },
-    enabled: open,
-    staleTime: 24 * 60 * 60 * 1000,
-  });
+  const settings = useSettings();
+  const taxRegimesList = settings.taxRegimes || [];
 
   // Reset when sheet closes
   useEffect(() => {

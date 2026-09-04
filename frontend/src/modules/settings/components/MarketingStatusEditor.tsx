@@ -11,7 +11,7 @@ import { useConfirm } from '@/components/ui/confirm-dialog';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { useQueryClient } from '@tanstack/react-query';
-import { useReferenceData } from '@/hooks/useReferenceData';
+import { useSettings } from '@/hooks/use-settings';
 
 interface MarketingStatusEditorProps {
   onUpdate?: () => void;
@@ -29,8 +29,9 @@ export function MarketingStatusEditor({ onUpdate }: MarketingStatusEditorProps) 
   const { confirm } = useConfirm();
   const queryClient = useQueryClient();
 
-  const { data: referenceData, isLoading, refetch } = useReferenceData();
-  const statuses = referenceData?.marketingStatuses || [];
+  const settings = useSettings();
+  const { refresh, loading: isLoading } = settings;
+  const statuses = (settings.marketingStatuses || []) as MarketingStatus[];
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState<{
@@ -67,7 +68,7 @@ export function MarketingStatusEditor({ onUpdate }: MarketingStatusEditorProps) 
         color: editData.color,
       });
       setEditingId(null);
-      await refetch();
+      await refresh();
       queryClient.invalidateQueries({ queryKey: ['referenceData'] });
       onUpdate?.();
       toast.success(t('common.saved_successfully'));
@@ -92,7 +93,7 @@ export function MarketingStatusEditor({ onUpdate }: MarketingStatusEditorProps) 
         color: '#6B7280',
       });
       setIsAdding(false);
-      await refetch();
+      await refresh();
       queryClient.invalidateQueries({ queryKey: ['referenceData'] });
       onUpdate?.();
       toast.success(t('common.added_successfully'));
@@ -111,7 +112,7 @@ export function MarketingStatusEditor({ onUpdate }: MarketingStatusEditorProps) 
     ) {
       try {
         await api.delete(`/references/marketing_status/${id}`);
-        await refetch();
+        await refresh();
         queryClient.invalidateQueries({ queryKey: ['referenceData'] });
         onUpdate?.();
         toast.success(t('common.deleted_successfully'));

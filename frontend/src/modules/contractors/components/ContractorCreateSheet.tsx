@@ -38,10 +38,6 @@ interface ContractorCreateSheetProps {
   initialName?: string;
 }
 
-interface TaxRegime {
-  id: number;
-  name: string;
-}
 
 export function ContractorCreateSheet({
   open,
@@ -56,19 +52,10 @@ export function ContractorCreateSheet({
   const [selectedType, setSelectedType] = useState<ContractorType>("legal");
   const [inn, setInn] = useState("");
   const [tagSearch, setTagSearch] = useState("");
-  const [taxRegimesList, setTaxRegimesList] = useState<TaxRegime[]>([]);
+  const taxRegimesList = settings.taxRegimes || [];
 
   // Use the extracted INN lookup hook
   const { isLoading, error, performLookup } = useInnLookup();
-
-  // Load tax regimes from references
-  useEffect(() => {
-    if (open) {
-      api.get('/references').then(res => {
-        if (res.taxRegimes) setTaxRegimesList(res.taxRegimes);
-      }).catch(err => console.error("Failed to load tax regimes:", err));
-    }
-  }, [open]);
 
   const relationshipTypes = settings.getRelationshipTypesByModule('contractors');
   const availableTags = settings.getTagsByModule('contractors');

@@ -162,6 +162,11 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const legalFormGroups = Array.isArray(settingsData?.legalFormGroupsRes) ? settingsData?.legalFormGroupsRes : (settingsData?.legalFormGroupsRes?.rows || []);
   const positions = Array.isArray(settingsData?.positionsRes) ? settingsData?.positionsRes : ((settingsData?.positionsRes as { data?: PositionItem[] })?.data || []);
   const modules = settingsData?.refs?.modules || [];
+  
+  const managers = settingsData?.refs?.managers || [];
+  const marketingStatuses = settingsData?.referenceData?.marketingStatuses || settingsData?.refs?.marketingStatuses || [];
+  const marketingTypes = settingsData?.referenceData?.marketingTypes || settingsData?.refs?.marketingTypes || [];
+  const projectStatuses = settingsData?.refs?.projectStatuses || [];
 
   const addItem = async (table: string, item: Record<string, unknown>) => {
     const res = await api.post(`/references/${table}`, item);
@@ -235,6 +240,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const contextValue: SettingsContextType = {
     theme, accentColor, sidebarCollapsed, density, tableFontSize, loading,
     statuses, tags, priorities, projectStages, quickActions, allQuickActions, relationshipTypes, taxRegimes, legalForms, legalFormGroups, contractorTypes, positions, modules,
+    managers, marketingStatuses, marketingTypes, projectStatuses,
     companyProfile,
     setTheme, setAccentColor, setSidebarCollapsed, setDensity, setTableFontSize,
     refresh: async () => { await loadData(); },
