@@ -19,7 +19,9 @@ export function CharacteristicTemplatesEditor() {
   const { settings, isLoading } = useModuleSettings(moduleId);
   const updateModuleSettings = useUpdateModuleSettings();
   
-  const [templates, setTemplates] = useState<CharacteristicTemplate[]>([]);
+  const [templates, setTemplates] = useState<CharacteristicTemplate[]>(
+    (settings?.characteristicTemplates as CharacteristicTemplate[]) || []
+  );
   const [isDirty, setIsDirty] = useState(false);
   const [prevSettings, setPrevSettings] = useState(settings);
 
