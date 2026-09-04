@@ -48,6 +48,7 @@ export {
   UserEditor,
   ModuleSettingsEditor,
   AllModuleSettingsPanel,
+  CharacteristicTemplatesEditor,
 } from "./components";
 
 // Pages

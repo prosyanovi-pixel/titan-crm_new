@@ -148,7 +148,8 @@ export const settings = {
     marketing_statuses: "Статусы кампаний",
     marketing_types: "Типы кампаний",
     types: "Типы",
-    tabs: "Вкладки"
+    tabs: "Вкладки",
+    characteristics_templates: "Шаблоны характеристик"
   },
   project_stages: {
     new_placeholder: 'Новая стадия',

@@ -44,6 +44,7 @@ import {
   TabsEditor,
   AiSettingsEditor,
 } from "../components";
+import { CharacteristicTemplatesEditor } from "@/modules/settings";
 import { BulkEditSettingsEditor } from "@/components/settings/BulkEditSettingsEditor";
 import { OutcomeEditor } from "../components";
 import { useSettings } from "@/hooks/use-settings";
@@ -93,7 +94,7 @@ import {
   Target,
 } from 'lucide-react';
 
-type ModuleTabId = 'statuses' | 'tags' | 'relationships' | 'priorities' | 'project_stages' | 'actions' | 'legal_forms' | 'params' | 'outcomes' | 'bulk_edit' | 'tax' | 'categories' | 'birthday_settings' | 'event_types' | 'marketing_statuses' | 'marketing_types' | 'types' | 'tabs';
+type ModuleTabId = 'statuses' | 'tags' | 'relationships' | 'priorities' | 'project_stages' | 'actions' | 'legal_forms' | 'params' | 'outcomes' | 'bulk_edit' | 'tax' | 'categories' | 'birthday_settings' | 'event_types' | 'marketing_statuses' | 'marketing_types' | 'types' | 'tabs' | 'characteristics_templates';
 
 const MODULE_TABS_CONFIG: Record<string, ModuleTabId[]> = {
   contractors: ['statuses', 'tags', 'relationships', 'priorities', 'actions', 'legal_forms', 'params', 'bulk_edit'],
@@ -110,7 +111,7 @@ const MODULE_TABS_CONFIG: Record<string, ModuleTabId[]> = {
   marketing:   ['marketing_statuses', 'marketing_types', 'tags', 'actions', 'params', 'bulk_edit'],
   workflows:   ['params', 'bulk_edit'],
   warehouse:   ['statuses', 'tags', 'actions', 'params', 'bulk_edit'],
-  products:    ['types', 'tabs', 'statuses', 'tags', 'actions', 'params', 'bulk_edit'],
+  products:    ['types', 'tabs', 'statuses', 'tags', 'actions', 'params', 'bulk_edit', 'characteristics_templates'],
   services:    ['types', 'tabs', 'statuses', 'tags', 'actions', 'params', 'bulk_edit'],
   price_lists: ['statuses', 'tags', 'actions', 'params', 'bulk_edit'],
 };
@@ -312,6 +313,7 @@ export default function Settings() {
         marketing_types: t('marketing.settings.types'),
         types:         t('settings.tabs.types'),
         tabs:          t('settings.tabs.tabs'),
+        characteristics_templates: t('settings.tabs.characteristics_templates'),
       };
 
       const TAB_ICONS: Record<string, React.ElementType> = {
@@ -449,6 +451,12 @@ export default function Settings() {
                 moduleId={activeSection}
                 moduleName={activeModule?.name ?? activeSection}
               />
+            </TabsContent>
+          )}
+
+          {tabs.includes('characteristics_templates') && (
+            <TabsContent value="characteristics_templates" className="mt-0">
+              <CharacteristicTemplatesEditor />
             </TabsContent>
           )}
 

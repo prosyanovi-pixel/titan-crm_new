@@ -22,7 +22,7 @@ export interface Product {
   currency: string;
   vatRate: number;
   dimensions: Record<string, number> | null;
-  characteristics: { name: string; value: string; unit: string }[] | null;
+  characteristics: { name: string; value: string; unit: string; section?: string }[] | null;
   images: string[] | null;
   translations: Record<string, {name?: string, description?: string}> | null;
   isActive: boolean;
@@ -45,7 +45,7 @@ export interface CreateProductDto {
   currency?: string;
   vatRate?: number;
   dimensions?: Record<string, number>;
-  characteristics?: { name: string; value: string; unit: string }[];
+  characteristics?: { name: string; value: string; unit: string; section?: string }[];
   images?: string[];
   translations?: Record<string, { name?: string; description?: string }>;
   isActive?: boolean;
@@ -60,4 +60,15 @@ export interface CreateCategoryDto {
   name: string;
   parentId?: number;
   description?: string;
+}
+
+export interface CharacteristicTemplate {
+  id: string;
+  name: string;
+  characteristics: {
+    section?: string;
+    name: string;
+    value: string;
+    unit: string;
+  }[];
 }

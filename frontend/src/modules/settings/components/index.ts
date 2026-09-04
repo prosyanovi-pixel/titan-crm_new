@@ -25,6 +25,7 @@ export { UsersTab } from "./system/UsersTab";
 // Module Settings
 export { ModuleSettingsEditor } from "./ModuleSettingsEditor";
 export { AllModuleSettingsPanel } from "./AllModuleSettingsPanel";
+export { CharacteristicTemplatesEditor } from "./CharacteristicTemplatesEditor";
 // Finance
 export { FinanceCategoriesSettings } from "./FinanceCategoriesSettings";
 export { FinanceTaxSettings } from "./FinanceTaxSettings";

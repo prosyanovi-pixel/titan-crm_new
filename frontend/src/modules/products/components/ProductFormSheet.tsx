@@ -20,6 +20,7 @@ import { ProductBalancesTab } from "./ProductBalancesTab";
 import { ProductBundlesTab } from "./ProductBundlesTab";
 import { Layers } from "lucide-react";
 import { useCompanyVat } from "@/hooks/useCompanyVat";
+import { CHARACTERISTIC_TEMPLATES } from "../constants/characteristicTemplates";
 
 interface ProductFormSheetProps {
   open: boolean;
@@ -40,6 +41,7 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
   const { settings } = useModuleSettings("products");
   const { statuses } = useStatuses({ module: "products" });
   const types = (settings?.types || []) as StatusType[];
+  const charTemplates = (settings?.characteristicTemplates as typeof CHARACTERISTIC_TEMPLATES) || CHARACTERISTIC_TEMPLATES || [];
 
   /** НДС компании — единый хук, не дублируем логику */
   const { hasVat, vatRate: companyVatRate, taxRegimeName } = useCompanyVat();
@@ -66,9 +68,9 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
   const [categoryId, setCategoryId] = useState<string>("");
   const [status, setStatus] = useState<string>("active");
   const [type, setType] = useState<string>("");
+  const [isSubmitError, setIsSubmitError] = useState(false);
+  const [characteristics, setCharacteristics] = useState<Array<{ id: string, section: string, name: string, value: string, unit: string }>>([]);
   const [tags, setTags] = useState<string[]>([]);
-  
-  const [characteristics, setCharacteristics] = useState<Array<{ id: string, name: string, value: string, unit: string }>>([]);
   
   // Bundles
   const [isComposite, setIsComposite] = useState(false);
@@ -154,7 +156,7 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
           writeOffFromWarehouse: c.writeOffFromWarehouse,
           isIncludedInPrice: c.isIncludedInPrice
         })));
-        setCharacteristics((product.characteristics || []).map(c => ({ id: crypto.randomUUID(), name: c.name, value: c.value, unit: c.unit })));
+        setCharacteristics((product.characteristics || []).map(c => ({ id: crypto.randomUUID(), section: c.section || "", name: c.name, value: c.value, unit: c.unit })));
         setImageUrls((product.images || []).join('\n'));
         const rawTr = product.translations || {};
           setTranslations(Object.fromEntries(Object.entries(rawTr).map(([k, v]) => [k, { name: v?.name || '', description: v?.description || '' }])));
@@ -180,16 +182,34 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
   };
 
   const addCharacteristic = () => {
-    setCharacteristics(prev => [...prev, { id: crypto.randomUUID(), name: "", value: "", unit: "" }]);
+    setCharacteristics(prev => [...prev, { id: crypto.randomUUID(), section: "", name: "", value: "", unit: "" }]);
   };
 
-  const updateCharacteristic = (id: string, field: "name" | "value" | "unit", val: string) => {
+  const updateCharacteristic = (id: string, field: "section" | "name" | "value" | "unit", val: string) => {
     setCharacteristics(prev => prev.map(c => c.id === id ? { ...c, [field]: val } : c));
   };
 
   const removeCharacteristic = (id: string) => {
     setCharacteristics(prev => prev.filter(c => c.id !== id));
   };
+
+  const loadTemplate = (templateId: string) => {
+    const template = charTemplates.find((t: any) => t.id === templateId);
+    if (template) {
+      const newChars = template.characteristics.map((c: any) => ({
+        id: crypto.randomUUID(),
+        section: c.section,
+        name: c.name,
+        value: c.value,
+        unit: c.unit
+      }));
+      setCharacteristics(prev => [...prev, ...newChars]);
+    }
+  };
+
+  const templateSections = Array.from(new Set(charTemplates.flatMap((t: any) => t.characteristics.map((c: any) => c.section)))).filter(Boolean);
+  const templateNames = Array.from(new Set(charTemplates.flatMap((t: any) => t.characteristics.map((c: any) => c.name)))).filter(Boolean);
+  const templateUnits = Array.from(new Set(charTemplates.flatMap((t: any) => t.characteristics.map((c: any) => c.unit)))).filter(Boolean);
 
   const flattenCategories = (cats: ProductCategory[], depth = 0): {id: number, name: string, depth: number}[] => {
     let result: {id: number, name: string, depth: number}[] = [];
@@ -223,7 +243,7 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
       tags: tags.length > 0 ? tags : undefined,
       isComposite,
       components: isComposite && components.length > 0 ? components.filter(c => c.componentId > 0) : undefined,
-      characteristics: characteristics.map(({ name, value, unit }) => ({ name, value, unit })),
+      characteristics: characteristics.map(({ section, name, value, unit }) => ({ section, name, value, unit })),
       images: images.length > 0 ? images : undefined,
       translations: Object.keys(translations).length > 0 ? translations : undefined
     };
@@ -441,11 +461,33 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
                 <h3 className="text-lg font-medium">{t('products.form.fields.characteristics')}</h3>
                 <p className="text-sm text-muted-foreground">{t('products.form.fields.characteristics_desc')}</p>
               </div>
-              <Button type="button" variant="outline" size="sm" onClick={addCharacteristic}>
-                <Plus className="w-4 h-4 mr-2" />
-                {t('products.form.fields.add_characteristic')}
-              </Button>
+              <div className="flex items-center gap-2">
+                <Select onValueChange={loadTemplate}>
+                  <SelectTrigger className="w-[200px]">
+                    <SelectValue placeholder="Шаблоны" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {charTemplates.map((t: any) => (
+                      <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button type="button" variant="outline" size="sm" onClick={addCharacteristic}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  {t('products.form.fields.add_characteristic')}
+                </Button>
+              </div>
             </div>
+
+            <datalist id="characteristic-sections">
+              {templateSections.map(s => <option key={s} value={s} />)}
+            </datalist>
+            <datalist id="characteristic-names">
+              {templateNames.map(n => <option key={n} value={n} />)}
+            </datalist>
+            <datalist id="characteristic-units">
+              {templateUnits.map(u => <option key={u} value={u} />)}
+            </datalist>
 
             {characteristics.length === 0 ? (
               <div className="text-center p-8 border border-dashed rounded-md text-muted-foreground text-sm">
@@ -455,9 +497,13 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
               <div className="space-y-3">
                 {characteristics.map((char, index) => (
                   <div key={char.id} className="flex gap-2 items-start">
+                    <div className="w-32 space-y-1">
+                      {index === 0 && <Label className="text-xs text-muted-foreground">Раздел</Label>}
+                      <Input value={char.section} onChange={e => updateCharacteristic(char.id, "section", e.target.value)} placeholder="Общие" list="characteristic-sections" />
+                    </div>
                     <div className="flex-1 space-y-1">
                       {index === 0 && <Label className="text-xs text-muted-foreground">{t('products.form.fields.characteristic_name_placeholder')}</Label>}
-                      <Input value={char.name} onChange={e => updateCharacteristic(char.id, "name", e.target.value)} placeholder={t('products.form.fields.characteristic_name')} />
+                      <Input value={char.name} onChange={e => updateCharacteristic(char.id, "name", e.target.value)} placeholder={t('products.form.fields.characteristic_name')} list="characteristic-names" />
                     </div>
                     <div className="flex-1 space-y-1">
                       {index === 0 && <Label className="text-xs text-muted-foreground">{t('products.form.fields.characteristic_value_placeholder')}</Label>}
@@ -465,7 +511,7 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
                     </div>
                     <div className="w-24 space-y-1">
                       {index === 0 && <Label className="text-xs text-muted-foreground">{t('products.form.fields.characteristic_unit_placeholder')}</Label>}
-                      <Input value={char.unit} onChange={e => updateCharacteristic(char.id, "unit", e.target.value)} placeholder={t('products.form.fields.characteristic_unit')} />
+                      <Input value={char.unit} onChange={e => updateCharacteristic(char.id, "unit", e.target.value)} placeholder={t('products.form.fields.characteristic_unit')} list="characteristic-units" />
                     </div>
                     <div className={index === 0 ? "pt-5" : ""}>
                       <Button type="button" variant="ghost" size="icon" onClick={() => removeCharacteristic(char.id)} className="text-destructive hover:bg-destructive/10">
