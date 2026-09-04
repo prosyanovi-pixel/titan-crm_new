@@ -43,7 +43,7 @@ function splitSQLStatements(sql) {
     }
     
     // Проверяем начало/конец PL/pgSQL блока
-    if (trimmed.startsWith('DO $$') || trimmed.startsWith('DO ')) {
+    if (trimmed.startsWith('DO $$')) {
       inDoBlock = true;
       depth = 1;
       current += line + '\n';

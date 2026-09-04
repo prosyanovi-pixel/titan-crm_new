@@ -79,6 +79,12 @@ CREATE TABLE IF NOT EXISTS price_list_tags (
     UNIQUE(price_list_id, tag)
 );
 
+-- Ensure modules exist before inserting tags
+INSERT INTO modules (id, name, icon, displayorder, is_active) VALUES
+    ('quotes', 'Коммерческие предложения', 'FileText', 9, true),
+    ('price_lists', 'Прайс-листы', 'List', 10, true)
+ON CONFLICT (id) DO NOTHING;
+
 -- Seed defined_tags for these modules (defaults)
 INSERT INTO defined_tags (id, name, color, module, variant, shape, displayorder) VALUES
 ('quote_tag_urgent', 'Срочно', '#EF4444', 'quotes', 'soft', 'pill', 1),
