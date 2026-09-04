@@ -3,7 +3,7 @@ import { SalesDeal } from './types';
 
 export const salesApi = {
   getPipeline: async (): Promise<SalesDeal[]> => {
-    const { data } = await api.get('/projects/sales-pipeline');
-    return data;
+    const data = await api.get('/projects/sales-pipeline');
+    return data || [];
   }
 };

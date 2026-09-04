@@ -1,3 +1,4 @@
+// @refresh reset
 import React, { createContext, useContext, useState } from 'react';
 import * as locales from './locales/ru/index';
 
