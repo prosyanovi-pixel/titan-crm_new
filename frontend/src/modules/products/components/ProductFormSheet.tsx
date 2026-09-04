@@ -4,14 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCreateProduct, useUpdateProduct } from "../hooks";
-import { Plus, Trash2, Info, ListChecks, Package, Globe, Languages } from "lucide-react";
+import { Plus, Trash2, Info, ListChecks, Package, Globe, Languages, Save } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { useContentLanguages } from "@/modules/settings/hooks";
+import { useContentLanguages, useUpdateModuleSettings } from "@/modules/settings/hooks";
 import { useModuleSettings } from "@/modules/settings/hooks/useModuleSettings";
+import { usePermission } from "@/hooks/usePermission";
+import { PERMISSIONS } from "@/constants/permissions";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useSheetTabs } from "@/hooks/useSheetTabs";
 import { ResizableSheet, SheetTabSettings } from "@/components/shared";
 import { TagInput, useStatuses } from "@/components/ui/status-system";
@@ -39,9 +42,44 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
   const createProductMutation = useCreateProduct();
   const updateProductMutation = useUpdateProduct();
   const { settings } = useModuleSettings("products");
+  const updateSettingsMutation = useUpdateModuleSettings();
   const { statuses } = useStatuses({ module: "products" });
+  const { hasPermission } = usePermission();
+  const canEditSettings = hasPermission(PERMISSIONS.settings.write);
   const types = (settings?.types || []) as StatusType[];
   const charTemplates = (settings?.characteristicTemplates as typeof CHARACTERISTIC_TEMPLATES) || CHARACTERISTIC_TEMPLATES || [];
+
+  const [saveTemplateOpen, setSaveTemplateOpen] = useState(false);
+  const [newTemplateName, setNewTemplateName] = useState("");
+
+  const handleSaveAsTemplate = () => {
+    if (!newTemplateName.trim()) return;
+    
+    const templateChars = characteristics.map(c => ({
+      section: c.section,
+      name: c.name,
+      value: c.value,
+      unit: c.unit
+    }));
+
+    const newTemplate = {
+      id: crypto.randomUUID(),
+      name: newTemplateName.trim(),
+      characteristics: templateChars
+    };
+
+    updateSettingsMutation.mutate({
+      moduleId: "products",
+      settings: {
+        characteristicTemplates: [...charTemplates, newTemplate]
+      }
+    }, {
+      onSuccess: () => {
+        setSaveTemplateOpen(false);
+        setNewTemplateName("");
+      }
+    });
+  };
 
   /** НДС компании — единый хук, не дублируем логику */
   const { hasVat, vatRate: companyVatRate, taxRegimeName } = useCompanyVat();
@@ -493,6 +531,12 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
                   <Plus className="w-4 h-4 mr-2" />
                   {t('products.form.fields.add_characteristic')}
                 </Button>
+                {canEditSettings && characteristics.length > 0 && (
+                  <Button type="button" variant="outline" size="sm" onClick={() => setSaveTemplateOpen(true)}>
+                    <Save className="w-4 h-4 mr-2" />
+                    В шаблон
+                  </Button>
+                )}
               </div>
             </div>
 
@@ -570,6 +614,32 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
                 ))}
               </div>
             )}
+
+            <Dialog open={saveTemplateOpen} onOpenChange={setSaveTemplateOpen}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Сохранить как шаблон</DialogTitle>
+                </DialogHeader>
+                <div className="py-4">
+                  <Label>Название шаблона</Label>
+                  <Input 
+                    value={newTemplateName} 
+                    onChange={e => setNewTemplateName(e.target.value)} 
+                    placeholder="Например: Станок ЧПУ базовый" 
+                    autoFocus
+                  />
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setSaveTemplateOpen(false)}>Отмена</Button>
+                  <Button 
+                    onClick={handleSaveAsTemplate} 
+                    disabled={!newTemplateName.trim() || updateSettingsMutation.isPending}
+                  >
+                    Сохранить
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         )}
 
