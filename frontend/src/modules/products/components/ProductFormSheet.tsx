@@ -472,7 +472,24 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
                     ))}
                   </SelectContent>
                 </Select>
-                <Button type="button" variant="outline" size="sm" onClick={addCharacteristic}>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => {
+                    let newSec = "Новый раздел";
+                    let counter = 1;
+                    while (characteristics.some(c => (c.section || "") === newSec)) {
+                      newSec = `Новый раздел ${counter}`;
+                      counter++;
+                    }
+                    setCharacteristics(prev => [...prev, { id: crypto.randomUUID(), section: newSec, name: "", value: "", unit: "" }]);
+                  }}
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Добавить раздел
+                </Button>
+                <Button type="button" variant="outline" size="sm" onClick={() => setCharacteristics(prev => [...prev, { id: crypto.randomUUID(), section: "", name: "", value: "", unit: "" }])}>
                   <Plus className="w-4 h-4 mr-2" />
                   {t('products.form.fields.add_characteristic')}
                 </Button>
@@ -494,29 +511,60 @@ export function ProductFormSheet({ open, onOpenChange, categories, product }: Pr
                 {t('products.form.fields.no_characteristics')}
               </div>
             ) : (
-              <div className="space-y-3">
-                {characteristics.map((char, index) => (
-                  <div key={char.id} className="flex gap-2 items-start">
-                    <div className="w-32 space-y-1">
-                      {index === 0 && <Label className="text-xs text-muted-foreground">Раздел</Label>}
-                      <Input value={char.section} onChange={e => updateCharacteristic(char.id, "section", e.target.value)} placeholder="Общие" list="characteristic-sections" />
-                    </div>
-                    <div className="flex-1 space-y-1">
-                      {index === 0 && <Label className="text-xs text-muted-foreground">{t('products.form.fields.characteristic_name_placeholder')}</Label>}
-                      <Input value={char.name} onChange={e => updateCharacteristic(char.id, "name", e.target.value)} placeholder={t('products.form.fields.characteristic_name')} list="characteristic-names" />
-                    </div>
-                    <div className="flex-1 space-y-1">
-                      {index === 0 && <Label className="text-xs text-muted-foreground">{t('products.form.fields.characteristic_value_placeholder')}</Label>}
-                      <Input value={char.value} onChange={e => updateCharacteristic(char.id, "value", e.target.value)} placeholder={t('products.form.fields.characteristic_value')} />
-                    </div>
-                    <div className="w-24 space-y-1">
-                      {index === 0 && <Label className="text-xs text-muted-foreground">{t('products.form.fields.characteristic_unit_placeholder')}</Label>}
-                      <Input value={char.unit} onChange={e => updateCharacteristic(char.id, "unit", e.target.value)} placeholder={t('products.form.fields.characteristic_unit')} list="characteristic-units" />
-                    </div>
-                    <div className={index === 0 ? "pt-5" : ""}>
-                      <Button type="button" variant="ghost" size="icon" onClick={() => removeCharacteristic(char.id)} className="text-destructive hover:bg-destructive/10">
-                        <Trash2 className="w-4 h-4" />
+              <div className="space-y-6">
+                {Object.entries(
+                  characteristics.reduce((acc, curr) => {
+                    const sec = curr.section || "";
+                    if (!acc[sec]) acc[sec] = [];
+                    acc[sec].push(curr);
+                    return acc;
+                  }, {} as Record<string, typeof characteristics>)
+                ).map(([section, chars]) => (
+                  <div key={chars[0].id} className="space-y-3 border rounded-md p-4 bg-card shadow-sm">
+                    <div className="flex items-center gap-2 mb-2 pb-2 border-b">
+                      <Input 
+                        value={section} 
+                        onChange={e => {
+                          const newSec = e.target.value;
+                          setCharacteristics(prev => prev.map(c => (c.section || "") === section ? { ...c, section: newSec } : c));
+                        }}
+                        placeholder="Без раздела (оставьте пустым для общего списка)"
+                        className="font-semibold text-base bg-transparent border-none px-1 h-auto focus-visible:ring-1 shadow-none flex-1"
+                        list="characteristic-sections"
+                      />
+                      <Button 
+                        type="button" 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setCharacteristics(prev => [...prev, { id: crypto.randomUUID(), section, name: "", value: "", unit: "" }])}
+                      >
+                        <Plus className="w-4 h-4 mr-1" />
+                        Параметр
                       </Button>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      {chars.map((char, i) => (
+                        <div key={char.id} className="flex gap-2 items-start">
+                          <div className="flex-1 space-y-1">
+                            {i === 0 && <Label className="text-xs text-muted-foreground">{t('products.form.fields.characteristic_name_placeholder')}</Label>}
+                            <Input value={char.name} onChange={e => updateCharacteristic(char.id, "name", e.target.value)} placeholder={t('products.form.fields.characteristic_name')} list="characteristic-names" />
+                          </div>
+                          <div className="flex-1 space-y-1">
+                            {i === 0 && <Label className="text-xs text-muted-foreground">{t('products.form.fields.characteristic_value_placeholder')}</Label>}
+                            <Input value={char.value} onChange={e => updateCharacteristic(char.id, "value", e.target.value)} placeholder={t('products.form.fields.characteristic_value')} />
+                          </div>
+                          <div className="w-32 space-y-1">
+                            {i === 0 && <Label className="text-xs text-muted-foreground">{t('products.form.fields.characteristic_unit_placeholder')}</Label>}
+                            <Input value={char.unit} onChange={e => updateCharacteristic(char.id, "unit", e.target.value)} placeholder={t('products.form.fields.characteristic_unit')} list="characteristic-units" />
+                          </div>
+                          <div className={i === 0 ? "pt-5" : ""}>
+                            <Button type="button" variant="ghost" size="icon" onClick={() => removeCharacteristic(char.id)} className="text-destructive hover:bg-destructive/10">
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ))}

@@ -143,10 +143,30 @@ export function CharacteristicTemplatesEditor() {
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <Label className="text-base">Характеристики</Label>
-                  <Button variant="outline" size="sm" onClick={() => addCharacteristic(template.id)}>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Добавить строку
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => {
+                        let newSec = "Новый раздел";
+                        let counter = 1;
+                        while (template.characteristics.some(c => (c.section || "") === newSec)) {
+                          newSec = `Новый раздел ${counter}`;
+                          counter++;
+                        }
+                        const newChars = [...template.characteristics, { section: newSec, name: "", value: "", unit: "" }];
+                        setTemplates(templates.map(t => t.id === template.id ? { ...t, characteristics: newChars } : t));
+                        setIsDirty(true);
+                      }}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Добавить раздел
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => addCharacteristic(template.id)}>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Добавить строку
+                    </Button>
+                  </div>
                 </div>
                 
                 {template.characteristics.length === 0 ? (
@@ -154,29 +174,65 @@ export function CharacteristicTemplatesEditor() {
                     Нет характеристик в этом шаблоне
                   </div>
                 ) : (
-                  <div className="space-y-2 mt-4">
-                    {template.characteristics.map((char, index) => (
-                      <div key={index} className="flex gap-2 items-start bg-muted/30 p-2 rounded-md">
-                        <div className="w-32 space-y-1">
-                          {index === 0 && <Label className="text-xs text-muted-foreground">Раздел</Label>}
-                          <Input value={char.section || ''} onChange={e => updateCharacteristic(template.id, index, "section", e.target.value)} placeholder="Раздел" />
-                        </div>
-                        <div className="flex-1 space-y-1">
-                          {index === 0 && <Label className="text-xs text-muted-foreground">Название</Label>}
-                          <Input value={char.name || ''} onChange={e => updateCharacteristic(template.id, index, "name", e.target.value)} placeholder="Название" />
-                        </div>
-                        <div className="flex-1 space-y-1">
-                          {index === 0 && <Label className="text-xs text-muted-foreground">Значение по умолчанию</Label>}
-                          <Input value={char.value || ''} onChange={e => updateCharacteristic(template.id, index, "value", e.target.value)} placeholder="Значение" />
-                        </div>
-                        <div className="w-24 space-y-1">
-                          {index === 0 && <Label className="text-xs text-muted-foreground">Ед. изм.</Label>}
-                          <Input value={char.unit || ''} onChange={e => updateCharacteristic(template.id, index, "unit", e.target.value)} placeholder="Ед. изм." />
-                        </div>
-                        <div className={index === 0 ? "pt-5" : ""}>
-                          <Button type="button" variant="ghost" size="icon" onClick={() => removeCharacteristic(template.id, index)} className="text-destructive hover:bg-destructive/10">
-                            <Trash2 className="w-4 h-4" />
+                  <div className="space-y-4 mt-4">
+                    {Object.entries(
+                      template.characteristics.reduce((acc, curr, originalIndex) => {
+                        const sec = curr.section || "";
+                        if (!acc[sec]) acc[sec] = [];
+                        acc[sec].push({ ...curr, originalIndex });
+                        return acc;
+                      }, {} as Record<string, Array<typeof template.characteristics[0] & { originalIndex: number }>>)
+                    ).map(([section, chars]) => (
+                      <div key={chars[0].originalIndex} className="space-y-3 border rounded-md p-4 bg-muted/10">
+                        <div className="flex items-center gap-2 mb-2 pb-2 border-b">
+                          <Input 
+                            value={section} 
+                            onChange={e => {
+                              const newSec = e.target.value;
+                              const newChars = template.characteristics.map(c => (c.section || "") === section ? { ...c, section: newSec } : c);
+                              setTemplates(templates.map(t => t.id === template.id ? { ...t, characteristics: newChars } : t));
+                              setIsDirty(true);
+                            }}
+                            placeholder="Без раздела (оставьте пустым для общего списка)"
+                            className="font-semibold text-base bg-transparent border-none px-1 h-auto focus-visible:ring-1 shadow-none flex-1"
+                          />
+                          <Button 
+                            type="button" 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => {
+                              const newChars = [...template.characteristics, { section, name: "", value: "", unit: "" }];
+                              setTemplates(templates.map(t => t.id === template.id ? { ...t, characteristics: newChars } : t));
+                              setIsDirty(true);
+                            }}
+                          >
+                            <Plus className="w-4 h-4 mr-1" />
+                            Параметр
                           </Button>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          {chars.map((char, i) => (
+                            <div key={char.originalIndex} className="flex gap-2 items-start">
+                              <div className="flex-1 space-y-1">
+                                {i === 0 && <Label className="text-xs text-muted-foreground">Название</Label>}
+                                <Input value={char.name || ''} onChange={e => updateCharacteristic(template.id, char.originalIndex, "name", e.target.value)} placeholder="Название" />
+                              </div>
+                              <div className="flex-1 space-y-1">
+                                {i === 0 && <Label className="text-xs text-muted-foreground">Значение по умолчанию</Label>}
+                                <Input value={char.value || ''} onChange={e => updateCharacteristic(template.id, char.originalIndex, "value", e.target.value)} placeholder="Значение" />
+                              </div>
+                              <div className="w-24 space-y-1">
+                                {i === 0 && <Label className="text-xs text-muted-foreground">Ед. изм.</Label>}
+                                <Input value={char.unit || ''} onChange={e => updateCharacteristic(template.id, char.originalIndex, "unit", e.target.value)} placeholder="Ед. изм." />
+                              </div>
+                              <div className={i === 0 ? "pt-5" : ""}>
+                                <Button type="button" variant="ghost" size="icon" onClick={() => removeCharacteristic(template.id, char.originalIndex)} className="text-destructive hover:bg-destructive/10">
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     ))}
